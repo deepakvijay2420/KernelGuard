@@ -82,3 +82,9 @@ Thumbs.db
 
 # Jupyter
 .ipynb_checkpoints/
+
+# Local ZTA compiled binary
+daemon/zta/zta_controller
+
+# Old development source
+ebpf/exec_monitor_before_pinning.c
