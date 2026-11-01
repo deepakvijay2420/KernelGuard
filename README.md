@@ -4,46 +4,63 @@
 
 KernelGuard is a Linux runtime security research prototype designed to monitor, analyze, authorize, and control actions performed by Agentic AI systems.
 
-Modern Agentic AI systems can do more than generate text. When connected to tools, files, shell commands, APIs, and operating-system resources, an AI agent can cause real system-level actions.
+The project addresses a security problem created when an AI agent is connected to operating-system tools such as files, shell commands, processes, and other system resources.
 
-This creates a new security problem:
+An Agentic AI system can normally generate text, but when it is given tools it can also cause real operating-system actions. A malicious or manipulated instruction can therefore cause an AI agent to perform an unintended action.
 
-> An AI agent may be manipulated by malicious instructions and cause unintended operating-system actions.
-
-KernelGuard addresses this problem by moving security enforcement close to the Linux kernel and combining:
+KernelGuard places security enforcement close to the Linux kernel and combines:
 
 - eBPF / BPF-LSM for kernel-level monitoring and enforcement
+- BPF Ring Buffer for kernel-to-user-space event delivery
 - Zero Trust Architecture (ZTA) for agent-specific authorization
-- Agent process provenance for identifying agent-controlled processes
+- Process provenance for identifying agent-controlled processes
 - Behavioral Machine Learning for detecting suspicious execution patterns
 - Risk Fusion for combining authorization and behavioral risk
-- Agentic AI integration using LangChain
+- LangChain for Agentic AI integration
 - Prompt-injection attack simulation
 - Deterministic kernel-level enforcement
 
-The main design principle is:
+The central design principle is:
 
 > Machine Learning and AI-based analysis can identify suspicious behavior, but deterministic kernel-level policy remains the final enforcement authority.
 
 ---
 
-# 1. Problem Statement
+# 1. Project Overview
 
-Agentic AI systems are different from traditional chatbots.
+KernelGuard is designed as a runtime security layer between an Agentic AI system and the Linux operating system.
 
-A traditional chatbot generally produces text.
+The system observes executable actions at the Linux kernel boundary and determines whether the action should be:
 
-An Agentic AI system can:
+- ALLOWED
+- REVIEWED
+- WARNED
+- DENIED
 
-- execute programs
-- read and modify files
-- invoke shell commands
-- access network resources
-- call external tools
-- interact with operating-system resources
-- perform multi-step tasks autonomously
+The current prototype focuses primarily on process execution monitoring using the Linux BPF-LSM hook:
 
-If an attacker can influence the instructions, files, tool outputs, or context consumed by the agent, the agent may perform an unintended action.
+`bprm_check_security`
+
+The system can observe information such as:
+
+- Process ID
+- User ID
+- Process name
+- Executable path
+- Execution frequency
+- Process changes
+- Path diversity
+- Temporal behavior
+
+The information is then processed by different security layers.
+
+---
+
+# 2. Problem Statement
+
+Traditional AI safety mechanisms usually operate at the application or prompt level.
+
+However, an Agentic AI system can interact with the host operating system.
 
 For example:
 
@@ -53,17 +70,13 @@ User
   v
 Agentic AI
   |
-  v
-Read a malicious document
+  +----> Read file
+  |
+  +----> Execute program
+  |
+  +----> Run shell command
+  |
+  +----> Access sensitive resource
   |
   v
-Prompt Injection
-  |
-  v
-Agent decides to execute a privileged command
-  |
-  v
-Linux process
-  |
-  v
-Operating System
+Linux Operating System
