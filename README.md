@@ -2328,3 +2328,83 @@ The current KernelGuard prototype follows this logical flow:
                       |
                       v
               BPF-LSM Enforcement
+
+---
+
+# Technical Architecture and Implementation Details
+
+## 1. Why KernelGuard Is Needed
+
+Traditional security mechanisms are mainly designed to control human users and conventional applications.
+
+Agentic AI introduces a different security problem.
+
+An Agentic AI system can:
+
+- interpret natural-language instructions
+- select tools
+- read files
+- execute programs
+- invoke shell commands
+- access operating-system resources
+- communicate with external services
+- perform multiple actions without direct human approval for every step
+
+Therefore, an Agentic AI system can potentially transform a malicious or manipulated instruction into a real operating-system action.
+
+For example:
+
+```text
+User Request
+     |
+     v
+Agentic AI
+     |
+     v
+Tool Invocation
+     |
+     v
+Linux Command
+     |
+     v
+Privilege-Sensitive Operation
+
+---
+
+# Technical Architecture and Implementation Details
+
+## 1. Why KernelGuard Is Needed
+
+Traditional security mechanisms are mainly designed to control human users and conventional applications.
+
+Agentic AI introduces a different security problem.
+
+An Agentic AI system can:
+
+- interpret natural-language instructions
+- select tools
+- read files
+- execute programs
+- invoke shell commands
+- access operating-system resources
+- communicate with external services
+- perform multiple actions without direct human approval for every step
+
+Therefore, an Agentic AI system can potentially transform a malicious or manipulated instruction into a real operating-system action.
+
+For example:
+
+```text
+User Request
+     |
+     v
+Agentic AI
+     |
+     v
+Tool Invocation
+     |
+     v
+Linux Command
+     |
+     v
+Privilege-Sensitive Operation
