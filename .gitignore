@@ -1,54 +1,72 @@
+# ==========================================
+# KernelGuard Git Ignore
+# ==========================================
+
 # Python
 __pycache__/
 *.py[cod]
 *.pyo
-*.pyd
 
-# Virtual environments
+# Python virtual environments
 .venv/
 venv/
 env/
-ENV/
 
-# Secrets
+# Environment / secrets
 .env
 .env.*
-!.env.example
 *.key
 *.pem
 *.secret
+secrets/
+credentials/
 
-# Compiled files
+# API keys / local configuration
+google_api_key.txt
+openai_api_key.txt
+
+# Compiled binaries / objects
 *.o
-*.a
 *.so
+*.a
 *.out
-*.bin
 
-# KernelGuard compiled executables
-ebpf/exec_monitor
+# KernelGuard generated binaries
 ebpf/kernelguard_reader
+ebpf/exec_monitor
 ebpf/zta/zta_controller
-daemon/zta/zta_controller
+ebpf/zta/zta_enforcer.bpf.o
+ebpf/zta/zta_controller
 
-# Logs
-*.log
+# Backup / temporary source files
+*backup*
+*_backup.*
+*.backup
+*.old
+*.bak
+*~
+*.tmp
+*.swp
+
+# Runtime logs
 logs/
+*.log
 
-# ML generated models
+# Runtime traces
+traces/
+
+# Temporary experiment files
+tmp/
+
+# Generated ML models
 *.joblib
 *.pkl
 *.pickle
 
-# Temporary files
-tmp/
-*.tmp
-*.swp
-*~
-
-# Backup files
-*.backup
-*.bak
+# Generated experiment outputs
+# Keep curated research results in Git, but ignore temporary files.
+results/**/tmp/
+results/**/logs/
 
 # IDE
 .vscode/
@@ -58,16 +76,9 @@ tmp/
 .DS_Store
 Thumbs.db
 
-# Python build
-build/
-dist/
-*.egg-info/
+# Python test/cache
+.pytest_cache/
+.mypy_cache/
 
-# Generated final experiment output
-results/final_experiment/
-
-# Additional development backups
-*.old
-*.backup_*
-*.c.backup_*
-Untitled Document 1
+# Jupyter
+.ipynb_checkpoints/
