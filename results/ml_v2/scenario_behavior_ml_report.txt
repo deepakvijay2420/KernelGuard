@@ -1,0 +1,28 @@
+KernelGuard Scenario-Level Behavioral ML Evaluation
+===================================================
+
+Purpose:
+Evaluate whether behavioral and temporal telemetry can distinguish benign and attack scenarios while preventing repetitions of the same scenario from appearing in both training and testing.
+
+Excluded information:
+- risk
+- reason
+- action
+- task_id
+- attack_id
+- label
+- exact executable identity
+
+Evaluation:
+Scenario-level GroupShuffleSplit was used.
+All repetitions belonging to the same scenario were kept in the same partition.
+
+              model  accuracy  precision  recall       f1      fpr  tn  fp  fn  tp  train_time_sec  avg_inference_ms
+Logistic Regression  0.870833   0.989011    0.75 0.853081 0.008333 119   1  30  90        0.005810          0.003778
+      Random Forest  0.870833   0.989011    0.75 0.853081 0.008333 119   1  30  90        0.590536          0.201848
+  Gradient Boosting  0.745833   0.983607    0.50 0.662983 0.008333 119   1  60  60        0.058016          0.004131
+
+Best model: Logistic Regression
+
+Important limitation:
+This is a controlled experimental dataset. The result demonstrates performance on the generated scenarios and does not establish generalization to all real-world Agentic AI attacks.

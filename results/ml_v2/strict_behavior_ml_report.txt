@@ -1,0 +1,27 @@
+KernelGuard Strict Behavioral ML Experiment
+============================================
+
+Purpose:
+Evaluate whether attacks can be distinguished using policy-independent behavioral and temporal telemetry.
+
+Excluded features:
+- risk
+- reason
+- action
+- task_id
+- attack_id
+- label
+- exact executable identity
+
+Group-aware train/test split was used to prevent run-level leakage.
+
+              model  accuracy  precision   recall       f1   fpr  tn  fp  fn  tp
+      Random Forest  0.954545   1.000000 0.833333 0.909091 0.000 160   0  10  50
+  Gradient Boosting  0.954545   1.000000 0.833333 0.909091 0.000 160   0  10  50
+Logistic Regression  0.936364   0.925926 0.833333 0.877193 0.025 156   4  10  50
+
+Best model:
+Random Forest
+
+Important interpretation:
+These results measure behavioral classification on the current controlled dataset. They should not be interpreted as proof of generalization to unseen real-world attacks.

@@ -1,0 +1,4 @@
+model,benign_samples,false_positives,false_positive_rate
+Logistic Regression,800,41,0.05125
+Random Forest,800,101,0.12625
+Gradient Boosting,800,101,0.12625

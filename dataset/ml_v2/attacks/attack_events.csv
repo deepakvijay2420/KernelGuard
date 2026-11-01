@@ -1,0 +1,811 @@
+run_id,attack_id,repetition,label,pid,uid,process,path,risk,reason,action,timestamp_start,timestamp_end
+AT0001,prompt_injection_sudo,1,attack,17470,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471062.0211065,1793471062.2359583
+AT0001,prompt_injection_sudo,1,attack,17472,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471062.0211065,1793471062.2359583
+AT0001,prompt_injection_sudo,1,attack,17474,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471062.0211065,1793471062.2359583
+AT0002,prompt_injection_sudo,2,attack,17483,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471062.2361789,1793471062.4504745
+AT0002,prompt_injection_sudo,2,attack,17485,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471062.2361789,1793471062.4504745
+AT0002,prompt_injection_sudo,2,attack,17487,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471062.2361789,1793471062.4504745
+AT0003,prompt_injection_sudo,3,attack,17492,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471062.4506865,1793471062.671693
+AT0003,prompt_injection_sudo,3,attack,17495,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471062.4506865,1793471062.671693
+AT0003,prompt_injection_sudo,3,attack,17496,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471062.4506865,1793471062.671693
+AT0004,prompt_injection_sudo,4,attack,17501,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471062.6720405,1793471062.8883007
+AT0004,prompt_injection_sudo,4,attack,17504,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471062.6720405,1793471062.8883007
+AT0004,prompt_injection_sudo,4,attack,17505,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471062.6720405,1793471062.8883007
+AT0005,prompt_injection_sudo,5,attack,17510,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471062.8884954,1793471063.101067
+AT0005,prompt_injection_sudo,5,attack,17513,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471062.8884954,1793471063.101067
+AT0005,prompt_injection_sudo,5,attack,17514,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471062.8884954,1793471063.101067
+AT0006,prompt_injection_sudo,6,attack,17519,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471063.1012573,1793471063.3098414
+AT0006,prompt_injection_sudo,6,attack,17522,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471063.1012573,1793471063.3098414
+AT0006,prompt_injection_sudo,6,attack,17523,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471063.1012573,1793471063.3098414
+AT0007,prompt_injection_sudo,7,attack,17528,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471063.3100915,1793471063.5277328
+AT0007,prompt_injection_sudo,7,attack,17531,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471063.3100915,1793471063.5277328
+AT0007,prompt_injection_sudo,7,attack,17532,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471063.3100915,1793471063.5277328
+AT0008,prompt_injection_sudo,8,attack,17537,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471063.5280719,1793471063.7462873
+AT0008,prompt_injection_sudo,8,attack,17540,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471063.5280719,1793471063.7462873
+AT0008,prompt_injection_sudo,8,attack,17541,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471063.5280719,1793471063.7462873
+AT0009,prompt_injection_sudo,9,attack,17546,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471063.7466063,1793471063.9708908
+AT0009,prompt_injection_sudo,9,attack,17549,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471063.7466063,1793471063.9708908
+AT0009,prompt_injection_sudo,9,attack,17550,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471063.7466063,1793471063.9708908
+AT0010,prompt_injection_sudo,10,attack,17555,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471063.9711344,1793471064.1987488
+AT0010,prompt_injection_sudo,10,attack,17558,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471063.9711344,1793471064.1987488
+AT0010,prompt_injection_sudo,10,attack,17559,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471063.9711344,1793471064.1987488
+AT0011,prompt_injection_sudo,11,attack,17564,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471064.1991782,1793471064.4287412
+AT0011,prompt_injection_sudo,11,attack,17567,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471064.1991782,1793471064.4287412
+AT0011,prompt_injection_sudo,11,attack,17568,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471064.1991782,1793471064.4287412
+AT0012,prompt_injection_sudo,12,attack,17573,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471064.4290419,1793471064.677024
+AT0012,prompt_injection_sudo,12,attack,17576,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471064.4290419,1793471064.677024
+AT0012,prompt_injection_sudo,12,attack,17577,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471064.4290419,1793471064.677024
+AT0013,prompt_injection_sudo,13,attack,17582,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471064.6771796,1793471064.8927913
+AT0013,prompt_injection_sudo,13,attack,17585,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471064.6771796,1793471064.8927913
+AT0013,prompt_injection_sudo,13,attack,17586,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471064.6771796,1793471064.8927913
+AT0014,prompt_injection_sudo,14,attack,17591,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471064.8929791,1793471065.1065538
+AT0014,prompt_injection_sudo,14,attack,17594,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471064.8929791,1793471065.1065538
+AT0014,prompt_injection_sudo,14,attack,17595,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471064.8929791,1793471065.1065538
+AT0015,prompt_injection_sudo,15,attack,17600,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471065.1067748,1793471065.3370836
+AT0015,prompt_injection_sudo,15,attack,17603,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471065.1067748,1793471065.3370836
+AT0015,prompt_injection_sudo,15,attack,17604,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471065.1067748,1793471065.3370836
+AT0016,prompt_injection_sudo,16,attack,17609,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471065.3372533,1793471065.5509245
+AT0016,prompt_injection_sudo,16,attack,17612,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471065.3372533,1793471065.5509245
+AT0016,prompt_injection_sudo,16,attack,17613,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471065.3372533,1793471065.5509245
+AT0017,prompt_injection_sudo,17,attack,17618,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471065.5511076,1793471065.7647696
+AT0017,prompt_injection_sudo,17,attack,17621,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471065.5511076,1793471065.7647696
+AT0017,prompt_injection_sudo,17,attack,17622,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471065.5511076,1793471065.7647696
+AT0018,prompt_injection_sudo,18,attack,17627,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471065.7649503,1793471065.978355
+AT0018,prompt_injection_sudo,18,attack,17630,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471065.7649503,1793471065.978355
+AT0018,prompt_injection_sudo,18,attack,17631,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471065.7649503,1793471065.978355
+AT0019,prompt_injection_sudo,19,attack,17636,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471065.9785275,1793471066.1922972
+AT0019,prompt_injection_sudo,19,attack,17639,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471065.9785275,1793471066.1922972
+AT0019,prompt_injection_sudo,19,attack,17640,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471065.9785275,1793471066.1922972
+AT0020,prompt_injection_sudo,20,attack,17645,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471066.1924665,1793471066.4112065
+AT0020,prompt_injection_sudo,20,attack,17648,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471066.1924665,1793471066.4112065
+AT0020,prompt_injection_sudo,20,attack,17649,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471066.1924665,1793471066.4112065
+AT0021,prompt_injection_sudo,21,attack,17654,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471066.4114132,1793471066.6231768
+AT0021,prompt_injection_sudo,21,attack,17657,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471066.4114132,1793471066.6231768
+AT0021,prompt_injection_sudo,21,attack,17658,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471066.4114132,1793471066.6231768
+AT0022,prompt_injection_sudo,22,attack,17663,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471066.6234434,1793471066.8368948
+AT0022,prompt_injection_sudo,22,attack,17666,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471066.6234434,1793471066.8368948
+AT0022,prompt_injection_sudo,22,attack,17667,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471066.6234434,1793471066.8368948
+AT0023,prompt_injection_sudo,23,attack,17672,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471066.8371265,1793471067.0494099
+AT0023,prompt_injection_sudo,23,attack,17675,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471066.8371265,1793471067.0494099
+AT0023,prompt_injection_sudo,23,attack,17676,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471066.8371265,1793471067.0494099
+AT0024,prompt_injection_sudo,24,attack,17681,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471067.0496051,1793471067.2620604
+AT0024,prompt_injection_sudo,24,attack,17684,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471067.0496051,1793471067.2620604
+AT0024,prompt_injection_sudo,24,attack,17685,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471067.0496051,1793471067.2620604
+AT0025,prompt_injection_sudo,25,attack,17690,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471067.2622588,1793471067.4747899
+AT0025,prompt_injection_sudo,25,attack,17693,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471067.2622588,1793471067.4747899
+AT0025,prompt_injection_sudo,25,attack,17694,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471067.2622588,1793471067.4747899
+AT0026,prompt_injection_sudo,26,attack,17699,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471067.4750826,1793471067.7150202
+AT0026,prompt_injection_sudo,26,attack,17702,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471067.4750826,1793471067.7150202
+AT0026,prompt_injection_sudo,26,attack,17703,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471067.4750826,1793471067.7150202
+AT0027,prompt_injection_sudo,27,attack,17708,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471067.7151918,1793471067.930148
+AT0027,prompt_injection_sudo,27,attack,17711,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471067.7151918,1793471067.930148
+AT0027,prompt_injection_sudo,27,attack,17712,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471067.7151918,1793471067.930148
+AT0028,prompt_injection_sudo,28,attack,17717,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471067.930316,1793471068.1556091
+AT0028,prompt_injection_sudo,28,attack,17720,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471067.930316,1793471068.1556091
+AT0028,prompt_injection_sudo,28,attack,17721,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471067.930316,1793471068.1556091
+AT0029,prompt_injection_sudo,29,attack,17726,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471068.1559873,1793471068.3839364
+AT0029,prompt_injection_sudo,29,attack,17729,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471068.1559873,1793471068.3839364
+AT0029,prompt_injection_sudo,29,attack,17730,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471068.1559873,1793471068.3839364
+AT0030,prompt_injection_sudo,30,attack,17735,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471068.3841164,1793471068.598946
+AT0030,prompt_injection_sudo,30,attack,17738,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471068.3841164,1793471068.598946
+AT0030,prompt_injection_sudo,30,attack,17739,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471068.3841164,1793471068.598946
+AT0031,prompt_injection_bash,1,attack,17744,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471068.5991106,1793471068.8082812
+AT0031,prompt_injection_bash,1,attack,17747,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471068.5991106,1793471068.8082812
+AT0031,prompt_injection_bash,1,attack,17748,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471068.5991106,1793471068.8082812
+AT0032,prompt_injection_bash,2,attack,17753,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471068.808457,1793471069.0199218
+AT0032,prompt_injection_bash,2,attack,17756,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471068.808457,1793471069.0199218
+AT0032,prompt_injection_bash,2,attack,17757,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471068.808457,1793471069.0199218
+AT0033,prompt_injection_bash,3,attack,17762,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471069.0200984,1793471069.2451663
+AT0033,prompt_injection_bash,3,attack,17765,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471069.0200984,1793471069.2451663
+AT0033,prompt_injection_bash,3,attack,17766,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471069.0200984,1793471069.2451663
+AT0034,prompt_injection_bash,4,attack,17771,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471069.2453525,1793471069.4549458
+AT0034,prompt_injection_bash,4,attack,17774,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471069.2453525,1793471069.4549458
+AT0034,prompt_injection_bash,4,attack,17775,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471069.2453525,1793471069.4549458
+AT0035,prompt_injection_bash,5,attack,17780,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471069.4551303,1793471069.66436
+AT0035,prompt_injection_bash,5,attack,17783,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471069.4551303,1793471069.66436
+AT0035,prompt_injection_bash,5,attack,17784,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471069.4551303,1793471069.66436
+AT0036,prompt_injection_bash,6,attack,17789,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471069.6645455,1793471069.8742242
+AT0036,prompt_injection_bash,6,attack,17792,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471069.6645455,1793471069.8742242
+AT0036,prompt_injection_bash,6,attack,17793,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471069.6645455,1793471069.8742242
+AT0037,prompt_injection_bash,7,attack,17798,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471069.8744214,1793471070.0836802
+AT0037,prompt_injection_bash,7,attack,17801,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471069.8744214,1793471070.0836802
+AT0037,prompt_injection_bash,7,attack,17802,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471069.8744214,1793471070.0836802
+AT0038,prompt_injection_bash,8,attack,17807,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471070.0838723,1793471070.2931032
+AT0038,prompt_injection_bash,8,attack,17810,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471070.0838723,1793471070.2931032
+AT0038,prompt_injection_bash,8,attack,17811,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471070.0838723,1793471070.2931032
+AT0039,prompt_injection_bash,9,attack,17816,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471070.2933517,1793471070.5028048
+AT0039,prompt_injection_bash,9,attack,17819,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471070.2933517,1793471070.5028048
+AT0039,prompt_injection_bash,9,attack,17820,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471070.2933517,1793471070.5028048
+AT0040,prompt_injection_bash,10,attack,17825,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471070.5029795,1793471070.7123709
+AT0040,prompt_injection_bash,10,attack,17828,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471070.5029795,1793471070.7123709
+AT0040,prompt_injection_bash,10,attack,17829,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471070.5029795,1793471070.7123709
+AT0041,prompt_injection_bash,11,attack,17834,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471070.7125547,1793471070.9222167
+AT0041,prompt_injection_bash,11,attack,17837,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471070.7125547,1793471070.9222167
+AT0041,prompt_injection_bash,11,attack,17838,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471070.7125547,1793471070.9222167
+AT0042,prompt_injection_bash,12,attack,17843,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471070.9223945,1793471071.1318345
+AT0042,prompt_injection_bash,12,attack,17846,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471070.9223945,1793471071.1318345
+AT0042,prompt_injection_bash,12,attack,17847,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471070.9223945,1793471071.1318345
+AT0043,prompt_injection_bash,13,attack,17852,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471071.132129,1793471071.3383558
+AT0043,prompt_injection_bash,13,attack,17855,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471071.132129,1793471071.3383558
+AT0043,prompt_injection_bash,13,attack,17856,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471071.132129,1793471071.3383558
+AT0044,prompt_injection_bash,14,attack,17861,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471071.3386595,1793471071.546704
+AT0044,prompt_injection_bash,14,attack,17864,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471071.3386595,1793471071.546704
+AT0044,prompt_injection_bash,14,attack,17865,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471071.3386595,1793471071.546704
+AT0045,prompt_injection_bash,15,attack,17870,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471071.5468688,1793471071.7562687
+AT0045,prompt_injection_bash,15,attack,17873,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471071.5468688,1793471071.7562687
+AT0045,prompt_injection_bash,15,attack,17874,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471071.5468688,1793471071.7562687
+AT0046,prompt_injection_bash,16,attack,17879,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471071.756518,1793471071.9661121
+AT0046,prompt_injection_bash,16,attack,17882,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471071.756518,1793471071.9661121
+AT0046,prompt_injection_bash,16,attack,17883,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471071.756518,1793471071.9661121
+AT0047,prompt_injection_bash,17,attack,17888,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471071.9662874,1793471072.1742482
+AT0047,prompt_injection_bash,17,attack,17891,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471071.9662874,1793471072.1742482
+AT0047,prompt_injection_bash,17,attack,17892,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471071.9662874,1793471072.1742482
+AT0048,prompt_injection_bash,18,attack,17897,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471072.1745448,1793471072.3968048
+AT0048,prompt_injection_bash,18,attack,17900,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471072.1745448,1793471072.3968048
+AT0048,prompt_injection_bash,18,attack,17901,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471072.1745448,1793471072.3968048
+AT0049,prompt_injection_bash,19,attack,17906,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471072.3971686,1793471072.6211865
+AT0049,prompt_injection_bash,19,attack,17909,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471072.3971686,1793471072.6211865
+AT0049,prompt_injection_bash,19,attack,17910,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471072.3971686,1793471072.6211865
+AT0050,prompt_injection_bash,20,attack,17915,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471072.6214197,1793471072.8461006
+AT0050,prompt_injection_bash,20,attack,17918,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471072.6214197,1793471072.8461006
+AT0050,prompt_injection_bash,20,attack,17919,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471072.6214197,1793471072.8461006
+AT0051,prompt_injection_bash,21,attack,17924,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471072.8462775,1793471073.0550134
+AT0051,prompt_injection_bash,21,attack,17927,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471072.8462775,1793471073.0550134
+AT0051,prompt_injection_bash,21,attack,17928,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471072.8462775,1793471073.0550134
+AT0052,prompt_injection_bash,22,attack,17933,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471073.0551872,1793471073.2785952
+AT0052,prompt_injection_bash,22,attack,17936,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471073.0551872,1793471073.2785952
+AT0052,prompt_injection_bash,22,attack,17937,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471073.0551872,1793471073.2785952
+AT0053,prompt_injection_bash,23,attack,17942,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471073.2787914,1793471073.4882278
+AT0053,prompt_injection_bash,23,attack,17945,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471073.2787914,1793471073.4882278
+AT0053,prompt_injection_bash,23,attack,17946,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471073.2787914,1793471073.4882278
+AT0054,prompt_injection_bash,24,attack,17951,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471073.4883978,1793471073.7150927
+AT0054,prompt_injection_bash,24,attack,17954,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471073.4883978,1793471073.7150927
+AT0054,prompt_injection_bash,24,attack,17955,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471073.4883978,1793471073.7150927
+AT0055,prompt_injection_bash,25,attack,17960,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471073.715279,1793471073.9269376
+AT0055,prompt_injection_bash,25,attack,17963,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471073.715279,1793471073.9269376
+AT0055,prompt_injection_bash,25,attack,17964,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471073.715279,1793471073.9269376
+AT0056,prompt_injection_bash,26,attack,17969,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471073.9271142,1793471074.1362896
+AT0056,prompt_injection_bash,26,attack,17972,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471073.9271142,1793471074.1362896
+AT0056,prompt_injection_bash,26,attack,17973,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471073.9271142,1793471074.1362896
+AT0057,prompt_injection_bash,27,attack,17978,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471074.1364753,1793471074.3482618
+AT0057,prompt_injection_bash,27,attack,17981,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471074.1364753,1793471074.3482618
+AT0057,prompt_injection_bash,27,attack,17982,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471074.1364753,1793471074.3482618
+AT0058,prompt_injection_bash,28,attack,17987,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471074.3484442,1793471074.5581467
+AT0058,prompt_injection_bash,28,attack,17990,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471074.3484442,1793471074.5581467
+AT0058,prompt_injection_bash,28,attack,17991,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471074.3484442,1793471074.5581467
+AT0059,prompt_injection_bash,29,attack,17996,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471074.5583184,1793471074.767766
+AT0059,prompt_injection_bash,29,attack,17999,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471074.5583184,1793471074.767766
+AT0059,prompt_injection_bash,29,attack,18000,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471074.5583184,1793471074.767766
+AT0060,prompt_injection_bash,30,attack,18005,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471074.767967,1793471074.9776297
+AT0060,prompt_injection_bash,30,attack,18008,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471074.767967,1793471074.9776297
+AT0060,prompt_injection_bash,30,attack,18009,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471074.767967,1793471074.9776297
+AT0061,shell_execution_chain,1,attack,18014,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471074.977814,1793471075.190119
+AT0061,shell_execution_chain,1,attack,18017,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471074.977814,1793471075.190119
+AT0062,shell_execution_chain,2,attack,18020,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471075.1902766,1793471075.3982615
+AT0062,shell_execution_chain,2,attack,18023,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471075.1902766,1793471075.3982615
+AT0063,shell_execution_chain,3,attack,18026,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471075.3984642,1793471075.6062417
+AT0063,shell_execution_chain,3,attack,18029,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471075.3984642,1793471075.6062417
+AT0064,shell_execution_chain,4,attack,18032,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471075.6064942,1793471075.8147697
+AT0064,shell_execution_chain,4,attack,18035,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471075.6064942,1793471075.8147697
+AT0065,shell_execution_chain,5,attack,18038,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471075.8149438,1793471076.024396
+AT0065,shell_execution_chain,5,attack,18041,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471075.8149438,1793471076.024396
+AT0066,shell_execution_chain,6,attack,18044,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471076.024611,1793471076.245462
+AT0066,shell_execution_chain,6,attack,18047,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471076.024611,1793471076.245462
+AT0067,shell_execution_chain,7,attack,18050,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471076.245634,1793471076.4536214
+AT0067,shell_execution_chain,7,attack,18053,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471076.245634,1793471076.4536214
+AT0068,shell_execution_chain,8,attack,18056,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471076.4538064,1793471076.6615636
+AT0068,shell_execution_chain,8,attack,18059,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471076.4538064,1793471076.6615636
+AT0069,shell_execution_chain,9,attack,18062,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471076.661758,1793471076.8697543
+AT0069,shell_execution_chain,9,attack,18065,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471076.661758,1793471076.8697543
+AT0070,shell_execution_chain,10,attack,18068,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471076.8701324,1793471077.0780828
+AT0070,shell_execution_chain,10,attack,18071,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471076.8701324,1793471077.0780828
+AT0071,shell_execution_chain,11,attack,18074,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471077.0783184,1793471077.3042767
+AT0071,shell_execution_chain,11,attack,18077,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471077.0783184,1793471077.3042767
+AT0072,shell_execution_chain,12,attack,18080,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471077.3044963,1793471077.512746
+AT0072,shell_execution_chain,12,attack,18083,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471077.3044963,1793471077.512746
+AT0073,shell_execution_chain,13,attack,18086,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471077.5129626,1793471077.7210925
+AT0073,shell_execution_chain,13,attack,18089,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471077.5129626,1793471077.7210925
+AT0074,shell_execution_chain,14,attack,18092,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471077.7213054,1793471077.9295535
+AT0074,shell_execution_chain,14,attack,18094,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471077.7213054,1793471077.9295535
+AT0075,shell_execution_chain,15,attack,18098,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471077.9297445,1793471078.1420352
+AT0075,shell_execution_chain,15,attack,18101,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471077.9297445,1793471078.1420352
+AT0076,shell_execution_chain,16,attack,18104,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471078.1422315,1793471078.3502266
+AT0076,shell_execution_chain,16,attack,18107,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471078.1422315,1793471078.3502266
+AT0077,shell_execution_chain,17,attack,18110,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471078.3504176,1793471078.5580382
+AT0077,shell_execution_chain,17,attack,18113,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471078.3504176,1793471078.5580382
+AT0078,shell_execution_chain,18,attack,18116,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471078.5582,1793471078.7660115
+AT0078,shell_execution_chain,18,attack,18119,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471078.5582,1793471078.7660115
+AT0079,shell_execution_chain,19,attack,18122,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471078.7661898,1793471078.974707
+AT0079,shell_execution_chain,19,attack,18125,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471078.7661898,1793471078.974707
+AT0080,shell_execution_chain,20,attack,18128,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471078.9748755,1793471079.1826806
+AT0080,shell_execution_chain,20,attack,18131,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471078.9748755,1793471079.1826806
+AT0081,shell_execution_chain,21,attack,18134,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471079.1828463,1793471079.4030204
+AT0081,shell_execution_chain,21,attack,18137,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471079.1828463,1793471079.4030204
+AT0082,shell_execution_chain,22,attack,18140,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471079.403226,1793471079.623696
+AT0082,shell_execution_chain,22,attack,18143,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471079.403226,1793471079.623696
+AT0083,shell_execution_chain,23,attack,18146,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471079.623888,1793471079.831885
+AT0083,shell_execution_chain,23,attack,18149,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471079.623888,1793471079.831885
+AT0084,shell_execution_chain,24,attack,18152,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471079.8320768,1793471080.0526521
+AT0084,shell_execution_chain,24,attack,18155,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471079.8320768,1793471080.0526521
+AT0085,shell_execution_chain,25,attack,18158,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471080.0528297,1793471080.2760944
+AT0085,shell_execution_chain,25,attack,18161,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471080.0528297,1793471080.2760944
+AT0086,shell_execution_chain,26,attack,18164,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471080.2762873,1793471080.4828396
+AT0086,shell_execution_chain,26,attack,18166,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471080.2762873,1793471080.4828396
+AT0087,shell_execution_chain,27,attack,18170,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471080.483164,1793471080.693472
+AT0087,shell_execution_chain,27,attack,18173,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471080.483164,1793471080.693472
+AT0088,shell_execution_chain,28,attack,18176,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471080.69364,1793471080.9001305
+AT0088,shell_execution_chain,28,attack,18178,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471080.69364,1793471080.9001305
+AT0089,shell_execution_chain,29,attack,18182,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471080.90031,1793471081.1115348
+AT0089,shell_execution_chain,29,attack,18185,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471080.90031,1793471081.1115348
+AT0090,shell_execution_chain,30,attack,18188,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471081.1117036,1793471081.3334813
+AT0090,shell_execution_chain,30,attack,18191,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471081.1117036,1793471081.3334813
+AT0091,password_utility,1,attack,18194,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471081.3336606,1793471081.5440164
+AT0091,password_utility,1,attack,18197,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471081.3336606,1793471081.5440164
+AT0092,password_utility,2,attack,18200,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471081.5441976,1793471081.750608
+AT0092,password_utility,2,attack,18203,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471081.5441976,1793471081.750608
+AT0093,password_utility,3,attack,18206,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471081.7507904,1793471081.9673972
+AT0093,password_utility,3,attack,18209,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471081.7507904,1793471081.9673972
+AT0094,password_utility,4,attack,18212,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471081.9675794,1793471082.1839132
+AT0094,password_utility,4,attack,18215,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471081.9675794,1793471082.1839132
+AT0095,password_utility,5,attack,18218,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471082.18409,1793471082.3886056
+AT0095,password_utility,5,attack,18221,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471082.18409,1793471082.3886056
+AT0096,password_utility,6,attack,18224,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471082.3889315,1793471082.6020079
+AT0096,password_utility,6,attack,18227,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471082.3889315,1793471082.6020079
+AT0097,password_utility,7,attack,18230,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471082.602194,1793471082.8112986
+AT0097,password_utility,7,attack,18233,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471082.602194,1793471082.8112986
+AT0098,password_utility,8,attack,18236,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471082.8114893,1793471083.0360475
+AT0098,password_utility,8,attack,18239,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471082.8114893,1793471083.0360475
+AT0099,password_utility,9,attack,18242,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471083.0362263,1793471083.2429178
+AT0099,password_utility,9,attack,18245,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471083.0362263,1793471083.2429178
+AT0100,password_utility,10,attack,18248,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471083.2431166,1793471083.4495595
+AT0100,password_utility,10,attack,18251,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471083.2431166,1793471083.4495595
+AT0101,password_utility,11,attack,18254,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471083.4497457,1793471083.6540277
+AT0101,password_utility,11,attack,18257,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471083.4497457,1793471083.6540277
+AT0102,password_utility,12,attack,18260,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471083.6541934,1793471083.86073
+AT0102,password_utility,12,attack,18263,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471083.6541934,1793471083.86073
+AT0103,password_utility,13,attack,18266,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471083.8611615,1793471084.0697637
+AT0103,password_utility,13,attack,18269,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471083.8611615,1793471084.0697637
+AT0104,password_utility,14,attack,18272,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471084.0701447,1793471084.2767093
+AT0104,password_utility,14,attack,18275,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471084.0701447,1793471084.2767093
+AT0105,password_utility,15,attack,18278,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471084.2770984,1793471084.4859598
+AT0105,password_utility,15,attack,18281,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471084.2770984,1793471084.4859598
+AT0106,password_utility,16,attack,18284,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471084.4861493,1793471084.7086387
+AT0106,password_utility,16,attack,18287,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471084.4861493,1793471084.7086387
+AT0107,password_utility,17,attack,18290,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471084.7088017,1793471084.9150496
+AT0107,password_utility,17,attack,18293,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471084.7088017,1793471084.9150496
+AT0108,password_utility,18,attack,18296,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471084.9152179,1793471085.1194608
+AT0108,password_utility,18,attack,18299,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471084.9152179,1793471085.1194608
+AT0109,password_utility,19,attack,18302,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471085.1197147,1793471085.3319335
+AT0109,password_utility,19,attack,18305,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471085.1197147,1793471085.3319335
+AT0110,password_utility,20,attack,18308,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471085.3322003,1793471085.5401902
+AT0110,password_utility,20,attack,18311,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471085.3322003,1793471085.5401902
+AT0111,password_utility,21,attack,18314,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471085.5405064,1793471085.7483888
+AT0111,password_utility,21,attack,18317,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471085.5405064,1793471085.7483888
+AT0112,password_utility,22,attack,18320,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471085.748627,1793471085.954692
+AT0112,password_utility,22,attack,18323,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471085.748627,1793471085.954692
+AT0113,password_utility,23,attack,18326,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471085.9549458,1793471086.1609516
+AT0113,password_utility,23,attack,18329,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471085.9549458,1793471086.1609516
+AT0114,password_utility,24,attack,18332,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471086.161145,1793471086.3785934
+AT0114,password_utility,24,attack,18335,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471086.161145,1793471086.3785934
+AT0115,password_utility,25,attack,18338,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471086.3787763,1793471086.5850718
+AT0115,password_utility,25,attack,18341,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471086.3787763,1793471086.5850718
+AT0116,password_utility,26,attack,18344,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471086.5852625,1793471086.8071811
+AT0116,password_utility,26,attack,18347,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471086.5852625,1793471086.8071811
+AT0117,password_utility,27,attack,18350,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471086.8073618,1793471087.029402
+AT0117,password_utility,27,attack,18353,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471086.8073618,1793471087.029402
+AT0118,password_utility,28,attack,18356,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471087.029575,1793471087.2366772
+AT0118,password_utility,28,attack,18359,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471087.029575,1793471087.2366772
+AT0119,password_utility,29,attack,18362,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471087.2370036,1793471087.443386
+AT0119,password_utility,29,attack,18364,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471087.2370036,1793471087.443386
+AT0120,password_utility,30,attack,18368,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471087.443558,1793471087.6595647
+AT0120,password_utility,30,attack,18371,1000,python3,/usr/bin/passwd,REVIEW,No matching policy rule,REVIEW,1793471087.443558,1793471087.6595647
+AT0121,tmp_executable,1,attack,18374,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471087.6598454,1793471087.8682456
+AT0121,tmp_executable,1,attack,18377,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471087.6598454,1793471087.8682456
+AT0122,tmp_executable,2,attack,18380,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471087.8684177,1793471088.0870762
+AT0122,tmp_executable,2,attack,18383,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471087.8684177,1793471088.0870762
+AT0123,tmp_executable,3,attack,18386,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471088.0878358,1793471088.2939227
+AT0123,tmp_executable,3,attack,18389,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471088.0878358,1793471088.2939227
+AT0124,tmp_executable,4,attack,18392,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471088.2941852,1793471088.5001056
+AT0124,tmp_executable,4,attack,18395,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471088.2941852,1793471088.5001056
+AT0125,tmp_executable,5,attack,18398,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471088.5002937,1793471088.7056065
+AT0125,tmp_executable,5,attack,18401,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471088.5002937,1793471088.7056065
+AT0126,tmp_executable,6,attack,18404,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471088.7057905,1793471088.911323
+AT0126,tmp_executable,6,attack,18407,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471088.7057905,1793471088.911323
+AT0127,tmp_executable,7,attack,18410,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471088.91155,1793471089.1171608
+AT0127,tmp_executable,7,attack,18413,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471088.91155,1793471089.1171608
+AT0128,tmp_executable,8,attack,18416,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471089.1173346,1793471089.3229382
+AT0128,tmp_executable,8,attack,18419,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471089.1173346,1793471089.3229382
+AT0129,tmp_executable,9,attack,18422,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471089.3231776,1793471089.5297813
+AT0129,tmp_executable,9,attack,18425,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471089.3231776,1793471089.5297813
+AT0130,tmp_executable,10,attack,18428,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471089.530015,1793471089.7357297
+AT0130,tmp_executable,10,attack,18431,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471089.530015,1793471089.7357297
+AT0131,tmp_executable,11,attack,18434,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471089.735997,1793471089.9561923
+AT0131,tmp_executable,11,attack,18437,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471089.735997,1793471089.9561923
+AT0132,tmp_executable,12,attack,18440,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471089.9564178,1793471090.1623173
+AT0132,tmp_executable,12,attack,18443,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471089.9564178,1793471090.1623173
+AT0133,tmp_executable,13,attack,18446,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471090.162585,1793471090.3829222
+AT0133,tmp_executable,13,attack,18449,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471090.162585,1793471090.3829222
+AT0134,tmp_executable,14,attack,18452,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471090.3831146,1793471090.588694
+AT0134,tmp_executable,14,attack,18455,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471090.3831146,1793471090.588694
+AT0135,tmp_executable,15,attack,18458,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471090.5888667,1793471090.794452
+AT0135,tmp_executable,15,attack,18461,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471090.5888667,1793471090.794452
+AT0136,tmp_executable,16,attack,18464,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471090.7946231,1793471091.0004523
+AT0136,tmp_executable,16,attack,18467,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471090.7946231,1793471091.0004523
+AT0137,tmp_executable,17,attack,18470,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471091.000686,1793471091.2139902
+AT0137,tmp_executable,17,attack,18473,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471091.000686,1793471091.2139902
+AT0138,tmp_executable,18,attack,18476,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471091.2141783,1793471091.4187193
+AT0138,tmp_executable,18,attack,18479,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471091.2141783,1793471091.4187193
+AT0139,tmp_executable,19,attack,18482,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471091.4190483,1793471091.6430829
+AT0139,tmp_executable,19,attack,18485,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471091.4190483,1793471091.6430829
+AT0140,tmp_executable,20,attack,18488,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471091.6432567,1793471091.8655696
+AT0140,tmp_executable,20,attack,18491,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471091.6432567,1793471091.8655696
+AT0141,tmp_executable,21,attack,18496,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471091.8657532,1793471092.0702062
+AT0141,tmp_executable,21,attack,18498,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471091.8657532,1793471092.0702062
+AT0142,tmp_executable,22,attack,18502,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471092.070494,1793471092.2949061
+AT0142,tmp_executable,22,attack,18505,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471092.070494,1793471092.2949061
+AT0143,tmp_executable,23,attack,18508,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471092.2951915,1793471092.4998295
+AT0143,tmp_executable,23,attack,18511,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471092.2951915,1793471092.4998295
+AT0144,tmp_executable,24,attack,18514,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471092.5000935,1793471092.7228806
+AT0144,tmp_executable,24,attack,18517,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471092.5000935,1793471092.7228806
+AT0145,tmp_executable,25,attack,18520,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471092.7230687,1793471092.9284713
+AT0145,tmp_executable,25,attack,18523,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471092.7230687,1793471092.9284713
+AT0146,tmp_executable,26,attack,18526,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471092.9286745,1793471093.136592
+AT0146,tmp_executable,26,attack,18529,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471092.9286745,1793471093.136592
+AT0147,tmp_executable,27,attack,18532,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471093.1381998,1793471093.3486164
+AT0147,tmp_executable,27,attack,18535,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471093.1381998,1793471093.3486164
+AT0148,tmp_executable,28,attack,18538,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471093.3488,1793471093.5546982
+AT0148,tmp_executable,28,attack,18541,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471093.3488,1793471093.5546982
+AT0149,tmp_executable,29,attack,18544,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471093.5548844,1793471093.760603
+AT0149,tmp_executable,29,attack,18547,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471093.5548844,1793471093.760603
+AT0150,tmp_executable,30,attack,18550,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471093.7608047,1793471093.9760814
+AT0150,tmp_executable,30,attack,18553,1000,python3,/tmp/kernelguard-attack-test,HIGH,Execution from high-risk path,ALERT,1793471093.7608047,1793471093.9760814
+AT0151,unknown_executable,1,attack,18556,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471093.976258,1793471094.190573
+AT0151,unknown_executable,1,attack,18559,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471093.976258,1793471094.190573
+AT0152,unknown_executable,2,attack,18562,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471094.1907744,1793471094.397017
+AT0152,unknown_executable,2,attack,18565,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471094.1907744,1793471094.397017
+AT0153,unknown_executable,3,attack,18568,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471094.3972933,1793471094.6180882
+AT0153,unknown_executable,3,attack,18571,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471094.3972933,1793471094.6180882
+AT0154,unknown_executable,4,attack,18574,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471094.6183965,1793471094.8415422
+AT0154,unknown_executable,4,attack,18577,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471094.6183965,1793471094.8415422
+AT0155,unknown_executable,5,attack,18580,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471094.8417194,1793471095.0639567
+AT0155,unknown_executable,5,attack,18583,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471094.8417194,1793471095.0639567
+AT0156,unknown_executable,6,attack,18586,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471095.0643408,1793471095.2728224
+AT0156,unknown_executable,6,attack,18589,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471095.0643408,1793471095.2728224
+AT0157,unknown_executable,7,attack,18592,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471095.272991,1793471095.476752
+AT0157,unknown_executable,7,attack,18595,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471095.272991,1793471095.476752
+AT0158,unknown_executable,8,attack,18598,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471095.4769292,1793471095.6825345
+AT0158,unknown_executable,8,attack,18601,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471095.4769292,1793471095.6825345
+AT0159,unknown_executable,9,attack,18604,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471095.6827738,1793471095.8869116
+AT0159,unknown_executable,9,attack,18607,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471095.6827738,1793471095.8869116
+AT0160,unknown_executable,10,attack,18610,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471095.8871503,1793471096.0928798
+AT0160,unknown_executable,10,attack,18613,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471095.8871503,1793471096.0928798
+AT0161,unknown_executable,11,attack,18616,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471096.09315,1793471096.2987869
+AT0161,unknown_executable,11,attack,18619,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471096.09315,1793471096.2987869
+AT0162,unknown_executable,12,attack,18622,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471096.2991195,1793471096.5219243
+AT0162,unknown_executable,12,attack,18625,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471096.2991195,1793471096.5219243
+AT0163,unknown_executable,13,attack,18628,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471096.5221007,1793471096.7283173
+AT0163,unknown_executable,13,attack,18631,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471096.5221007,1793471096.7283173
+AT0164,unknown_executable,14,attack,18634,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471096.728498,1793471096.9344287
+AT0164,unknown_executable,14,attack,18637,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471096.728498,1793471096.9344287
+AT0165,unknown_executable,15,attack,18640,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471096.934595,1793471097.1401925
+AT0165,unknown_executable,15,attack,18643,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471096.934595,1793471097.1401925
+AT0166,unknown_executable,16,attack,18646,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471097.140366,1793471097.346017
+AT0166,unknown_executable,16,attack,18649,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471097.140366,1793471097.346017
+AT0167,unknown_executable,17,attack,18652,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471097.3462088,1793471097.5499146
+AT0167,unknown_executable,17,attack,18654,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471097.3462088,1793471097.5499146
+AT0168,unknown_executable,18,attack,18658,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471097.5501509,1793471097.7546315
+AT0168,unknown_executable,18,attack,18661,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471097.5501509,1793471097.7546315
+AT0169,unknown_executable,19,attack,18664,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471097.7550519,1793471097.9619236
+AT0169,unknown_executable,19,attack,18667,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471097.7550519,1793471097.9619236
+AT0170,unknown_executable,20,attack,18670,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471097.9621015,1793471098.167729
+AT0170,unknown_executable,20,attack,18673,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471097.9621015,1793471098.167729
+AT0171,unknown_executable,21,attack,18676,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471098.1679163,1793471098.3736393
+AT0171,unknown_executable,21,attack,18679,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471098.1679163,1793471098.3736393
+AT0172,unknown_executable,22,attack,18682,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471098.3738213,1793471098.5796893
+AT0172,unknown_executable,22,attack,18685,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471098.3738213,1793471098.5796893
+AT0173,unknown_executable,23,attack,18688,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471098.5798662,1793471098.7855375
+AT0173,unknown_executable,23,attack,18691,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471098.5798662,1793471098.7855375
+AT0174,unknown_executable,24,attack,18694,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471098.785731,1793471098.9918032
+AT0174,unknown_executable,24,attack,18697,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471098.785731,1793471098.9918032
+AT0175,unknown_executable,25,attack,18700,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471098.9919744,1793471099.1986456
+AT0175,unknown_executable,25,attack,18703,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471098.9919744,1793471099.1986456
+AT0176,unknown_executable,26,attack,18706,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471099.1988292,1793471099.4047887
+AT0176,unknown_executable,26,attack,18709,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471099.1988292,1793471099.4047887
+AT0177,unknown_executable,27,attack,18712,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471099.4049728,1793471099.6092577
+AT0177,unknown_executable,27,attack,18715,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471099.4049728,1793471099.6092577
+AT0178,unknown_executable,28,attack,18718,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471099.6094306,1793471099.8155215
+AT0178,unknown_executable,28,attack,18721,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471099.6094306,1793471099.8155215
+AT0179,unknown_executable,29,attack,18724,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471099.8157086,1793471100.022463
+AT0179,unknown_executable,29,attack,18727,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471099.8157086,1793471100.022463
+AT0180,unknown_executable,30,attack,18730,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471100.0228534,1793471100.227824
+AT0180,unknown_executable,30,attack,18733,1000,python3,/tmp/kernelguard_unknown_exec,HIGH,Execution from high-risk path,ALERT,1793471100.0228534,1793471100.227824
+AT0181,benign_to_sudo,1,attack,18739,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471100.228139,1793471100.450703
+AT0181,benign_to_sudo,1,attack,18740,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471100.228139,1793471100.450703
+AT0181,benign_to_sudo,1,attack,18741,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471100.228139,1793471100.450703
+AT0181,benign_to_sudo,1,attack,18742,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471100.228139,1793471100.450703
+AT0182,benign_to_sudo,2,attack,18753,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471100.4510188,1793471100.664986
+AT0182,benign_to_sudo,2,attack,18755,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471100.4510188,1793471100.664986
+AT0182,benign_to_sudo,2,attack,18756,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471100.4510188,1793471100.664986
+AT0182,benign_to_sudo,2,attack,18757,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471100.4510188,1793471100.664986
+AT0183,benign_to_sudo,3,attack,18768,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471100.6652074,1793471100.8836827
+AT0183,benign_to_sudo,3,attack,18770,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471100.6652074,1793471100.8836827
+AT0183,benign_to_sudo,3,attack,18771,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471100.6652074,1793471100.8836827
+AT0183,benign_to_sudo,3,attack,18772,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471100.6652074,1793471100.8836827
+AT0184,benign_to_sudo,4,attack,18784,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471100.8840504,1793471101.1174235
+AT0184,benign_to_sudo,4,attack,18785,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471100.8840504,1793471101.1174235
+AT0184,benign_to_sudo,4,attack,18786,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471100.8840504,1793471101.1174235
+AT0184,benign_to_sudo,4,attack,18787,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471100.8840504,1793471101.1174235
+AT0185,benign_to_sudo,5,attack,18799,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471101.1176896,1793471101.3346865
+AT0185,benign_to_sudo,5,attack,18800,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471101.1176896,1793471101.3346865
+AT0185,benign_to_sudo,5,attack,18801,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471101.1176896,1793471101.3346865
+AT0185,benign_to_sudo,5,attack,18802,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471101.1176896,1793471101.3346865
+AT0186,benign_to_sudo,6,attack,18813,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471101.3350303,1793471101.5490434
+AT0186,benign_to_sudo,6,attack,18815,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471101.3350303,1793471101.5490434
+AT0186,benign_to_sudo,6,attack,18816,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471101.3350303,1793471101.5490434
+AT0186,benign_to_sudo,6,attack,18817,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471101.3350303,1793471101.5490434
+AT0187,benign_to_sudo,7,attack,18829,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471101.5494037,1793471101.785499
+AT0187,benign_to_sudo,7,attack,18830,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471101.5494037,1793471101.785499
+AT0187,benign_to_sudo,7,attack,18831,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471101.5494037,1793471101.785499
+AT0187,benign_to_sudo,7,attack,18834,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471101.5494037,1793471101.785499
+AT0188,benign_to_sudo,8,attack,18843,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471101.7857287,1793471102.0045073
+AT0188,benign_to_sudo,8,attack,18845,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471101.7857287,1793471102.0045073
+AT0188,benign_to_sudo,8,attack,18846,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471101.7857287,1793471102.0045073
+AT0188,benign_to_sudo,8,attack,18847,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471101.7857287,1793471102.0045073
+AT0189,benign_to_sudo,9,attack,18859,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471102.0047655,1793471102.2239034
+AT0189,benign_to_sudo,9,attack,18860,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471102.0047655,1793471102.2239034
+AT0189,benign_to_sudo,9,attack,18861,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471102.0047655,1793471102.2239034
+AT0189,benign_to_sudo,9,attack,18862,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471102.0047655,1793471102.2239034
+AT0190,benign_to_sudo,10,attack,18874,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471102.2240808,1793471102.4454198
+AT0190,benign_to_sudo,10,attack,18875,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471102.2240808,1793471102.4454198
+AT0190,benign_to_sudo,10,attack,18876,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471102.2240808,1793471102.4454198
+AT0190,benign_to_sudo,10,attack,18877,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471102.2240808,1793471102.4454198
+AT0191,benign_to_sudo,11,attack,18889,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471102.4456089,1793471102.6648097
+AT0191,benign_to_sudo,11,attack,18890,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471102.4456089,1793471102.6648097
+AT0191,benign_to_sudo,11,attack,18891,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471102.4456089,1793471102.6648097
+AT0191,benign_to_sudo,11,attack,18892,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471102.4456089,1793471102.6648097
+AT0192,benign_to_sudo,12,attack,18903,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471102.6651459,1793471102.8992226
+AT0192,benign_to_sudo,12,attack,18905,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471102.6651459,1793471102.8992226
+AT0192,benign_to_sudo,12,attack,18906,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471102.6651459,1793471102.8992226
+AT0192,benign_to_sudo,12,attack,18909,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471102.6651459,1793471102.8992226
+AT0193,benign_to_sudo,13,attack,18918,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471102.89942,1793471103.1252825
+AT0193,benign_to_sudo,13,attack,18920,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471102.89942,1793471103.1252825
+AT0193,benign_to_sudo,13,attack,18921,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471102.89942,1793471103.1252825
+AT0193,benign_to_sudo,13,attack,18922,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471102.89942,1793471103.1252825
+AT0194,benign_to_sudo,14,attack,18934,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471103.1255186,1793471103.3449414
+AT0194,benign_to_sudo,14,attack,18935,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471103.1255186,1793471103.3449414
+AT0194,benign_to_sudo,14,attack,18936,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471103.1255186,1793471103.3449414
+AT0194,benign_to_sudo,14,attack,18937,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471103.1255186,1793471103.3449414
+AT0195,benign_to_sudo,15,attack,18948,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471103.3451335,1793471103.5651293
+AT0195,benign_to_sudo,15,attack,18950,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471103.3451335,1793471103.5651293
+AT0195,benign_to_sudo,15,attack,18951,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471103.3451335,1793471103.5651293
+AT0195,benign_to_sudo,15,attack,18952,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471103.3451335,1793471103.5651293
+AT0196,benign_to_sudo,16,attack,18964,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471103.5653057,1793471103.786001
+AT0196,benign_to_sudo,16,attack,18965,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471103.5653057,1793471103.786001
+AT0196,benign_to_sudo,16,attack,18966,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471103.5653057,1793471103.786001
+AT0196,benign_to_sudo,16,attack,18967,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471103.5653057,1793471103.786001
+AT0197,benign_to_sudo,17,attack,18979,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471103.7861726,1793471104.0202937
+AT0197,benign_to_sudo,17,attack,18980,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471103.7861726,1793471104.0202937
+AT0197,benign_to_sudo,17,attack,18981,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471103.7861726,1793471104.0202937
+AT0197,benign_to_sudo,17,attack,18984,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471103.7861726,1793471104.0202937
+AT0198,benign_to_sudo,18,attack,18994,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471104.0204997,1793471104.2563174
+AT0198,benign_to_sudo,18,attack,18995,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471104.0204997,1793471104.2563174
+AT0198,benign_to_sudo,18,attack,18996,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471104.0204997,1793471104.2563174
+AT0198,benign_to_sudo,18,attack,18999,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471104.0204997,1793471104.2563174
+AT0199,benign_to_sudo,19,attack,19009,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471104.2565172,1793471104.4856997
+AT0199,benign_to_sudo,19,attack,19010,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471104.2565172,1793471104.4856997
+AT0199,benign_to_sudo,19,attack,19011,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471104.2565172,1793471104.4856997
+AT0199,benign_to_sudo,19,attack,19013,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471104.2565172,1793471104.4856997
+AT0200,benign_to_sudo,20,attack,19024,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471104.486043,1793471104.7243598
+AT0200,benign_to_sudo,20,attack,19025,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471104.486043,1793471104.7243598
+AT0200,benign_to_sudo,20,attack,19026,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471104.486043,1793471104.7243598
+AT0200,benign_to_sudo,20,attack,19029,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471104.486043,1793471104.7243598
+AT0201,benign_to_sudo,21,attack,19039,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471104.72461,1793471104.9411397
+AT0201,benign_to_sudo,21,attack,19040,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471104.72461,1793471104.9411397
+AT0201,benign_to_sudo,21,attack,19041,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471104.72461,1793471104.9411397
+AT0201,benign_to_sudo,21,attack,19042,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471104.72461,1793471104.9411397
+AT0202,benign_to_sudo,22,attack,19055,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471104.9413075,1793471105.1718752
+AT0202,benign_to_sudo,22,attack,19056,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471104.9413075,1793471105.1718752
+AT0202,benign_to_sudo,22,attack,19058,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471104.9413075,1793471105.1718752
+AT0202,benign_to_sudo,22,attack,19060,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471104.9413075,1793471105.1718752
+AT0203,benign_to_sudo,23,attack,19069,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471105.1720605,1793471105.3887985
+AT0203,benign_to_sudo,23,attack,19071,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471105.1720605,1793471105.3887985
+AT0203,benign_to_sudo,23,attack,19072,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471105.1720605,1793471105.3887985
+AT0203,benign_to_sudo,23,attack,19073,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471105.1720605,1793471105.3887985
+AT0204,benign_to_sudo,24,attack,19085,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471105.3889792,1793471105.6103096
+AT0204,benign_to_sudo,24,attack,19086,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471105.3889792,1793471105.6103096
+AT0204,benign_to_sudo,24,attack,19087,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471105.3889792,1793471105.6103096
+AT0204,benign_to_sudo,24,attack,19088,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471105.3889792,1793471105.6103096
+AT0205,benign_to_sudo,25,attack,19100,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471105.6104662,1793471105.8312306
+AT0205,benign_to_sudo,25,attack,19101,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471105.6104662,1793471105.8312306
+AT0205,benign_to_sudo,25,attack,19102,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471105.6104662,1793471105.8312306
+AT0205,benign_to_sudo,25,attack,19103,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471105.6104662,1793471105.8312306
+AT0206,benign_to_sudo,26,attack,19115,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471105.8314183,1793471106.0551353
+AT0206,benign_to_sudo,26,attack,19116,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471105.8314183,1793471106.0551353
+AT0206,benign_to_sudo,26,attack,19117,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471105.8314183,1793471106.0551353
+AT0206,benign_to_sudo,26,attack,19118,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471105.8314183,1793471106.0551353
+AT0207,benign_to_sudo,27,attack,19129,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471106.0553114,1793471106.2862394
+AT0207,benign_to_sudo,27,attack,19131,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471106.0553114,1793471106.2862394
+AT0207,benign_to_sudo,27,attack,19132,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471106.0553114,1793471106.2862394
+AT0207,benign_to_sudo,27,attack,19133,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471106.0553114,1793471106.2862394
+AT0208,benign_to_sudo,28,attack,19145,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471106.2864373,1793471106.5006847
+AT0208,benign_to_sudo,28,attack,19146,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471106.2864373,1793471106.5006847
+AT0208,benign_to_sudo,28,attack,19147,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471106.2864373,1793471106.5006847
+AT0208,benign_to_sudo,28,attack,19148,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471106.2864373,1793471106.5006847
+AT0209,benign_to_sudo,29,attack,19160,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471106.5010014,1793471106.7171454
+AT0209,benign_to_sudo,29,attack,19161,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471106.5010014,1793471106.7171454
+AT0209,benign_to_sudo,29,attack,19162,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471106.5010014,1793471106.7171454
+AT0209,benign_to_sudo,29,attack,19163,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471106.5010014,1793471106.7171454
+AT0210,benign_to_sudo,30,attack,19175,1000,python3,/bin/ls,LOW,Known standard system command,ALLOW,1793471106.717389,1793471106.93631
+AT0210,benign_to_sudo,30,attack,19176,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471106.717389,1793471106.93631
+AT0210,benign_to_sudo,30,attack,19177,1000,python3,/usr/bin/grep,REVIEW,No matching policy rule,REVIEW,1793471106.717389,1793471106.93631
+AT0210,benign_to_sudo,30,attack,19178,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471106.717389,1793471106.93631
+AT0211,benign_to_shell,1,attack,19187,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471106.9365458,1793471107.143953
+AT0211,benign_to_shell,1,attack,19190,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471106.9365458,1793471107.143953
+AT0211,benign_to_shell,1,attack,19191,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471106.9365458,1793471107.143953
+AT0211,benign_to_shell,1,attack,19192,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471106.9365458,1793471107.143953
+AT0212,benign_to_shell,2,attack,19199,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471107.144216,1793471107.3539183
+AT0212,benign_to_shell,2,attack,19202,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471107.144216,1793471107.3539183
+AT0212,benign_to_shell,2,attack,19203,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471107.144216,1793471107.3539183
+AT0212,benign_to_shell,2,attack,19204,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471107.144216,1793471107.3539183
+AT0213,benign_to_shell,3,attack,19211,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471107.3542051,1793471107.5807207
+AT0213,benign_to_shell,3,attack,19214,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471107.3542051,1793471107.5807207
+AT0213,benign_to_shell,3,attack,19215,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471107.3542051,1793471107.5807207
+AT0213,benign_to_shell,3,attack,19216,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471107.3542051,1793471107.5807207
+AT0214,benign_to_shell,4,attack,19223,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471107.581156,1793471107.7896345
+AT0214,benign_to_shell,4,attack,19226,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471107.581156,1793471107.7896345
+AT0214,benign_to_shell,4,attack,19227,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471107.581156,1793471107.7896345
+AT0214,benign_to_shell,4,attack,19228,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471107.581156,1793471107.7896345
+AT0215,benign_to_shell,5,attack,19235,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471107.790089,1793471108.0040154
+AT0215,benign_to_shell,5,attack,19238,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471107.790089,1793471108.0040154
+AT0215,benign_to_shell,5,attack,19239,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471107.790089,1793471108.0040154
+AT0215,benign_to_shell,5,attack,19240,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471107.790089,1793471108.0040154
+AT0216,benign_to_shell,6,attack,19247,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471108.004295,1793471108.216986
+AT0216,benign_to_shell,6,attack,19250,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471108.004295,1793471108.216986
+AT0216,benign_to_shell,6,attack,19251,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471108.004295,1793471108.216986
+AT0216,benign_to_shell,6,attack,19252,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471108.004295,1793471108.216986
+AT0217,benign_to_shell,7,attack,19259,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471108.2172136,1793471108.4304733
+AT0217,benign_to_shell,7,attack,19262,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471108.2172136,1793471108.4304733
+AT0217,benign_to_shell,7,attack,19263,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471108.2172136,1793471108.4304733
+AT0217,benign_to_shell,7,attack,19264,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471108.2172136,1793471108.4304733
+AT0218,benign_to_shell,8,attack,19271,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471108.4306567,1793471108.6416159
+AT0218,benign_to_shell,8,attack,19274,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471108.4306567,1793471108.6416159
+AT0218,benign_to_shell,8,attack,19275,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471108.4306567,1793471108.6416159
+AT0218,benign_to_shell,8,attack,19276,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471108.4306567,1793471108.6416159
+AT0219,benign_to_shell,9,attack,19283,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471108.641793,1793471108.852926
+AT0219,benign_to_shell,9,attack,19286,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471108.641793,1793471108.852926
+AT0219,benign_to_shell,9,attack,19287,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471108.641793,1793471108.852926
+AT0219,benign_to_shell,9,attack,19288,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471108.641793,1793471108.852926
+AT0220,benign_to_shell,10,attack,19295,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471108.8531034,1793471109.0643332
+AT0220,benign_to_shell,10,attack,19298,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471108.8531034,1793471109.0643332
+AT0220,benign_to_shell,10,attack,19299,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471108.8531034,1793471109.0643332
+AT0220,benign_to_shell,10,attack,19300,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471108.8531034,1793471109.0643332
+AT0221,benign_to_shell,11,attack,19307,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471109.0645394,1793471109.2781582
+AT0221,benign_to_shell,11,attack,19310,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471109.0645394,1793471109.2781582
+AT0221,benign_to_shell,11,attack,19311,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471109.0645394,1793471109.2781582
+AT0221,benign_to_shell,11,attack,19312,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471109.0645394,1793471109.2781582
+AT0222,benign_to_shell,12,attack,19319,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471109.2783327,1793471109.4905763
+AT0222,benign_to_shell,12,attack,19322,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471109.2783327,1793471109.4905763
+AT0222,benign_to_shell,12,attack,19323,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471109.2783327,1793471109.4905763
+AT0222,benign_to_shell,12,attack,19324,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471109.2783327,1793471109.4905763
+AT0223,benign_to_shell,13,attack,19331,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471109.4907787,1793471109.7030544
+AT0223,benign_to_shell,13,attack,19334,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471109.4907787,1793471109.7030544
+AT0223,benign_to_shell,13,attack,19335,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471109.4907787,1793471109.7030544
+AT0223,benign_to_shell,13,attack,19336,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471109.4907787,1793471109.7030544
+AT0224,benign_to_shell,14,attack,19343,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471109.703289,1793471109.9151719
+AT0224,benign_to_shell,14,attack,19346,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471109.703289,1793471109.9151719
+AT0224,benign_to_shell,14,attack,19347,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471109.703289,1793471109.9151719
+AT0224,benign_to_shell,14,attack,19348,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471109.703289,1793471109.9151719
+AT0225,benign_to_shell,15,attack,19355,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471109.9153872,1793471110.1275203
+AT0225,benign_to_shell,15,attack,19358,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471109.9153872,1793471110.1275203
+AT0225,benign_to_shell,15,attack,19359,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471109.9153872,1793471110.1275203
+AT0225,benign_to_shell,15,attack,19360,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471109.9153872,1793471110.1275203
+AT0226,benign_to_shell,16,attack,19367,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471110.1277194,1793471110.3387172
+AT0226,benign_to_shell,16,attack,19370,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471110.1277194,1793471110.3387172
+AT0226,benign_to_shell,16,attack,19371,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471110.1277194,1793471110.3387172
+AT0226,benign_to_shell,16,attack,19372,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471110.1277194,1793471110.3387172
+AT0227,benign_to_shell,17,attack,19379,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471110.338906,1793471110.5494387
+AT0227,benign_to_shell,17,attack,19382,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471110.338906,1793471110.5494387
+AT0227,benign_to_shell,17,attack,19383,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471110.338906,1793471110.5494387
+AT0227,benign_to_shell,17,attack,19384,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471110.338906,1793471110.5494387
+AT0228,benign_to_shell,18,attack,19391,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471110.5496159,1793471110.7608292
+AT0228,benign_to_shell,18,attack,19394,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471110.5496159,1793471110.7608292
+AT0228,benign_to_shell,18,attack,19395,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471110.5496159,1793471110.7608292
+AT0228,benign_to_shell,18,attack,19396,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471110.5496159,1793471110.7608292
+AT0229,benign_to_shell,19,attack,19403,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471110.7611837,1793471110.9740741
+AT0229,benign_to_shell,19,attack,19406,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471110.7611837,1793471110.9740741
+AT0229,benign_to_shell,19,attack,19407,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471110.7611837,1793471110.9740741
+AT0229,benign_to_shell,19,attack,19408,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471110.7611837,1793471110.9740741
+AT0230,benign_to_shell,20,attack,19415,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471110.9743102,1793471111.1865182
+AT0230,benign_to_shell,20,attack,19418,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471110.9743102,1793471111.1865182
+AT0230,benign_to_shell,20,attack,19419,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471110.9743102,1793471111.1865182
+AT0230,benign_to_shell,20,attack,19420,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471110.9743102,1793471111.1865182
+AT0231,benign_to_shell,21,attack,19427,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471111.1866817,1793471111.3993208
+AT0231,benign_to_shell,21,attack,19430,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471111.1866817,1793471111.3993208
+AT0231,benign_to_shell,21,attack,19431,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471111.1866817,1793471111.3993208
+AT0231,benign_to_shell,21,attack,19432,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471111.1866817,1793471111.3993208
+AT0232,benign_to_shell,22,attack,19439,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471111.3995025,1793471111.610638
+AT0232,benign_to_shell,22,attack,19442,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471111.3995025,1793471111.610638
+AT0232,benign_to_shell,22,attack,19443,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471111.3995025,1793471111.610638
+AT0232,benign_to_shell,22,attack,19444,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471111.3995025,1793471111.610638
+AT0233,benign_to_shell,23,attack,19451,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471111.610817,1793471111.8219004
+AT0233,benign_to_shell,23,attack,19454,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471111.610817,1793471111.8219004
+AT0233,benign_to_shell,23,attack,19455,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471111.610817,1793471111.8219004
+AT0233,benign_to_shell,23,attack,19456,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471111.610817,1793471111.8219004
+AT0234,benign_to_shell,24,attack,19463,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471111.8220904,1793471112.0332599
+AT0234,benign_to_shell,24,attack,19466,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471111.8220904,1793471112.0332599
+AT0234,benign_to_shell,24,attack,19467,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471111.8220904,1793471112.0332599
+AT0234,benign_to_shell,24,attack,19468,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471111.8220904,1793471112.0332599
+AT0235,benign_to_shell,25,attack,19475,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471112.0334592,1793471112.26066
+AT0235,benign_to_shell,25,attack,19478,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471112.0334592,1793471112.26066
+AT0235,benign_to_shell,25,attack,19479,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471112.0334592,1793471112.26066
+AT0235,benign_to_shell,25,attack,19481,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471112.0334592,1793471112.26066
+AT0236,benign_to_shell,26,attack,19487,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471112.2609787,1793471112.4738958
+AT0236,benign_to_shell,26,attack,19490,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471112.2609787,1793471112.4738958
+AT0236,benign_to_shell,26,attack,19491,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471112.2609787,1793471112.4738958
+AT0236,benign_to_shell,26,attack,19492,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471112.2609787,1793471112.4738958
+AT0237,benign_to_shell,27,attack,19499,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471112.4740841,1793471112.687553
+AT0237,benign_to_shell,27,attack,19502,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471112.4740841,1793471112.687553
+AT0237,benign_to_shell,27,attack,19503,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471112.4740841,1793471112.687553
+AT0237,benign_to_shell,27,attack,19504,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471112.4740841,1793471112.687553
+AT0238,benign_to_shell,28,attack,19511,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471112.6877253,1793471112.9006352
+AT0238,benign_to_shell,28,attack,19514,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471112.6877253,1793471112.9006352
+AT0238,benign_to_shell,28,attack,19515,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471112.6877253,1793471112.9006352
+AT0238,benign_to_shell,28,attack,19516,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471112.6877253,1793471112.9006352
+AT0239,benign_to_shell,29,attack,19523,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471112.9008956,1793471113.1181693
+AT0239,benign_to_shell,29,attack,19526,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471112.9008956,1793471113.1181693
+AT0239,benign_to_shell,29,attack,19527,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471112.9008956,1793471113.1181693
+AT0239,benign_to_shell,29,attack,19528,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471112.9008956,1793471113.1181693
+AT0240,benign_to_shell,30,attack,19535,1000,python3,/usr/bin/id,REVIEW,No matching policy rule,REVIEW,1793471113.1184227,1793471113.348061
+AT0240,benign_to_shell,30,attack,19538,1000,python3,/usr/bin/date,LOW,Known standard system command,ALLOW,1793471113.1184227,1793471113.348061
+AT0240,benign_to_shell,30,attack,19539,1000,python3,/bin/cat,REVIEW,No matching policy rule,REVIEW,1793471113.1184227,1793471113.348061
+AT0240,benign_to_shell,30,attack,19540,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471113.1184227,1793471113.348061
+AT0241,repeated_sudo,1,attack,19547,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471113.3482528,1793471113.575444
+AT0241,repeated_sudo,1,attack,19550,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471113.3482528,1793471113.575444
+AT0241,repeated_sudo,1,attack,19551,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471113.3482528,1793471113.575444
+AT0242,repeated_sudo,2,attack,19556,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471113.5756075,1793471113.7984858
+AT0242,repeated_sudo,2,attack,19559,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471113.5756075,1793471113.7984858
+AT0242,repeated_sudo,2,attack,19560,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471113.5756075,1793471113.7984858
+AT0243,repeated_sudo,3,attack,19565,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471113.7986643,1793471114.0169907
+AT0243,repeated_sudo,3,attack,19568,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471113.7986643,1793471114.0169907
+AT0243,repeated_sudo,3,attack,19569,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471113.7986643,1793471114.0169907
+AT0244,repeated_sudo,4,attack,19574,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.017175,1793471114.2443273
+AT0244,repeated_sudo,4,attack,19577,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.017175,1793471114.2443273
+AT0244,repeated_sudo,4,attack,19578,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.017175,1793471114.2443273
+AT0245,repeated_sudo,5,attack,19583,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.2445407,1793471114.4694786
+AT0245,repeated_sudo,5,attack,19586,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.2445407,1793471114.4694786
+AT0245,repeated_sudo,5,attack,19587,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.2445407,1793471114.4694786
+AT0246,repeated_sudo,6,attack,19592,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.4696565,1793471114.7058816
+AT0246,repeated_sudo,6,attack,19595,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.4696565,1793471114.7058816
+AT0246,repeated_sudo,6,attack,19598,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.4696565,1793471114.7058816
+AT0247,repeated_sudo,7,attack,19601,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.7060523,1793471114.9319267
+AT0247,repeated_sudo,7,attack,19604,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.7060523,1793471114.9319267
+AT0247,repeated_sudo,7,attack,19605,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.7060523,1793471114.9319267
+AT0248,repeated_sudo,8,attack,19610,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.9321034,1793471115.1667006
+AT0248,repeated_sudo,8,attack,19613,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.9321034,1793471115.1667006
+AT0248,repeated_sudo,8,attack,19616,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471114.9321034,1793471115.1667006
+AT0249,repeated_sudo,9,attack,19619,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.167013,1793471115.4024286
+AT0249,repeated_sudo,9,attack,19622,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.167013,1793471115.4024286
+AT0249,repeated_sudo,9,attack,19623,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.167013,1793471115.4024286
+AT0250,repeated_sudo,10,attack,19628,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.4026053,1793471115.6423762
+AT0250,repeated_sudo,10,attack,19631,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.4026053,1793471115.6423762
+AT0250,repeated_sudo,10,attack,19634,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.4026053,1793471115.6423762
+AT0251,repeated_sudo,11,attack,19637,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.64256,1793471115.8651865
+AT0251,repeated_sudo,11,attack,19640,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.64256,1793471115.8651865
+AT0251,repeated_sudo,11,attack,19641,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.64256,1793471115.8651865
+AT0252,repeated_sudo,12,attack,19646,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.8654234,1793471116.0945008
+AT0252,repeated_sudo,12,attack,19649,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.8654234,1793471116.0945008
+AT0252,repeated_sudo,12,attack,19650,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471115.8654234,1793471116.0945008
+AT0253,repeated_sudo,13,attack,19655,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.0946906,1793471116.3155725
+AT0253,repeated_sudo,13,attack,19658,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.0946906,1793471116.3155725
+AT0253,repeated_sudo,13,attack,19659,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.0946906,1793471116.3155725
+AT0254,repeated_sudo,14,attack,19664,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.3157616,1793471116.557613
+AT0254,repeated_sudo,14,attack,19667,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.3157616,1793471116.557613
+AT0254,repeated_sudo,14,attack,19670,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.3157616,1793471116.557613
+AT0255,repeated_sudo,15,attack,19673,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.5577903,1793471116.7832246
+AT0255,repeated_sudo,15,attack,19676,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.5577903,1793471116.7832246
+AT0255,repeated_sudo,15,attack,19677,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.5577903,1793471116.7832246
+AT0256,repeated_sudo,16,attack,19682,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.7834187,1793471117.0072155
+AT0256,repeated_sudo,16,attack,19685,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.7834187,1793471117.0072155
+AT0256,repeated_sudo,16,attack,19686,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471116.7834187,1793471117.0072155
+AT0257,repeated_sudo,17,attack,19691,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.0073876,1793471117.2249281
+AT0257,repeated_sudo,17,attack,19694,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.0073876,1793471117.2249281
+AT0257,repeated_sudo,17,attack,19695,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.0073876,1793471117.2249281
+AT0258,repeated_sudo,18,attack,19700,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.2251437,1793471117.4610317
+AT0258,repeated_sudo,18,attack,19703,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.2251437,1793471117.4610317
+AT0258,repeated_sudo,18,attack,19704,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.2251437,1793471117.4610317
+AT0259,repeated_sudo,19,attack,19709,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.4612434,1793471117.6859977
+AT0259,repeated_sudo,19,attack,19712,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.4612434,1793471117.6859977
+AT0259,repeated_sudo,19,attack,19713,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.4612434,1793471117.6859977
+AT0260,repeated_sudo,20,attack,19718,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.6861668,1793471117.9069338
+AT0260,repeated_sudo,20,attack,19721,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.6861668,1793471117.9069338
+AT0260,repeated_sudo,20,attack,19722,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.6861668,1793471117.9069338
+AT0261,repeated_sudo,21,attack,19727,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.9071097,1793471118.132311
+AT0261,repeated_sudo,21,attack,19730,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.9071097,1793471118.132311
+AT0261,repeated_sudo,21,attack,19731,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471117.9071097,1793471118.132311
+AT0262,repeated_sudo,22,attack,19736,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.1325126,1793471118.3651223
+AT0262,repeated_sudo,22,attack,19739,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.1325126,1793471118.3651223
+AT0262,repeated_sudo,22,attack,19742,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.1325126,1793471118.3651223
+AT0263,repeated_sudo,23,attack,19745,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.365303,1793471118.5916927
+AT0263,repeated_sudo,23,attack,19748,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.365303,1793471118.5916927
+AT0263,repeated_sudo,23,attack,19749,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.365303,1793471118.5916927
+AT0264,repeated_sudo,24,attack,19754,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.5920062,1793471118.8184695
+AT0264,repeated_sudo,24,attack,19757,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.5920062,1793471118.8184695
+AT0264,repeated_sudo,24,attack,19758,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.5920062,1793471118.8184695
+AT0265,repeated_sudo,25,attack,19763,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.8186636,1793471119.0435207
+AT0265,repeated_sudo,25,attack,19766,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.8186636,1793471119.0435207
+AT0265,repeated_sudo,25,attack,19767,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471118.8186636,1793471119.0435207
+AT0266,repeated_sudo,26,attack,19772,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.0436904,1793471119.2770662
+AT0266,repeated_sudo,26,attack,19775,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.0436904,1793471119.2770662
+AT0266,repeated_sudo,26,attack,19776,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.0436904,1793471119.2770662
+AT0267,repeated_sudo,27,attack,19781,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.2772615,1793471119.5024445
+AT0267,repeated_sudo,27,attack,19784,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.2772615,1793471119.5024445
+AT0267,repeated_sudo,27,attack,19785,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.2772615,1793471119.5024445
+AT0268,repeated_sudo,28,attack,19790,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.502625,1793471119.7309735
+AT0268,repeated_sudo,28,attack,19793,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.502625,1793471119.7309735
+AT0268,repeated_sudo,28,attack,19794,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.502625,1793471119.7309735
+AT0269,repeated_sudo,29,attack,19799,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.7311635,1793471119.9571815
+AT0269,repeated_sudo,29,attack,19802,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.7311635,1793471119.9571815
+AT0269,repeated_sudo,29,attack,19803,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.7311635,1793471119.9571815
+AT0270,repeated_sudo,30,attack,19808,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.9573405,1793471120.172095
+AT0270,repeated_sudo,30,attack,19811,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.9573405,1793471120.172095
+AT0270,repeated_sudo,30,attack,19812,1000,python3,/usr/bin/sudo,MEDIUM,Sensitive command detected,WARNING,1793471119.9573405,1793471120.172095
+AT0271,repeated_shell,1,attack,19817,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471120.1722825,1793471120.3965154
+AT0271,repeated_shell,1,attack,19821,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471120.1722825,1793471120.3965154
+AT0272,repeated_shell,2,attack,19824,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471120.3967233,1793471120.6075149
+AT0272,repeated_shell,2,attack,19828,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471120.3967233,1793471120.6075149
+AT0273,repeated_shell,3,attack,19831,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471120.6076872,1793471120.8320198
+AT0273,repeated_shell,3,attack,19835,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471120.6076872,1793471120.8320198
+AT0274,repeated_shell,4,attack,19838,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471120.832201,1793471121.0404437
+AT0274,repeated_shell,4,attack,19842,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471120.832201,1793471121.0404437
+AT0275,repeated_shell,5,attack,19845,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.0406353,1793471121.26772
+AT0275,repeated_shell,5,attack,19849,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.0406353,1793471121.26772
+AT0276,repeated_shell,6,attack,19852,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.2679834,1793471121.477363
+AT0276,repeated_shell,6,attack,19856,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.2679834,1793471121.477363
+AT0277,repeated_shell,7,attack,19859,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.4775496,1793471121.6843853
+AT0277,repeated_shell,7,attack,19863,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.4775496,1793471121.6843853
+AT0278,repeated_shell,8,attack,19866,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.6845987,1793471121.908891
+AT0278,repeated_shell,8,attack,19870,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.6845987,1793471121.908891
+AT0279,repeated_shell,9,attack,19873,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.9091797,1793471122.1310403
+AT0279,repeated_shell,9,attack,19877,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471121.9091797,1793471122.1310403
+AT0280,repeated_shell,10,attack,19880,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.1312962,1793471122.3620532
+AT0280,repeated_shell,10,attack,19884,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.1312962,1793471122.3620532
+AT0281,repeated_shell,11,attack,19887,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.362337,1793471122.5708792
+AT0281,repeated_shell,11,attack,19891,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.362337,1793471122.5708792
+AT0282,repeated_shell,12,attack,19894,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.5711005,1793471122.7837913
+AT0282,repeated_shell,12,attack,19898,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.5711005,1793471122.7837913
+AT0283,repeated_shell,13,attack,19901,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.7841122,1793471122.993288
+AT0283,repeated_shell,13,attack,19905,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.7841122,1793471122.993288
+AT0284,repeated_shell,14,attack,19908,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.993686,1793471123.2039638
+AT0284,repeated_shell,14,attack,19912,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471122.993686,1793471123.2039638
+AT0285,repeated_shell,15,attack,19915,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471123.2041998,1793471123.4289474
+AT0285,repeated_shell,15,attack,19919,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471123.2041998,1793471123.4289474
+AT0286,repeated_shell,16,attack,19922,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471123.4291172,1793471123.6398582
+AT0286,repeated_shell,16,attack,19926,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471123.4291172,1793471123.6398582
+AT0287,repeated_shell,17,attack,19929,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471123.640058,1793471123.8486686
+AT0287,repeated_shell,17,attack,19933,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471123.640058,1793471123.8486686
+AT0288,repeated_shell,18,attack,19936,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471123.8490458,1793471124.057715
+AT0288,repeated_shell,18,attack,19940,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471123.8490458,1793471124.057715
+AT0289,repeated_shell,19,attack,19943,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.058071,1793471124.2717779
+AT0289,repeated_shell,19,attack,19947,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.058071,1793471124.2717779
+AT0290,repeated_shell,20,attack,19950,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.2720737,1793471124.4925478
+AT0290,repeated_shell,20,attack,19954,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.2720737,1793471124.4925478
+AT0291,repeated_shell,21,attack,19957,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.4927204,1793471124.7034469
+AT0291,repeated_shell,21,attack,19961,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.4927204,1793471124.7034469
+AT0292,repeated_shell,22,attack,19964,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.7036269,1793471124.9129698
+AT0292,repeated_shell,22,attack,19968,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.7036269,1793471124.9129698
+AT0293,repeated_shell,23,attack,19971,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.913151,1793471125.123411
+AT0293,repeated_shell,23,attack,19975,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471124.913151,1793471125.123411
+AT0294,repeated_shell,24,attack,19978,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.1235933,1793471125.3318226
+AT0294,repeated_shell,24,attack,19982,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.1235933,1793471125.3318226
+AT0295,repeated_shell,25,attack,19985,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.3321292,1793471125.5424123
+AT0295,repeated_shell,25,attack,19989,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.3321292,1793471125.5424123
+AT0296,repeated_shell,26,attack,19992,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.5425773,1793471125.7509189
+AT0296,repeated_shell,26,attack,19996,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.5425773,1793471125.7509189
+AT0297,repeated_shell,27,attack,19999,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.7510915,1793471125.975372
+AT0297,repeated_shell,27,attack,20003,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.7510915,1793471125.975372
+AT0298,repeated_shell,28,attack,20006,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.9755864,1793471126.1920493
+AT0298,repeated_shell,28,attack,20010,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471125.9755864,1793471126.1920493
+AT0299,repeated_shell,29,attack,20013,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471126.1922445,1793471126.4006681
+AT0299,repeated_shell,29,attack,20017,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471126.1922445,1793471126.4006681
+AT0300,repeated_shell,30,attack,20020,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471126.4008412,1793471126.6263585
+AT0300,repeated_shell,30,attack,20024,1000,python3,/bin/bash,MEDIUM,Sensitive command detected,WARNING,1793471126.4008412,1793471126.6263585

@@ -1,0 +1,16 @@
+sudo env LD_LIBRARY_PATH=/home/deepak/.local/lib64 ./kernelguard_reader
+
+
+ls 
+sudo ls
+/tmp/kg_test "KernelGuard test"
+
+
+
+
+
+
+
+
+
+AQ.Ab8RN6LsJ8JXdCyNwdl2YrOIgV5IQ6a6Yrz-_8i5tPP9TIv1_Q

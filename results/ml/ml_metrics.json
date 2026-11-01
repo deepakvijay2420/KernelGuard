@@ -1,0 +1,18 @@
+{
+  "model": "IsolationForest",
+  "version": "KG-ML-v2",
+  "training_events": 84,
+  "training_windows": "benign",
+  "evaluation_events": 99,
+  "evaluation_windows": 92,
+  "threshold": -2.190088388420719e-17,
+  "accuracy": 0.34782608695652173,
+  "precision": 0.5714285714285714,
+  "recall": 0.3076923076923077,
+  "f1": 0.4,
+  "false_positive_rate": 0.5555555555555556,
+  "tn": 12,
+  "fp": 15,
+  "fn": 45,
+  "tp": 20
+}

@@ -1,0 +1,39 @@
+KernelGuard Behavioral ML Experiment
+=====================================
+
+Total raw events : 2781
+Total run samples: 1100
+Total features   : 72
+
+Training samples : 810
+Testing samples  : 290
+
+Models compared:
+
+Logistic Regression
+  Accuracy : 1.0000
+  Precision: 1.0000
+  Recall   : 1.0000
+  F1       : 1.0000
+  FPR      : 0.0000
+  Avg inference ms: 0.001187
+
+Random Forest
+  Accuracy : 1.0000
+  Precision: 1.0000
+  Recall   : 1.0000
+  F1       : 1.0000
+  FPR      : 0.0000
+  Avg inference ms: 0.276802
+
+Gradient Boosting
+  Accuracy : 1.0000
+  Precision: 1.0000
+  Recall   : 1.0000
+  F1       : 1.0000
+  FPR      : 0.0000
+  Avg inference ms: 0.010534
+
+
+Candidate selected using F1/Recall/FPR:
+Logistic Regression

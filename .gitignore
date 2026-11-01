@@ -1,0 +1,61 @@
+# ============================================================
+# KernelGuard Git Ignore
+# ============================================================
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.secret
+
+# Compiled binaries / libraries
+*.o
+*.a
+*.so
+*.out
+*.bin
+
+# Runtime logs
+*.log
+logs/
+
+# ML generated models / artifacts
+*.joblib
+*.pkl
+*.pickle
+
+# Temporary files
+tmp/
+*.tmp
+*.swp
+*~
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Python build
+build/
+dist/
+*.egg-info/
+
+# Local backups
+*.backup*
+*.bak

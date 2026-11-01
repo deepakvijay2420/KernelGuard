@@ -1,0 +1,24 @@
+agents:
+  research_agent_01:
+    allowed:
+      - /usr/bin/ls
+      - /usr/bin/cat
+      - /usr/bin/date
+      - /usr/bin/whoami
+      - /usr/bin/pwd
+
+    review:
+      - /usr/bin/grep
+      - /usr/bin/find
+      - /usr/bin/uname
+      - /usr/bin/curl
+      - /usr/bin/wget
+
+    blocked:
+      - /usr/bin/sudo
+      - /bin/bash
+      - /bin/sh
+      - /usr/bin/passwd
+
+    blocked_paths:
+      - /tmp/

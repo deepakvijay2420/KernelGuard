@@ -1,0 +1,142 @@
+security_monitor:
+
+  execution_policy:
+
+    # ========================================================
+    # LOW RISK
+    # Normal commands
+    # ACTION = ALLOW
+    # ========================================================
+
+    low_risk:
+
+      - /usr/bin/ls
+      - /bin/ls
+
+      - /usr/bin/whoami
+      - /usr/bin/date
+      - /bin/date
+
+      - /usr/bin/pwd
+      - /bin/pwd
+
+      - /usr/bin/echo
+      - /bin/echo
+
+      - /usr/bin/cat
+      - /bin/cat
+
+      - /usr/bin/head
+      - /usr/bin/tail
+
+      - /usr/bin/grep
+      - /bin/grep
+
+      - /usr/bin/wc
+
+      - /usr/bin/ps
+      - /bin/ps
+
+      - /usr/bin/df
+      - /usr/bin/du
+
+      - /usr/bin/uname
+      - /usr/bin/hostname
+
+      - /usr/bin/id
+
+      - /usr/bin/env
+      - /usr/bin/which
+
+      - /usr/bin/uptime
+
+      # Python used by KernelGuard policy engine
+      - /usr/bin/python3
+
+
+    # ========================================================
+    # MEDIUM RISK
+    # Sensitive commands
+    # ACTION = WARNING
+    # ========================================================
+
+    medium_risk:
+
+      # Privilege / shell
+      - /usr/bin/sudo
+      - /bin/sudo
+
+      - /bin/bash
+      - /usr/bin/bash
+
+      - /bin/sh
+      - /usr/bin/sh
+
+      - /bin/dash
+      - /usr/bin/dash
+
+      # Environment / file modification
+      - /usr/bin/env
+      - /usr/bin/tee
+
+      # Scheduling / system control
+      - /usr/bin/crontab
+      - /usr/bin/systemctl
+
+      - /usr/bin/kill
+      - /bin/kill
+      - /usr/bin/pkill
+
+      # Development / package management
+      - /usr/bin/git
+      - /usr/bin/pip
+      - /usr/bin/pip3
+      - /usr/bin/npm
+
+      - /usr/bin/apt
+      - /usr/bin/apt-get
+      - /usr/bin/dpkg
+
+      # Filesystem
+      - /usr/bin/mount
+      - /usr/bin/umount
+
+      # Potentially dangerous utilities
+      - /usr/bin/find
+      - /usr/bin/tar
+      - /usr/bin/gzip
+      - /usr/bin/unzip
+
+
+    # ========================================================
+    # HIGH RISK PATHS
+    # Executions from suspicious locations
+    # ACTION = ALERT
+    # ========================================================
+
+    high_risk_paths:
+
+      - /tmp/
+      - /dev/shm/
+      - /var/tmp/
+
+      # Runtime temporary locations
+      - /run/user/
+
+      # Sensitive system files/directories
+      - /etc/passwd
+      - /etc/shadow
+      - /etc/sudoers
+
+      # SSH credentials
+      - /root/.ssh/
+      - /home/
+
+
+    # ========================================================
+    # DEFAULT
+    # Unknown executable
+    # ACTION = REVIEW
+    # ========================================================
+
+    default_action: REVIEW

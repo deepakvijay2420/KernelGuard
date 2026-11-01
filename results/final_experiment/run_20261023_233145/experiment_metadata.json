@@ -1,0 +1,49 @@
+{
+    "project": "KernelGuard",
+    "run_id": "20261023_233145",
+    "timestamp": "2026-10-23T23:31:47.377422+05:30",
+    "kernel": "6.8.0-138-generic",
+    "policy_file": "/home/deepak/kernelguard/policies/agent_policy.yaml",
+    "test_count": 13,
+    "benign_cases": 7,
+    "attack_cases": 6,
+    "kernelguard_events": 40,
+    "confusion_matrix": {
+        "true_positive": 4,
+        "true_negative": 7,
+        "false_positive": 0,
+        "false_negative": 2
+    },
+    "metrics": {
+        "accuracy": 0.8462,
+        "precision": 1.0,
+        "recall": 0.6667,
+        "f1_score": 0.8,
+        "false_positive_rate": 0.0
+    },
+    "decision_distribution": {
+        "allow": 5,
+        "review": 4,
+        "deny": 4
+    },
+    "latency_microseconds": {
+        "minimum": 2783,
+        "average": 3724.46,
+        "median": 3674,
+        "maximum": 4549
+    },
+    "implemented_components": [
+        "BPF-LSM execution monitoring",
+        "bprm_check_security",
+        "BPF Ring Buffer",
+        "user-space event reader",
+        "executable risk classification",
+        "Zero Trust policy"
+    ],
+    "future_components": [
+        "behavioural LSTM",
+        "LLM semantic adjudication",
+        "kernel-level EPERM enforcement",
+        "production-grade agent identity"
+    ]
+}

@@ -1,0 +1,43 @@
+agents:
+
+  research_agent:
+    execution:
+      allow:
+        - /usr/bin/python3
+      deny:
+        - /bin/bash
+        - /bin/sh
+
+  code_agent:
+    execution:
+      allow:
+        - /usr/bin/python3
+        - /bin/bash
+      deny: []
+
+security_monitor:
+
+  execution_policy:
+
+    low_risk:
+      - /bin/ls
+      - /usr/bin/ls
+      - /usr/bin/whoami
+      - /bin/date
+      - /usr/bin/date
+      - /usr/bin/pwd
+
+    medium_risk:
+      - /usr/bin/sudo
+      - /bin/bash
+      - /bin/sh
+      - /usr/bin/curl
+      - /usr/bin/wget
+      - /usr/bin/python3
+
+    high_risk_paths:
+      - /tmp/
+      - /var/tmp/
+      - /dev/shm/
+
+    default_action: REVIEW
