@@ -1,11 +1,8 @@
-# ============================================================
-# KernelGuard Git Ignore
-# ============================================================
-
 # Python
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyd
 
 # Virtual environments
 .venv/
@@ -13,7 +10,7 @@ venv/
 env/
 ENV/
 
-# Environment / secrets
+# Secrets
 .env
 .env.*
 !.env.example
@@ -21,18 +18,24 @@ ENV/
 *.pem
 *.secret
 
-# Compiled binaries / libraries
+# Compiled files
 *.o
 *.a
 *.so
 *.out
 *.bin
 
-# Runtime logs
+# KernelGuard compiled executables
+ebpf/exec_monitor
+ebpf/kernelguard_reader
+ebpf/zta/zta_controller
+daemon/zta/zta_controller
+
+# Logs
 *.log
 logs/
 
-# ML generated models / artifacts
+# ML generated models
 *.joblib
 *.pkl
 *.pickle
@@ -42,6 +45,10 @@ tmp/
 *.tmp
 *.swp
 *~
+
+# Backup files
+*.backup
+*.bak
 
 # IDE
 .vscode/
@@ -56,6 +63,11 @@ build/
 dist/
 *.egg-info/
 
-# Local backups
-*.backup*
-*.bak
+# Generated final experiment output
+results/final_experiment/
+
+# Additional development backups
+*.old
+*.backup_*
+*.c.backup_*
+Untitled Document 1
