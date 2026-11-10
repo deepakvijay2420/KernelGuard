@@ -88,3 +88,4 @@ daemon/zta/zta_controller
 
 # Old development source
 ebpf/exec_monitor_before_pinning.c
+zta_v2/build/
