@@ -1,0 +1,16 @@
+version: 1
+default_decision: REVIEW
+
+agents:
+  "8176":
+    name: research_agent
+
+    allowed_executables:
+      - /usr/bin/python3
+      - /usr/bin/ls
+      - /usr/bin/whoami
+      - /usr/bin/cat
+
+    denied_executables:
+      - /usr/bin/sudo
+      - /usr/sbin/sudo

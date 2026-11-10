@@ -1,0 +1,167 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <errno.h>
+
+#include <bpf/libbpf.h>
+#include <bpf/bpf.h>
+
+#include "../bpf/kg_common.h"
+
+static volatile sig_atomic_t running = 1;
+
+static void handle_signal(int sig)
+{
+    (void)sig;
+    running = 0;
+}
+
+static const char *event_name(unsigned int type)
+{
+    switch (type) {
+    case KG_EVENT_EXEC:          return "EXEC";
+    case KG_EVENT_FILE_OPEN:     return "FILE_OPEN";
+    case KG_EVENT_SOCKET_CONNECT:return "SOCKET_CONNECT";
+    case KG_EVENT_SOCKET_SENDMSG:return "SOCKET_SENDMSG";
+    case KG_EVENT_BPF:           return "BPF";
+    case KG_EVENT_PTRACE:        return "PTRACE";
+    default:                     return "UNKNOWN";
+    }
+}
+
+static int handle_event(void *ctx, void *data, size_t size)
+{
+    (void)ctx;
+
+    if (size < sizeof(struct kg_event)) {
+        fprintf(stderr, "[ERROR] Invalid event size: %zu\n", size);
+        return 0;
+    }
+
+    const struct kg_event *event = data;
+
+    printf(
+        "{\"event\":\"%s\","
+        "\"tgid\":%u,"
+        "\"uid\":%u,"
+        "\"cgroup_id\":%llu,"
+        "\"timestamp_ns\":%llu,"
+        "\"comm\":\"%.15s\","
+        "\"filename\":\"%.127s\"}\n",
+        event_name(event->event_type),
+        event->tgid,
+        event->uid,
+        event->cgroup_id,
+        event->timestamp_ns,
+        event->comm,
+        event->filename
+    );
+
+    fflush(stdout);
+    return 0;
+}
+
+int main(void)
+{
+    struct bpf_object *obj = NULL;
+    struct bpf_program *prog;
+    struct bpf_map *map;
+    struct bpf_link *link = NULL;
+    struct ring_buffer *rb = NULL;
+
+    int err;
+
+    signal(SIGINT, handle_signal);
+    signal(SIGTERM, handle_signal);
+
+    printf("[KernelGuard v2] Opening BPF object...\n");
+
+    obj = bpf_object__open_file(
+        "build/kg_zta.bpf.o",
+        NULL
+    );
+
+    err = libbpf_get_error(obj);
+    if (err) {
+        fprintf(stderr, "[ERROR] Open failed: %d\n", err);
+        return 1;
+    }
+
+    printf("[KernelGuard v2] Loading BPF object...\n");
+
+    err = bpf_object__load(obj);
+    if (err) {
+        fprintf(stderr, "[ERROR] BPF load failed: %d\n", err);
+        goto cleanup;
+    }
+
+    prog = bpf_object__find_program_by_name(
+        obj,
+        "kg_v2_exec_probe"
+    );
+
+    if (!prog) {
+        fprintf(stderr, "[ERROR] BPF program not found\n");
+        goto cleanup;
+    }
+
+    printf("[KernelGuard v2] Attaching execution hook...\n");
+
+    link = bpf_program__attach(prog);
+
+    err = libbpf_get_error(link);
+    if (err) {
+        link = NULL;
+        fprintf(stderr, "[ERROR] BPF attach failed: %d\n", err);
+        goto cleanup;
+    }
+
+    map = bpf_object__find_map_by_name(obj, "kg_events");
+
+    if (!map) {
+        fprintf(stderr, "[ERROR] Ring buffer map not found\n");
+        goto cleanup;
+    }
+
+    rb = ring_buffer__new(
+        bpf_map__fd(map),
+        handle_event,
+        NULL,
+        NULL
+    );
+
+    err = libbpf_get_error(rb);
+    if (err) {
+        rb = NULL;
+        fprintf(stderr, "[ERROR] Ring buffer creation failed: %d\n", err);
+        goto cleanup;
+    }
+
+    printf("[KernelGuard v2] Monitoring execution events.\n");
+    printf("[KernelGuard v2] Press Ctrl+C to stop.\n\n");
+
+    while (running) {
+        err = ring_buffer__poll(rb, 1000);
+
+        if (err == -EINTR)
+            continue;
+
+        if (err < 0) {
+            fprintf(stderr, "[ERROR] Ring buffer poll: %d\n", err);
+            break;
+        }
+    }
+
+cleanup:
+    if (rb)
+        ring_buffer__free(rb);
+
+    if (link)
+        bpf_link__destroy(link);
+
+    if (obj)
+        bpf_object__close(obj);
+
+    printf("\n[KernelGuard v2] Reader stopped.\n");
+    return err < 0 ? 1 : 0;
+}
