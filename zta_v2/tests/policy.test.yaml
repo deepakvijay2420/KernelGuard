@@ -1,0 +1,33 @@
+# Policy used by tests/bypass_suite.sh.  Two agents:
+#   probe_strict : egress_default deny, nothing allow-listed  -> exec/file/network/ptrace attempts
+#   probe_taint  : egress_default allow                       -> proves "read secret => egress cut"
+version: 1
+
+sensitive:
+  taint: [".env"]
+  deny: ["shadow"]
+
+agents:
+  probe_strict:
+    id: 11
+    mode: enforce
+    run_as: kgagent
+    workdir: /var/lib/kernelguard/work/probe_strict
+    limits: {pids_max: 64, memory_max: 536870912}
+    exec:
+      allow: [/usr/bin/python3, /usr/bin/ls]
+    network:
+      egress_default: deny
+      allow: []
+
+  probe_taint:
+    id: 12
+    mode: enforce
+    run_as: kgagent
+    workdir: /var/lib/kernelguard/work/probe_taint
+    limits: {pids_max: 64, memory_max: 536870912}
+    exec:
+      allow: [/usr/bin/python3, /usr/bin/ls]
+    network:
+      egress_default: allow
+      allow: []
