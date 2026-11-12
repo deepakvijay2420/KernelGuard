@@ -2,7 +2,7 @@ version: 1
 default_decision: REVIEW
 
 agents:
-  "8176":
+  "8638":
     name: research_agent
 
     allowed_executables:

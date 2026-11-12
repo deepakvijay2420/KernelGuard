@@ -23,6 +23,66 @@ The central security principle of KernelGuard is:
 
 > Machine Learning and AI-based analysis can identify suspicious behavior, but deterministic kernel-level policy remains the final enforcement authority.
 
+
+<!-- KERNELGUARD_V2_STATUS_START -->
+## KernelGuard v2 — Verified implementation status
+
+KernelGuard is a Linux runtime-security research prototype that associates an Agentic AI process tree with a Linux cgroup and applies executable-path policy at the kernel boundary.
+
+### Implemented v2 path
+
+1. A LangChain agent is placed in `/sys/fs/cgroup/kernelguard-research-agent`.
+2. The `lsm/bprm_check_security` BPF-LSM hook observes executable launch attempts.
+3. The policy compiler converts `zta_v2/policy/policy.yaml` into `zta_v2/policy/policy.bin`.
+4. The user-space loader loads the policy map, attaches the hook, and reads events from the BPF ring buffer.
+5. A matching deny entry returns `-EPERM`; permitted entries continue.
+
+### Development-VM validation observed
+
+| Test | Observed result |
+|---|---|
+| BPF object and reader build | Successful |
+| Policy loading | Six entries loaded |
+| BPF-LSM attachment | Successful |
+| Benign LangChain task | Read and summarized `research.txt` |
+| Agent identity | Agent and `/usr/bin/ls` + `/usr/bin/cat` events observed under cgroup `8638` |
+| Restricted execution | Agent attempt to execute `/usr/bin/sudo` returned `PermissionError` |
+| Kernel event | Reader recorded `/usr/bin/sudo` with cgroup ID `8638` |
+
+Tested model: `gemini-3.5-flash`. The cgroup inode is environment-specific and can change when the cgroup is recreated; compile the policy again after it changes.
+
+### Scope and limitations
+
+- Current v2 enforcement is limited to executable launches and exact executable-path policy. File access and network operations are not yet enforced by this hook.
+- The ring-buffer event records an execution attempt; the event alone is not a decision record. Denial was corroborated by `PermissionError` and the configured BPF-LSM deny policy.
+- The controlled attack experiment deliberately directs the agent to invoke a restricted test tool. It demonstrates kernel enforcement against a controlled malicious action, not autonomous prompt-injection detection.
+- A genuine prompt-injection evaluation remains future work: keep the system instruction benign and place the malicious instruction only in untrusted document content, then measure whether the agent independently attempts the tool.
+- Do not describe semantic intent analysis, ML-based decisions, file/network enforcement, or broad attack coverage as end-to-end implemented until separately integrated and tested.
+
+### Build and test
+
+```bash
+make -B -C zta_v2
+cd zta_v2
+../agents/langchain_agent/.venv/bin/python tools/kg_policy_compile.py
+../agents/langchain_agent/.venv/bin/python -m pytest -q tests
+sudo ./build/kg_events
+```
+
+Run the reader from `zta_v2` because its object and policy paths are relative. Stop this foreground v2 reader with `Ctrl+C`; this does not require stopping the v1 systemd services.
+
+### Main v2 files
+
+- `zta_v2/bpf/kg_zta.bpf.c` — BPF-LSM execution hook.
+- `zta_v2/bpf/kg_common.h` — shared event/policy definitions.
+- `zta_v2/tools/kg_events.c` — policy loader and ring-buffer reader.
+- `zta_v2/tools/kg_policy_compile.py` — YAML policy compiler.
+- `zta_v2/policy/policy.yaml` — executable policy.
+- `agents/langchain_agent/kernelguard_complete_agent.py` — LangChain test agent.
+- `docs/KERNELGUARD_V2_VALIDATION.md` — validation record.
+
+**Status:** cgroup-associated executable monitoring and restricted executable denial have been demonstrated in the local development VM. Broader semantic prompt-injection detection and additional enforcement hooks remain research work.
+<!-- KERNELGUARD_V2_STATUS_END -->
 ---
 
 # 1. Problem Statement
@@ -2408,3 +2468,62 @@ Linux Command
      |
      v
 Privilege-Sensitive Operation
+
+## Agentic AI Runtime Security Integration
+
+### Objective
+KernelGuard is a Linux runtime-security research prototype being
+extended to monitor process execution originating from Agentic AI
+applications. The controlled experiment uses a Gemini-powered
+LangChain agent with file-reading and directory-listing tools.
+
+### Architecture
+1. Agent layer: LangChain performs a user-requested task.
+2. Process layer: Agent tools create Linux child processes.
+3. Monitoring layer: eBPF-based components observe execution events.
+4. Policy layer: Zero Trust rules evaluate cgroup identity and
+   executable-path permissions.
+5. Enforcement layer: The separate ZTA v2 eBPF-LSM prototype
+   demonstrates executable-path enforcement.
+
+### Implemented components
+- LangChain agent with normal and controlled attack modes.
+- Agent PID and parent PID collection.
+- Tool subprocess PID and command logging.
+- Experiment launcher configured for the research cgroup:
+  `/sys/fs/cgroup/kernelguard-research-agent`.
+- Agent-side cgroup membership and inode reporting.
+- Existing v1 monitoring implementation retained.
+- Separate v2 eBPF-LSM execution hook, policy map and ring buffer.
+
+### Enforcement status
+The complete Agentic AI experiment includes user-space analysis
+that classifies observed executable paths as ALLOW, REVIEW or DENY.
+This analysis does not itself block processes.
+
+The v2 eBPF-LSM prototype has separately demonstrated controlled
+executable-path enforcement using cgroup identity and executable
+path matching. End-to-end enforcement of the LangChain experiment
+through v2 still requires verification.
+
+### Evaluation
+Execution duration can be measured for normal and attack runs.
+Classification metrics must be calculated from actual labelled
+observations. Demonstration placeholders are not measured results.
+
+### Limitations and future work
+- Verify cgroup membership and policy identity during each run.
+- Current v2 policy matching uses cgroup ID and executable path.
+- The current policy does not semantically understand prompt injection.
+- Broader file-access and network-operation enforcement remains future work.
+- Larger labelled benign and adversarial datasets are required.
+- Detection and enforcement performance require systematic evaluation.
+
+### Reproduction requirements
+- Ubuntu Linux with compatible eBPF and BPF-LSM support.
+- Configured KernelGuard services.
+- Research cgroup and matching policy.
+- Python virtual environment and agent dependencies.
+- Valid Gemini API credentials.
+
+Run experiments only in the controlled research environment.
