@@ -18,6 +18,8 @@ KG="python3 ./kgctl.py"
 POLICY="tests/policy.test.yaml"
 EVENTS="$(mktemp /tmp/kg_events.XXXXXX.jsonl)"
 FAIL=0
+RES="${KG_RESULTS_DIR:-}"     # set by eval/run_eval.py to keep raw evidence
+[ -n "$RES" ] && mkdir -p "$RES"
 
 if [ "$(id -u)" -ne 0 ]; then echo "run as root"; exit 2; fi
 id kgagent >/dev/null 2>&1 || useradd --system --no-create-home kgagent
@@ -42,7 +44,9 @@ run_probe() {   # $1 = agent, $2 = scenario
     chown -R kgagent "$work"
     echo "== agent $agent / scenario $scenario =="
     $KG run "$agent" -- /usr/bin/python3 "$work/attack_probe.py" --scenario "$scenario" | tee "$work/result.jsonl"
-    return "${PIPESTATUS[0]}"
+    local rc="${PIPESTATUS[0]}"
+    [ -n "$RES" ] && cp "$work/result.jsonl" "$RES/probe_$2.jsonl"
+    return "$rc"
 }
 
 run_probe probe_strict strict || FAIL=1
@@ -72,6 +76,7 @@ if missing:
 print("all expected hooks fired")
 PY
 
+[ -n "$RES" ] && cp "$EVENTS" "$RES/kernel_events.jsonl"
 $KG unload --force >/dev/null
 rm -f "$EVENTS"
 

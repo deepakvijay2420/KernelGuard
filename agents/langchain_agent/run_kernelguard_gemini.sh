@@ -2,7 +2,7 @@
 
 set -e
 
-PROJECT="/home/deepak/kernelguard"
+PROJECT="${KG_HOME:-$HOME/kernelguard}"
 AGENT_DIR="$PROJECT/agents/langchain_agent"
 LAB_DIR="/tmp/kernelguard-agent-lab"
 

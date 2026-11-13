@@ -2408,3 +2408,7 @@ Linux Command
      |
      v
 Privilege-Sensitive Operation
+
+## Reproducing the ZTA v2 evaluation
+
+See [`zta_v2/eval/README.md`](zta_v2/eval/README.md). All scripts honour `KG_HOME` (default `~/kernelguard`).
