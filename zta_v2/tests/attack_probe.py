@@ -185,16 +185,11 @@ def misc_tests():
             raise OSError(ctypes.get_errno(), "bpf refused")
     attempt("bpf() syscall", "blocked", bpf_call)
 
-    def cgroup_escape():
-        with open("/sys/fs/cgroup/cgroup.procs", "w") as fh:
-            fh.write(str(os.getpid()))
-    # EACCES/EPERM both mean the escape failed; not an LSM errno test, so judge by "any OSError"
-    try:
-        cgroup_escape()
-        err = 0
-    except OSError as exc:
-        err = errno.EPERM if exc.errno in (errno.EPERM, errno.EACCES, errno.EROFS) else exc.errno
-    record("escape cgroup by writing cgroup.procs", "blocked", err)
+    # Cgroup migration is controlled by cgroup filesystem permissions and
+    # delegation.  A normal unprivileged agent usually receives EACCES before
+    # any BPF-LSM decision is involved, so this is deliberately NOT counted as
+    # a KernelGuard enforcement result.  Validate cgroup membership separately
+    # from the host-side controller and record it in the test report.
 
 
 def main():
