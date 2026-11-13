@@ -8,7 +8,8 @@ import yaml
 # KernelGuard Dynamic Policy Engine
 # ============================================================
 
-POLICY_PATH = "/home/deepak/kernelguard/policies/policy.yaml"
+KG_HOME = os.environ.get("KG_HOME", os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+POLICY_PATH = os.environ.get("KG_POLICY", os.path.join(KG_HOME, "policies", "policy.yaml"))
 
 
 # ------------------------------------------------------------

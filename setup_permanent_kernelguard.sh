@@ -2,7 +2,10 @@
 
 set -e
 
-PROJECT="/home/deepak/kernelguard"
+PROJECT="${KG_HOME:-$HOME/kernelguard}"
+# user-local library dir for the root-run reader (override with KG_LIBDIR)
+OWNER_HOME="$(getent passwd "${SUDO_USER:-$USER}" | cut -d: -f6)"
+LIBDIR="${KG_LIBDIR:-$OWNER_HOME/.local/lib64}"
 BPF_DIR="$PROJECT/ebpf"
 BPF_OBJ="$BPF_DIR/exec_monitor.bpf.o"
 READER="$BPF_DIR/kernelguard_reader"
@@ -90,7 +93,7 @@ cat > "$PROJECT/scripts/start_kernelguard.sh" <<SCRIPT
 
 set -e
 
-BPF_DIR="/home/deepak/kernelguard/ebpf"
+BPF_DIR="$PROJECT/ebpf"
 BPF_OBJ="\$BPF_DIR/exec_monitor.bpf.o"
 
 BPF_FS="/sys/fs/bpf"
@@ -158,7 +161,7 @@ Before=kernelguard-reader.service
 
 [Service]
 Type=oneshot
-ExecStart=/home/deepak/kernelguard/scripts/start_kernelguard.sh
+ExecStart=$PROJECT/scripts/start_kernelguard.sh
 RemainAfterExit=yes
 
 [Install]
@@ -179,9 +182,9 @@ After=kernelguard-ebpf.service
 
 [Service]
 Type=simple
-WorkingDirectory=/home/deepak/kernelguard/ebpf
-Environment="LD_LIBRARY_PATH=/home/deepak/.local/lib64"
-ExecStart=/home/deepak/kernelguard/ebpf/kernelguard_reader
+WorkingDirectory=$PROJECT/ebpf
+Environment="LD_LIBRARY_PATH=$LIBDIR"
+ExecStart=$PROJECT/ebpf/kernelguard_reader
 Restart=on-failure
 RestartSec=3
 

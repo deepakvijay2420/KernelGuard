@@ -2,7 +2,7 @@
 
 set -e
 
-BPF_DIR="/home/deepak/kernelguard/ebpf"
+BPF_DIR="${KG_HOME:-$(cd "$(dirname "$0")/.." && pwd)}/ebpf"
 BPF_OBJ="$BPF_DIR/exec_monitor.bpf.o"
 
 BPF_FS="/sys/fs/bpf"

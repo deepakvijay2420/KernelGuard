@@ -8,7 +8,7 @@
 set -u
 set -o pipefail
 
-PROJECT="/home/deepak/kernelguard"
+PROJECT="${KG_HOME:-$HOME/kernelguard}"
 AGENT_DIR="$PROJECT/agents/langchain_agent"
 LAB_DIR="/tmp/kernelguard-agent-lab"
 LOG_DIR="$PROJECT/logs/agent_identity"
@@ -293,7 +293,8 @@ TEST_DIR = "/tmp/kernelguard-agent-lab"
 
 PID_FILE = "/tmp/kernelguard_agent_pid"
 
-TOOL_LOG = "/home/deepak/kernelguard/logs/agent_identity/tool_pids_current.log"
+TOOL_LOG = os.path.join(os.environ.get("KG_HOME", os.path.expanduser("~/kernelguard")),
+                        "logs", "agent_identity", "tool_pids_current.log")
 
 
 # ==============================================================

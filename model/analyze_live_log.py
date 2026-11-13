@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -12,9 +13,8 @@ from behavior_ml import BehaviorML
 from risk_fusion import fuse_risk
 
 
-LOG_FILE = Path(
-    "/home/deepak/kernelguard/logs/kernelguard_live.log"
-)
+KG_HOME = Path(os.environ.get("KG_HOME", Path(__file__).resolve().parent.parent))
+LOG_FILE = KG_HOME / "logs" / "kernelguard_live.log"
 
 
 LINE_RE = re.compile(

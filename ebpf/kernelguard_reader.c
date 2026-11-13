@@ -9,11 +9,29 @@
 
 #define EVENT_MAP "/sys/fs/bpf/kernelguard_events"
 
-#define POLICY_ENGINE \
-    "/home/deepak/kernelguard/daemon/dynamic_policy_engine.py"
+/* Install root: set KG_HOME in the environment (default: $HOME/kernelguard). */
+static const char *kg_home(void)
+{
+    const char *h = getenv("KG_HOME");
+    if (h && *h)
+        return h;
+    static char buf[512];
+    const char *home = getenv("HOME");
+    snprintf(buf, sizeof(buf), "%s/kernelguard", home ? home : ".");
+    return buf;
+}
 
-#define LOG_FILE \
-    "/home/deepak/kernelguard/logs/kernelguard_live.log"
+static const char *kg_path(const char *rel)
+{
+    static char out[2][1024];
+    static int i;
+    i ^= 1;
+    snprintf(out[i], sizeof(out[i]), "%s/%s", kg_home(), rel);
+    return out[i];
+}
+
+#define POLICY_ENGINE kg_path("daemon/dynamic_policy_engine.py")
+#define LOG_FILE      kg_path("logs/kernelguard_live.log")
 
 
 /* ============================================================
@@ -514,10 +532,7 @@ int main(void)
         "[+] Dynamic YAML policy engine enabled\n"
     );
 
-    printf(
-        "[+] Policy file: "
-        "/home/deepak/kernelguard/policies/policy.yaml\n"
-    );
+    printf("[+] Policy file: %s\n", kg_path("policies/policy.yaml"));
 
     printf(
         "[+] Self-trigger protection enabled\n"

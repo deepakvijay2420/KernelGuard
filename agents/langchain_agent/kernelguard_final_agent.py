@@ -18,7 +18,8 @@ TEST_DIR = "/tmp/kernelguard-agent-lab"
 
 PID_FILE = "/tmp/kernelguard_agent_pid"
 
-TOOL_LOG = "/home/deepak/kernelguard/logs/agent_identity/tool_pids_current.log"
+TOOL_LOG = os.path.join(os.environ.get("KG_HOME", os.path.expanduser("~/kernelguard")),
+                        "logs", "agent_identity", "tool_pids_current.log")
 
 
 # ==============================================================

@@ -17,7 +17,7 @@ set -o pipefail
 # Existing Steps 1-6 are NOT rebuilt.
 # ============================================================
 
-PROJECT="/home/deepak/kernelguard"
+PROJECT="${KG_HOME:-$HOME/kernelguard}"
 AGENT_DIR="$PROJECT/agents/langchain_agent"
 LAB_DIR="/tmp/kernelguard-agent-lab"
 LOG_DIR="$PROJECT/logs/final_experiment"
