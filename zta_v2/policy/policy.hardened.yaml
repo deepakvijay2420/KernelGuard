@@ -1,0 +1,114 @@
+# KernelGuard ZTA v2 - HARDENED policy.  Validate:  ./kgctl.py plan -p policy/policy.hardened.yaml
+#                                      Lint:      python3 tools/policy_lint.py policy/policy.hardened.yaml
+# Philosophy: deny by default.  Anything not in exec.allow is refused (see dangerous_commands.yaml
+# for the families this deliberately excludes).  Start in `audit`, then flip to `enforce`.
+version: 1
+
+sensitive:
+  taint:          # read allowed but egress is then cut to the allow-list
+    - ".env"
+    - ".env.local"
+    - ".env.production"
+    - ".netrc"
+    - ".npmrc"
+    - ".pypirc"
+    - ".git-credentials"
+    - ".pgpass"
+    - ".my.cnf"
+    - ".boto"
+    - ".vault-token"
+    - "id_rsa"
+    - "id_dsa"
+    - "id_ecdsa"
+    - "id_ed25519"
+    - "authorized_keys"
+    - "known_hosts"
+    - "credentials"
+    - "credentials.json"
+    - "credentials.db"
+    - "access_tokens.db"
+    - "service_account.json"
+    - "secrets.yaml"
+    - "secrets.json"
+    - "kubeconfig"
+    - "terraform.tfstate"
+    - "Login Data"         # browser credential stores
+    - "Cookies"
+    - "logins.json"
+    - "key4.db"
+    - "wallet.dat"
+    - "keyring"
+  deny:           # never readable by an agent
+    - "shadow"
+    - "gshadow"
+    - "sudoers"
+    - "master.passwd"
+    - "ssh_host_rsa_key"
+    - "ssh_host_ed25519_key"
+    - "ssh_host_ecdsa_key"
+    - "kcore"
+    - "kallsyms"
+    - "kmem"
+    - "mem"
+    - "docker.sock"
+    - "containerd.sock"
+    - "crontab"
+    - "rc.local"
+    - "ld.so.preload"
+    - "ld.so.conf"
+    - "policy.yaml"        # the agent must not read or learn its own policy
+    - "policy.hardened.yaml"
+
+agents:
+  research_agent:
+    id: 1
+    mode: audit               # change to enforce after a clean audit run
+    run_as: kgagent
+    workdir: /var/lib/kernelguard/work/research_agent
+    env_passthrough: [GOOGLE_API_KEY]
+    limits: {pids_max: 32, memory_max: 536870912}
+    exec:
+      allow:                  # read-only, side-effect-free tools only
+        - /usr/bin/python3
+        - /usr/bin/ls
+        - /usr/bin/cat
+        - /usr/bin/date
+        - /usr/bin/pwd
+        - /usr/bin/whoami
+        - /usr/bin/uname
+        - /usr/bin/grep
+        - /usr/bin/head
+        - /usr/bin/tail
+        - /usr/bin/wc
+    network:
+      egress_default: deny
+      allow:
+        - {host: generativelanguage.googleapis.com, port: 443}
+        - {ip: 127.0.0.53, port: 53}
+
+  code_agent:
+    id: 2
+    mode: audit
+    run_as: kgagent
+    workdir: /var/lib/kernelguard/work/code_agent
+    env_passthrough: [GOOGLE_API_KEY]
+    limits: {pids_max: 64, memory_max: 1073741824}
+    exec:
+      allow:                  # note: NO shell, NO compiler, NO package manager, NO git
+        - /usr/bin/python3
+        - /usr/bin/ls
+        - /usr/bin/cat
+        - /usr/bin/date
+        - /usr/bin/pwd
+        - /usr/bin/whoami
+        - /usr/bin/grep
+        - /usr/bin/head
+        - /usr/bin/tail
+        - /usr/bin/wc
+        - /usr/bin/diff
+        - /usr/bin/sort
+    network:
+      egress_default: deny
+      allow:
+        - {host: generativelanguage.googleapis.com, port: 443}
+        - {ip: 127.0.0.53, port: 53}
