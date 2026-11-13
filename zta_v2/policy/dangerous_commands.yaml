@@ -1,0 +1,32 @@
+# KernelGuard dangerous-command catalog (DEFENSIVE).
+# Not an enforcement list: enforcement is deny-by-default by inode (exec.allow).
+# This catalog is the *safety net*: tools/policy_lint.py refuses any policy whose exec.allow
+# contains (or symlinks / hash-matches to) one of these, and tests use it as the bypass-probe list.
+categories:
+  privilege_escalation:
+    why: "gain root / change identity"
+    names: [sudo, su, doas, pkexec, newgrp, sg, runuser, setpriv, chroot, unshare, nsenter, capsh, passwd, chpasswd, usermod, useradd, userdel, visudo, chsh, chfn, gpasswd]
+  shells_and_interpreters:
+    why: "arbitrary command execution; most injected payloads need one"
+    names: [bash, sh, dash, zsh, ksh, csh, tcsh, fish, ash, busybox, perl, ruby, php, lua, node, nodejs, awk, gawk, tclsh, expect, screen, tmux, script]
+  network_exfil_and_c2:
+    why: "data exfiltration, reverse shells, tunnels"
+    names: [curl, wget, nc, ncat, netcat, socat, telnet, ftp, tftp, sftp, scp, ssh, rsync, openssl, nmap, masscan, tcpdump, tshark, dig, nslookup, ssh-keygen, sshpass, proxychains]
+  destructive:
+    why: "data loss / denial of service"
+    names: [rm, shred, dd, mkfs, mkfs.ext4, fdisk, parted, wipefs, truncate, mv, kill, killall, pkill, reboot, shutdown, halt, poweroff, init, swapoff]
+  persistence_and_scheduling:
+    why: "survive reboot / run later"
+    names: [crontab, at, batch, systemctl, service, systemd-run, update-rc.d]
+  privileged_system_change:
+    why: "weaken host security"
+    names: [mount, umount, insmod, rmmod, modprobe, sysctl, setcap, chmod, chown, chattr, setfacl, iptables, nft, ip, ufw, setenforce, aa-complain, aa-disable, bpftool, strace, ltrace, gdb, ptrace, perf, sudoedit]
+  container_and_vm_escape:
+    why: "break out of the sandbox"
+    names: [docker, podman, ctr, crictl, kubectl, runc, lxc, nerdctl, virsh]
+  package_and_code_install:
+    why: "pull and run new code"
+    names: [apt, apt-get, dpkg, snap, pip, pip3, npm, gem, cargo, go, gcc, cc, make, git]
+  credential_and_recon:
+    why: "harvest secrets, map the host"
+    names: [find, locate, getent, last, lastlog, w, who, env, printenv, history, base64, xxd, gpg, ssh-add, mysql, psql, sqlite3, redis-cli]
