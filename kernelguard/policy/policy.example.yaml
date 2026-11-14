@@ -1,4 +1,4 @@
-# KernelGuard ZTA v2 policy  (validate with: ./kgctl.py plan -p policy/policy.example.yaml)
+# KernelGuard administrator policy  (validate with: ./kgctl.py plan -p policy/policy.example.yaml)
 #
 # Zero Trust rules this file expresses:
 #   * DENY BY DEFAULT: an agent can exec only what is listed under exec.allow.
