@@ -23,7 +23,7 @@
  * comm, pid).  It trusts only the cgroup the controller put it in and the
  * kernel's own inode numbers.
  *
- * Build: see zta_v2/Makefile.  Needs CONFIG_BPF_LSM=y and "bpf" in lsm=.
+ * Build: run `make` from the canonical `kernelguard/` directory using `kernelguard/Makefile`.  Needs CONFIG_BPF_LSM=y and "bpf" in lsm=.
  */
 #include "vmlinux.h"
 #include <bpf/bpf_helpers.h>
