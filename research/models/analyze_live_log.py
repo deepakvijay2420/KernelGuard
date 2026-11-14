@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -13,8 +14,8 @@ from risk_fusion import fuse_risk
 
 
 LOG_FILE = Path(
-    "/home/deepak/kernelguard/logs/kernelguard_live.log"
-)
+    os.environ.get("KG_HOME", Path(__file__).resolve().parents[2])
+) / "logs" / "kernelguard_live.log"
 
 
 LINE_RE = re.compile(
