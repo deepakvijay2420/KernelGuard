@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * kg_events - print KernelGuard ZTA v2 decisions as JSON lines.
+ * kg_events - print KernelGuard security decisions as JSON lines.
  *
  *   build/kg_events [/sys/fs/bpf/kg_zta/maps/events]
  *
