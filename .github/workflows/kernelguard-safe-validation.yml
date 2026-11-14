@@ -26,3 +26,18 @@ jobs:
       - name: Run safe syntax, policy and unit checks
         working-directory: kernelguard
         run: bash tests/dry_run.sh
+
+  bpf-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install BPF build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm gcc make libbpf-dev
+
+      - name: Compile BPF object and event reader (no attach/load)
+        working-directory: kernelguard
+        run: make
