@@ -9,9 +9,9 @@ import time
 from pathlib import Path
 
 BASE = Path("/tmp/kernelguard-ml-lab")
-LOG = Path.home() / "kernelguard/logs/kernelguard_live.log"
+REPO_ROOT = Path(__file__).resolve().parents[3]\nLOG = REPO_ROOT / "logs/kernelguard_live.log"
 
-OUT_DIR = Path.home() / "kernelguard/dataset/ml_v2/benign"
+OUT_DIR = REPO_ROOT / "kernelguard/dataset/benign"
 RAW_DIR = OUT_DIR / "raw"
 CSV_FILE = OUT_DIR / "benign_events.csv"
 META_FILE = OUT_DIR / "benign_runs.csv"
