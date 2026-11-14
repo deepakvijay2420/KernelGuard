@@ -2,7 +2,7 @@
 
 This directory documents the controlled behavioural dataset used in the KernelGuard ML experiments. It explains how the event records were generated, labelled, converted into run-level samples, and used for feature extraction.
 
-> **Scope and reproducibility note:** the generator scripts in this directory collect events from the legacy KernelGuard live log at `~/kernelguard/logs/kernelguard_live.log`. That log format is the v1-style userspace event format (`PID | UID | PROCESS | PATH | RISK | REASON | ACTION`). Therefore, this dataset should be described as a controlled dataset collected using the earlier KernelGuard monitoring pipeline. It is not evidence that the same dataset was captured from the ZTA v2 cgroup/BPF-LSM telemetry path. A separate v2-native dataset collection and schema alignment are future validation tasks.
+> **Scope and reproducibility note:** the generator scripts in this directory collect events from the legacy KernelGuard live log at `~/kernelguard/logs/kernelguard_live.log`. That log format is the v1-style userspace event format (`PID | UID | PROCESS | PATH | RISK | REASON | ACTION`). Therefore, this dataset should be described as a controlled dataset collected using the earlier KernelGuard monitoring pipeline. It is not evidence that the same dataset was captured from the canonical cgroup/BPF-LSM telemetry path. A ring-buffer JSON-to-dataset schema adapter and an end-to-end validation run are still future tasks.
 
 ## 1. Dataset objective
 
@@ -247,3 +247,8 @@ The scripts execute controlled commands on the host. Use a disposable VM and ins
 - [ ] Keep scenario IDs available for grouped evaluation, but do not pass them as model features.
 - [ ] Report precision, recall, F1-score, confusion matrix and class-wise support.
 - [ ] Clearly distinguish controlled simulation results from real-world agent attack evaluation.
+
+
+## 7. Unified repository location
+
+The canonical copy of these scripts is under `kernelguard/dataset/generators/`. They now resolve the repository root relative to their own file location and write generated CSV files under `kernelguard/dataset/benign/` and `kernelguard/dataset/attacks/`. They still read the legacy monitor log schema described above. This path correction does **not** convert the collector into a BPF ring-buffer JSON consumer.
