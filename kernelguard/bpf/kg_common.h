@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-2.0 */
 /*
- * KernelGuard ZTA v2 - structures shared by
+ * KernelGuard structures shared by
  *   - bpf/kg_zta.bpf.c   (kernel side, includes vmlinux.h first)
  *   - tools/kg_events.c  (user space, includes <linux/types.h> first)
  *   - kgctl.py           (mirrors the byte layouts with struct.pack)
