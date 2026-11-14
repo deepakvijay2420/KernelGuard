@@ -96,5 +96,6 @@ Previous root-level experiments and `zta_v2/` are retained as historical source 
 - [Previous ZTA v2 README](docs/history/ZTA-v2-README.md)
 - [Previous ZTA v2 architecture guide](docs/history/ZTA-v2-ARCHITECTURE.md)
 - [Unified migration plan](docs/UNIFIED_MIGRATION.md)
+- [Historical component map](docs/HISTORICAL_COMPONENTS.md)
 
 **Research prototype notice:** KernelGuard is experimental, not a production security boundary.
