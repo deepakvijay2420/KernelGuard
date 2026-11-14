@@ -1,20 +1,21 @@
 #!/usr/bin/env python3
 
 import os
+from pathlib import Path
 import joblib
 import pandas as pd
 
 
-BASE = os.path.expanduser("~/kernelguard")
+BASE = str(Path(__file__).resolve().parents[2] / "research")
 
 MODEL_PATH = os.path.join(
     BASE,
-    "model/random_forest_behavior_model.joblib"
+    "models/artifacts/random_forest_behavior_model.joblib"
 )
 
 FEATURE_PATH = os.path.join(
     BASE,
-    "model/behavior_features.joblib"
+    "models/artifacts/behavior_features.joblib"
 )
 
 

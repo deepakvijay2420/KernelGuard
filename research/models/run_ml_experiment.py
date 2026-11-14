@@ -28,7 +28,8 @@ from sklearn.preprocessing import StandardScaler
 # KernelGuard Behavioral ML Experiment
 # ============================================================
 
-BASE = Path.home() / "kernelguard"
+REPO_ROOT = Path(__file__).resolve().parents[2]
+BASE = REPO_ROOT / "research"
 
 BENIGN_FILES = [
     BASE / "dataset/ml_v2/benign/benign_events.csv",
