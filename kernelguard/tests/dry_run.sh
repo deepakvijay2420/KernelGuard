@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# KernelGuard Stage 1 dry run.
-# Safe: no root required; does not load/unload BPF, alter cgroups, or change policy maps.
+# Safe unified KernelGuard dry run: no root, BPF load/unload, map writes or cgroups.
 set -Eeuo pipefail
 cd "$(dirname "$0")/.."
 
@@ -12,13 +11,13 @@ printf 'Clang: '; command -v clang || true
 printf 'bpftool: '; command -v bpftool || true
 
 echo
-echo "== Static syntax checks =="
-python3 -m py_compile kgctl.py tests/test_kgctl.py tests/attack_probe.py
-bash -n tests/bypass_suite.sh
-echo "Python and shell syntax: PASS"
+echo "== Python and shell syntax =="
+python3 -m py_compile kgctl.py tests/test_kgctl.py tests/attack_probe.py tools/policy_lint.py agent/langchain_gemini_agent.py detection/behavior_features.py detection/behavior_ml.py detection/risk_fusion.py dataset/generators/collect_attack_dataset.py dataset/generators/collect_benign_dataset.py dataset/generators/collect_composite_benign.py dataset/generators/generate_benign.py
+bash -n tests/dry_run.sh
+echo "Syntax checks: PASS"
 
 echo
-echo "== Policy structure validation (no BPF interaction) =="
+echo "== Policy validation (no BPF interaction) =="
 python3 - <<'PY'
 import kgctl
 for path in ("policy/policy.example.yaml", "tests/policy.test.yaml"):
