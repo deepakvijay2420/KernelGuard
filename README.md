@@ -84,7 +84,7 @@ The detection modules define 23 run-level behavioural features, an ML inference 
 
 ## Validation and limitations
 
-The development VM previously passed Python/shell syntax checks, policy validation and 30 controller unit tests. Those checks do not establish BPF verifier acceptance, successful attachment or live enforcement. Runtime results must be recorded separately.
+The original controller tree previously passed Python/shell syntax checks, policy validation and 30 controller unit tests before this directory consolidation. The canonical copy has not yet been rerun on the target VM. Neither those earlier checks nor a future dry run establishes BPF verifier acceptance, successful attachment or live enforcement.
 
 Known limitations include filename-component rather than full-path/file-operation policy, IPv4-only egress allow-listing, no HTTPS payload inspection, no prompt-text inspection in the kernel, no cryptographic proof of model provenance, and the fact that allowing an interpreter does not sandbox scripts executed inside it. ML model artifacts are not currently included in the canonical source copy.
 
