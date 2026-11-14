@@ -689,6 +689,11 @@ This demonstrates the intended security property:
 
 # 18. Dataset
 
+**Dataset methodology and reproducibility:** See the dedicated [ML v2 Dataset README](dataset/ml_v2/README.md) for the collection workflow, benign and attack-like scenario design, event/run CSV structure, labels, 23 behavioural features, regeneration steps, and limitations.
+
+**Important scope note:** the current generator scripts parse the legacy KernelGuard live-log format. This dataset should not be described as captured from the ZTA v2 cgroup/BPF-LSM event pipeline. The attack-like generator runs controlled harmless command sequences; its `prompt_injection_*` labels are scenario names, not proof of a live LLM prompt-injection execution.
+
+
 KernelGuard includes a behavioral dataset used for Machine Learning evaluation.
 
 The dataset is located under:
