@@ -13,7 +13,7 @@ from risk_fusion import fuse_risk
 
 
 LOG_FILE = Path(
-    "/home/deepak/kernelguard/logs/kernelguard_live.log"
+    __import__("os").environ.get("KG_LEGACY_LOG", Path.home() / "kernelguard/logs/kernelguard_live.log")
 )
 
 

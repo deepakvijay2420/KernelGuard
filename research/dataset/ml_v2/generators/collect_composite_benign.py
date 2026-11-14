@@ -7,12 +7,23 @@ import subprocess
 import time
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parents[4]
 BASE = Path("/tmp/kernelguard-ml-lab")
-LOG = Path.home() / "kernelguard/logs/kernelguard_live.log"
+LOG = Path(os.environ.get("KG_LEGACY_LOG", Path.home() / "kernelguard/logs/kernelguard_live.log"))
 
-OUT_DIR = Path.home() / "kernelguard/dataset/ml_v2/benign"
+OUT_DIR = REPO_ROOT / "research/dataset/ml_v2/benign"
 CSV_FILE = OUT_DIR / "benign_composite_events.csv"
 META_FILE = OUT_DIR / "benign_composite_runs.csv"
+
+# Protect committed experiment outputs from accidental overwrite.
+if os.environ.get("KG_OVERWRITE_DATASET") != "1":
+    existing_outputs = [p for p in (CSV_FILE, META_FILE) if p.exists()]
+    if existing_outputs:
+        raise SystemExit(
+            "Refusing to overwrite existing dataset outputs: "
+            + ", ".join(str(p) for p in existing_outputs)
+            + ". Set KG_OVERWRITE_DATASET=1 only when intentionally regenerating."
+        )
 
 BASE.mkdir(parents=True, exist_ok=True)
 OUT_DIR.mkdir(parents=True, exist_ok=True)

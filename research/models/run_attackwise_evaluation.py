@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+from pathlib import Path
 import numpy as np
 import pandas as pd
 
@@ -16,7 +17,7 @@ from sklearn.metrics import (
     f1_score
 )
 
-BASE = os.path.expanduser("~/kernelguard")
+BASE = str(Path(__file__).resolve().parents[2] / "research")
 
 BENIGN_FILE = os.path.join(
     BASE, "dataset/ml_v2/benign/benign_events.csv"
