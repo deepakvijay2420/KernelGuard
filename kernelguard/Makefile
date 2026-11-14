@@ -1,18 +1,14 @@
-# KernelGuard ZTA v2 build
-#
-#   make            build BPF object + events reader
-#   make test       run unit tests (no root, no kernel features needed)
-#   make vmlinux    (optional) regenerate bpf/vmlinux.h from THIS kernel's BTF
-#   make clean
-#
-# Requires: clang, libbpf-dev (headers + -lbpf), and for `make vmlinux` bpftool.
+# KernelGuard unified build: BPF-LSM object + user-space event reader.
+# Run from this directory: make, make test, make clean.
+# Requires clang/LLVM with BPF target, gcc, libbpf-dev and bpftool.
 
 CLANG   ?= clang
 CC      ?= gcc
 BPFTOOL ?= $(shell command -v bpftool || echo /usr/sbin/bpftool)
 ARCH    := $(shell uname -m | sed 's/x86_64/x86/; s/aarch64/arm64/')
 
-# bpf/ first so a freshly generated bpf/vmlinux.h wins; ../ebpf is the repo's committed copy
+# The committed CO-RE vmlinux.h is currently sourced from the repository ebpf/
+# directory. A host-specific header generated with "make vmlinux" takes priority.
 BPF_CFLAGS := -O2 -g -Wall -target bpf -D__TARGET_ARCH_$(ARCH) -Ibpf -I../ebpf
 
 all: build/kg_zta.bpf.o build/kg_events
