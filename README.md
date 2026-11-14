@@ -8,21 +8,19 @@ KernelGuard investigates how to place a deterministic operating-system security 
 
 ## Contents
 
-- [Problem and motivation](#1-problem-and-motivation)
-- [What KernelGuard does](#2-what-kernelguard-does)
-- [Architecture and execution flow](#3-architecture-and-execution-flow)
-- [Repository structure](#4-repository-structure)
-- [Zero Trust policy](#5-zero-trust-policy)
-- [Kernel enforcement and supported controls](#6-kernel-enforcement-and-supported-controls)
-- [Behavioural ML and dataset](#7-behavioural-ml-and-dataset)
-- [Experimental results](#8-experimental-results)
-- [Related work and research positioning](#9-related-work-and-research-positioning)
-- [Research contributions and novelty](#10-research-contributions-and-novelty)
-- [Attack coverage and limitations](#11-attack-coverage-and-limitations)
-- [Installation and safe validation](#12-installation-and-safe-validation)
-- [Current status and future work](#13-current-status-and-future-work)
-- [References](#14-references)
-
+- [1. Problem and motivation](#1-problem-and-motivation)
+- [2. What KernelGuard does](#2-what-kernelguard-does)
+- [3. Architecture and execution flow](#3-architecture-and-execution-flow)
+- [4. Repository structure](#4-repository-structure)
+- [5. Zero Trust policy](#5-zero-trust-policy-the-security-contract-for-each-agent)
+- [6. Kernel enforcement and supported controls](#6-kernel-enforcement-and-supported-controls)
+- [7. Behavioural ML and dataset](#7-behavioural-ml-and-dataset)
+- [8. Experimental results](#8-experimental-results)
+- [9. Research positioning](#9-research-positioning)
+- [10. Research contributions and novelty](#10-research-contributions-and-novelty)
+- [11. Attack coverage and limitations](#11-attack-coverage-and-limitations)
+- [12. Installation and validation plan](#12-installation-and-validation-plan)
+- [13. Current status and future work](#13-current-status-and-future-work)
 ## 1. Problem and motivation
 
 Agentic AI applications differ from ordinary chat systems because an agent can select tools and cause real operating-system side effects. A model may request a Python tool, which launches a subprocess; that subprocess may execute a shell, access a file, or open a network connection. Untrusted documents, retrieved pages, tool output, or other context can influence the agent's decisions. This creates a path from a semantic manipulation (for example, indirect prompt injection) to an OS-level action.
@@ -147,41 +145,251 @@ KernelGuard/
 
 The archive is retained intentionally. Historical code and scripts are not the active implementation and may require path/dependency adjustments before they can be run from the reorganised repository. The `libbpf-bootstrap` gitlink is retained separately pending confirmation of its upstream URL and submodule configuration; it must not be removed blindly.
 
-## 5. Zero Trust policy
+## 5. Zero Trust policy: the security contract for each agent
 
-The active policy format is the version-1 YAML schema in `kernelguard/policy/`. The administrator owns the policy. The AI agent does not have permission to edit the policy file or BPF maps.
+KernelGuard's Zero Trust policy is an administrator-owned security contract for a managed AI workload. It answers four practical questions:
 
-### Policy lifecycle
+1. **Who is performing the operation?** Is the current process part of a workload registered by KernelGuard?
+2. **What is it trying to do?** Launch a program, open a file, connect to a destination, use BPF, or access another process through ptrace?
+3. **Is that operation permitted for this workload?** Does the administrator's policy allow it?
+4. **What should happen?** Allow it, record it in audit mode, or deny it in enforce mode?
 
-| Command | Purpose |
-|---|---|
-| `python3 kgctl.py doctor` | Checks kernel, BTF, cgroup v2, bpffs, bpftool and build prerequisites. |
-| `python3 kgctl.py plan -p policy/policy.example.yaml` | Validates policy and previews map entries; does not load BPF. |
-| `sudo python3 kgctl.py load` | Loads and attaches BPF-LSM programs and pins maps. |
-| `sudo python3 kgctl.py apply -p policy/policy.example.yaml` | Applies policy entries to BPF maps and records policy SHA-256. |
-| `sudo python3 kgctl.py run research_agent -- COMMAND` | Runs the managed command inside its cgroup. |
-| `sudo python3 kgctl.py events` | Streams ring-buffer events as JSON Lines. |
-| `sudo python3 kgctl.py status` | Shows controller state, registered agents and counters. |
-| `sudo python3 kgctl.py tier research_agent restrict` | Escalates a running workload to restricted enforcement. |
-| `sudo python3 kgctl.py tier research_agent freeze` | Suspends the workload; `thaw` resumes it. |
-| `sudo python3 kgctl.py tier research_agent kill` | Terminates the workload cgroup. |
+The policy does not decide whether an AI prompt is malicious. It constrains selected operating-system effects that may result from the agent's decisions. The model can propose an action; the Linux kernel remains the authority that permits or rejects covered operations.
 
-### Policy controls
+### 5.1 Trust model and security boundary
 
-- **Executable allow-list:** entries are resolved to device/inode identities and associated with the agent ID. Unlisted executable launches become policy violations.
-- **Sensitive-file handling:** configured filename components can be denied or marked as taint sources. A tainted workload is subject to the configured egress restriction.
-- **Network egress:** IPv4 destination address and port entries define the allow-list. Hostnames are resolved during policy application.
-- **Self-protection:** BPF syscall and ptrace access attempts by a managed agent are treated as violations.
-- **Resource limits:** cgroup PID and memory limits can constrain resource use.
-- **Privilege reduction:** the controller runs the workload under a non-root account, clears supplementary groups, sets `no_new_privs`, and constructs a minimal environment.
-- **Policy integrity:** the controller records a SHA-256 digest at apply time and refuses to start the workload if the policy file has changed since application.
+| Element | Trust decision | Responsibility |
+|---|---|---|
+| Administrator | Trusted policy authority | Creates, reviews and applies YAML policy; controls the privileged controller. |
+| KernelGuard controller (`kgctl.py`) | Privileged enforcement setup | Validates policy, creates the managed cgroup, configures BPF maps and launches the workload with reduced privileges. |
+| Managed agent process tree | Untrusted workload | May behave normally, make mistakes, or be influenced by untrusted content. It must not control its own policy. |
+| Linux kernel and BPF-LSM | Trusted enforcement boundary (assumption) | Checks the covered operations at kernel security hooks. |
+| User-space event reader | Telemetry consumer | Reads events from the BPF ring buffer; it is not the synchronous enforcement authority. |
+| Behavioural ML | Advisory analysis in the current implementation | Analyses compatible event data out of band; it does not block a syscall in the current verified architecture. |
 
-### Audit versus enforce
+**Security assumptions:** the Linux kernel, privileged controller, administrator policy and host root account are trusted. KernelGuard is not designed to protect a host after kernel compromise or malicious host-root control.
 
-- `audit`: records a policy violation but returns success from the hook; the operation is allowed to continue.
-- `enforce`: records a deny event and returns `-EPERM` for the covered operation.
+### 5.2 Policy file and ownership
 
-The example policy is configured for audit mode. Enforcement must be tested in enforce mode on a disposable VM before claiming a specific operation is blocked. A successful policy plan or BPF build is not proof of kernel enforcement.
+The canonical example is `kernelguard/policy/policy.example.yaml`. It uses schema version `1`. The administrator owns this file and the privileged BPF maps. The managed agent is launched as an unprivileged account and is not given a policy-editing or policy-application interface.
+
+The example policy contains these top-level areas:
+
+| YAML area | Meaning | Where it is enforced |
+|---|---|---|
+| `version` | Policy schema version | Controller validation |
+| `sensitive.taint` | Sensitive final filename components that may be read but taint the workload | BPF `file_open` hook and per-cgroup taint state |
+| `sensitive.deny` | Sensitive final filename components whose open is denied | BPF `file_open` hook |
+| `agents.<name>.id` | Numeric agent identifier used in BPF policy keys | Controller and BPF maps |
+| `agents.<name>.mode` | Required `audit` or `enforce` mode | BPF agent configuration |
+| `run_as`, `workdir` | Unprivileged account and working directory | Controller launch process |
+| `env_passthrough` | Explicit environment variables passed to the agent | Controller launch process |
+| `limits` | cgroup PID and memory limits | cgroup v2 |
+| `exec.allow` | Executable paths, optionally with SHA-256 pinning | Controller-resolved device/inode allow-list used by BPF |
+| `network.egress_default` | Default egress behaviour: `deny` or `allow` | BPF network hooks |
+| `network.allow` | Allowed IPv4 host/IP and port entries | Controller-resolved IPv4 address/port BPF map |
+
+The policy is global for the sensitive filename lists and per-agent for the workload-specific settings. Review the actual YAML schema and the controller's validator before adding new fields; an arbitrary YAML key does not automatically become an enforced control.
+
+### 5.3 How each policy control works
+
+#### A. Workload identity: cgroup v2
+
+The controller creates a dedicated cgroup v2 for the managed workload, moves the child process into it before dropping privileges, reads the cgroup directory inode (the cgroup ID), and registers that ID in the `agent_cgroups` BPF map. Child processes inherit cgroup membership.
+
+At a BPF-LSM hook, the program calls `bpf_get_current_cgroup_id()`. If that ID is not registered, KernelGuard does not apply the agent-specific policy to that process. If it is registered, the corresponding agent configuration is used for the decision.
+
+**Why this matters:** a PID can change as processes fork, exit or are reaped. A cgroup scopes the policy to the managed process tree rather than relying only on a single PID or process name.
+
+**Boundary:** this identifies a managed Linux workload; it does not prove which model, prompt, user or agent framework created the process. It is not cryptographic model provenance.
+
+#### B. Executable allow-list: `bprm_check_security`
+
+When a managed process attempts to execute a program, the BPF-LSM `bprm_check_security` hook obtains the executable's device and inode identity and combines it with the agent ID. The `exec_allow` map is checked for that identity.
+
+- A matching entry is allowed.
+- An unlisted executable is a policy violation.
+- In `audit` mode, the event is recorded and the hook returns success.
+- In `enforce` mode, the violation is recorded and the hook returns `-EPERM`.
+
+The policy's `exec.allow` entries are paths used by the controller to resolve executable identities. The optional `sha256` field can be used to pin expected binary content during policy application. The kernel hook itself makes the runtime decision using the resolved device/inode map key, not by hashing the executable at every exec.
+
+**Why this matters:** an agent that is permitted to run Python should not automatically be permitted to launch every other executable available on the host.
+
+**Boundary:** an allowed interpreter can still run scripts. This control is not a complete interpreter sandbox, and executable identity allow-listing alone does not understand the semantic intent of a command.
+
+#### C. Sensitive-file policy and taint: `file_open`
+
+The BPF-LSM `file_open` hook reads the final filename component of the resolved file being opened and checks the global `sensitive_names` map.
+
+There are two configured actions:
+
+- **Deny:** the open is a policy violation. Audit mode records and permits it; enforce mode returns `-EPERM`.
+- **Taint:** the open is allowed, but the cgroup's runtime state is marked as having accessed a configured sensitive source.
+
+Taint is important because a sensitive read can create a later data-exfiltration risk. The network hook checks this taint state and applies the egress allow-list to a tainted workload.
+
+**Why this matters:** the policy can connect a sensitive data access to a later network decision instead of treating file and network activity as unrelated events.
+
+**Boundary:** this is filename-component matching at the file-open hook, not comprehensive full-path, read/write, memory-mapping or data-flow mediation. The configured names are global rather than per-agent in the current schema. Do not describe it as universal protection for every credential file or every possible file access technique.
+
+#### D. Network egress policy: `socket_connect` and `socket_sendmsg`
+
+For IPv4 destinations, the hooks check destination address and port against the `egress_allow` map. The controller resolves configured hostnames when applying the policy; the kernel map contains address/port entries, not a live DNS or URL policy.
+
+- With `egress_default: deny`, non-listed IPv4 egress is restricted for the managed workload.
+- With `egress_default: allow`, ordinary egress is allowed unless the workload has been tainted by a configured sensitive-file read. A tainted workload is restricted to the explicit allow-list.
+- Explicit-destination `sendmsg` traffic is checked as well as `connect` traffic. A connected socket's destination was checked at connect time.
+
+For a restricted workload, IPv6 has no allow-list in the current implementation and is treated as unlisted. When egress is not restricted, IPv6 is not blocked by this allow-list logic.
+
+**Why this matters:** an agent that reads a configured sensitive file can be prevented from sending traffic to arbitrary unapproved IPv4 destinations, while retaining explicitly allowed destinations such as the configured model API.
+
+**Boundary:** the hooks inspect socket destination metadata, not DNS names at runtime, URL paths, TLS certificates, HTTP headers, HTTPS bodies or encrypted prompt content. Local UNIX-domain sockets and local service interactions are not comprehensively mediated as internet egress.
+
+#### E. Self-protection: `bpf` and `ptrace_access_check`
+
+For a registered agent cgroup, attempts to use the BPF syscall or ptrace access are treated as policy violations. The configured audit/enforce mode determines whether the covered operation is only recorded or denied.
+
+**Why this matters:** a managed agent should not be able to use these powerful interfaces to interfere with kernel instrumentation or inspect other processes through ptrace.
+
+**Boundary:** these hooks do not make the agent a fully sandboxed process and do not defend against a compromised kernel or host root.
+
+#### F. Resource limits and privilege reduction
+
+The controller also prepares the workload with a configured unprivileged user, clears supplementary groups, sets `no_new_privs`, uses a controlled working directory and minimal environment, and applies supported cgroup v2 PID and memory limits.
+
+These measures reduce the impact of accidental or abusive workload behaviour. They complement, but do not replace, the BPF-LSM operation policy.
+
+Environment variables explicitly passed through (for example, `GOOGLE_API_KEY`) become available to the agent process. This is not a secret vault and does not protect a key from the agent itself.
+
+### 5.4 Policy lifecycle: from YAML to kernel decision
+
+| Stage | Command / component | What happens | What it does not prove |
+|---|---|---|---|
+| 1. Author | Administrator edits YAML | Defines the workload's permitted operations and limits | That the policy is syntactically or semantically valid |
+| 2. Plan | `python3 kgctl.py plan -p policy/policy.example.yaml` | Validates the schema and previews the intended map entries without loading BPF | That BPF is loaded or enforcing |
+| 3. Load | `sudo python3 kgctl.py load` | Loads and attaches the BPF-LSM object and pins maps/programs | That every policy test passes |
+| 4. Apply | `sudo python3 kgctl.py apply -p policy/policy.example.yaml` | Populates the maps and records the policy file SHA-256 digest | That every hook has been tested against real operations |
+| 5. Run | `sudo python3 kgctl.py run research_agent -- COMMAND` | Verifies the applied policy digest, creates/registers the cgroup, reduces privileges and launches the command | That the agent is immune to prompt injection |
+| 6. Enforce / observe | BPF-LSM hooks | Checks covered operations using the registered cgroup and BPF maps | That operations outside the listed hooks are mediated |
+| 7. Monitor | `sudo python3 kgctl.py events` / `status` | Reads event stream and counters | That event collection alone proves a deny occurred |
+| 8. Respond | `sudo python3 kgctl.py tier research_agent restrict` | Changes the workload to enforce mode and deny unlisted egress; other tiers include freeze, thaw and kill | That ML autonomously made this decision |
+
+The controller also checks the policy file's SHA-256 digest at workload start. If the file changes after it was applied, the controller refuses to start the workload until the policy is reapplied. This is an integrity check on the policy file, not a digital signature or a complete protection against privileged host tampering.
+
+### 5.5 Audit mode versus enforce mode
+
+| Mode | Kernel hook behaviour | Appropriate use |
+|---|---|---|
+| `audit` | Emits an audit-deny event but returns success, so the covered operation continues | Initial rollout, learning legitimate workload behaviour and measuring false positives |
+| `enforce` | Emits a deny event and returns `-EPERM` for a covered policy violation | Controlled enforcement after reviewing audit results |
+
+The example policy deliberately uses `mode: audit`. Do not switch directly to enforce on a production or shared host. First observe legitimate activity, adjust the allow-lists, and test with harmless probes in a disposable VM.
+
+### 5.6 Example policy, explained
+
+The following is a shortened illustration of the actual schema. The complete runnable example is in `kernelguard/policy/policy.example.yaml`.
+
+```yaml
+version: 1
+
+sensitive:
+  taint:
+    - ".env"
+    - "id_rsa"
+    - "credentials"
+  deny:
+    - "shadow"
+    - "sudoers"
+
+agents:
+  research_agent:
+    id: 1
+    mode: audit
+    run_as: kgagent
+    workdir: /var/lib/kernelguard/work/research_agent
+
+    env_passthrough:
+      - GOOGLE_API_KEY
+
+    limits:
+      pids_max: 64
+      memory_max: 1073741824
+
+    exec:
+      allow:
+        - /usr/bin/python3
+        - /usr/bin/ls
+        - /usr/bin/cat
+
+    network:
+      egress_default: deny
+      allow:
+        - {host: generativelanguage.googleapis.com, port: 443}
+        - {ip: 127.0.0.53, port: 53}
+```
+
+Interpretation:
+
+- The managed workload is named `research_agent` and has numeric ID `1`.
+- It runs in audit mode initially, so policy violations are logged but not blocked.
+- It runs as the unprivileged `kgagent` user, with a dedicated working directory.
+- Only the listed environment variable is passed through.
+- PID and memory limits constrain resource use.
+- Only executable identities resolved from the allow-list are permitted by the executable policy.
+- The example restricts egress to the configured IPv4 allow-list.
+- A configured taint filename is allowed to open but marks the workload tainted; after that, network egress is restricted to the allow-list.
+- A configured deny filename is rejected in enforce mode.
+
+The example includes a Gemini API hostname and a local DNS stub because the agent needs those connections in this setup. The actual resolved IP addresses can change; inspect the applied map entries and test the current environment rather than assuming a hostname is a permanent IP identity.
+
+### 5.7 Why the ZTA policy is important for Agentic AI
+
+Traditional application permissions often answer, "Can this user or process perform this operation?" KernelGuard adds a workload-scoped question: "Should this particular managed agent workload be allowed to perform this operation under its administrator-defined policy?"
+
+This matters because:
+
+- **Agent decisions are dynamic.** The agent may select different tools and launch child processes depending on user requests or untrusted context.
+- **Prompt safety is not an OS boundary.** A model can be influenced even when the operating system still needs to protect files, executables and network destinations.
+- **Permissions should be least-privilege.** The agent receives only the executable and egress capabilities that the administrator explicitly configures.
+- **Policy is independent of model reasoning.** The kernel checks the resulting operation without needing to understand the prompt or call another LLM.
+- **Sensitive access can influence later egress.** The taint mechanism links selected sensitive-file opens to network restrictions.
+- **Audit-first rollout is measurable.** Administrators can observe legitimate activity before enabling enforcement.
+
+### 5.8 Defensible research novelty
+
+KernelGuard does not claim to invent Zero Trust, eBPF, BPF-LSM, cgroups or ML anomaly detection. Its research contribution is the design and evaluation of their specific combination for a managed Agentic AI workload:
+
+1. **Workload-scoped identity:** cgroup v2 identity is used at the kernel boundary to select the policy for an agent process tree.
+2. **Administrator-owned policy translation:** a versioned YAML policy is validated and translated into BPF map entries rather than being delegated to the agent.
+3. **Operation-level enforcement:** BPF-LSM hooks constrain selected executable, sensitive-file, network, BPF and ptrace operations resulting from agent activity.
+4. **Cross-operation taint-to-egress control:** a configured sensitive-file open can taint the workload and cause subsequent non-allow-listed egress to be denied when egress is restricted.
+5. **Deterministic enforcement separated from ML:** the kernel policy remains the synchronous authority; behavioural ML is kept out of the syscall path and is advisory in the current implementation.
+6. **Explicit, testable claim boundaries:** evaluation distinguishes policy decisions, telemetry, audit events and actual kernel `-EPERM` denials.
+
+**Research contribution statement:** KernelGuard investigates a workload-scoped Zero Trust enforcement framework for Linux-based Agentic AI applications. It combines cgroup v2 workload identity, administrator-defined YAML policy, BPF-LSM checks on selected operating-system operations, and a sensitive-read-to-egress restriction mechanism. Its purpose is to constrain OS-visible consequences of potentially manipulated agent behaviour independently of the agent's prompt-level reasoning.
+
+This is a defensible contribution statement, not a claim of being the first eBPF-based AI security system. The strength of the novelty claim depends on reproducible experiments demonstrating the integrated behaviour.
+
+### 5.9 Threat coverage: what the policy can and cannot do
+
+| Scenario | Current coverage | Conditions / limitation |
+|---|---|---|
+| Prompt injection leads to launch of an unlisted executable | Potentially blockable | The kernel does not detect the prompt; the resulting exec must be covered, the process must be in the registered cgroup and enforce mode must be active. |
+| Agent attempts to launch `sudo`, shell or another unlisted binary | Potentially blockable | Depends on the executable identity not being allow-listed. |
+| Agent opens a configured sensitive filename in the deny list | Potentially blockable | Final filename component must match; enforce mode must be active. |
+| Agent opens a configured taint filename | Taint and later egress restriction | Open is allowed; subsequent non-allow-listed egress is restricted when the egress policy is configured to restrict. |
+| Agent connects to an unlisted IPv4 destination/port | Potentially blockable | Depends on `egress_default` or taint state and enforce mode. |
+| Agent attempts BPF or ptrace access | Potentially blockable | Managed cgroup and enforce mode required. |
+| Excessive process or memory use | Resource constrained | cgroup limits help; they are not a complete denial-of-service defence. |
+| IPv6 egress | Partial / no allow-list | Restricted workloads treat IPv6 as unlisted; unrestricted workloads are not blocked by this allow-list logic. |
+| HTTPS body, URL path or prompt content inspection | Not implemented | Socket destination metadata is checked, not encrypted application payloads. |
+| Malicious script executed by an allowed interpreter | Not comprehensively covered | Executable allow-listing does not sandbox interpreter input or script semantics. |
+| Every possible credential access or data leak | Not guaranteed | File matching is limited; other access paths and local IPC are not comprehensively mediated. |
+| Kernel compromise or malicious host root | Out of scope | KernelGuard assumes a trusted kernel and privileged controller. |
+
+**Correct interpretation:** KernelGuard does not block the label "prompt injection" directly. It can deny selected operating-system actions that result from an agent's behaviour, provided the action reaches a covered hook and the active policy denies it.
 
 ## 6. Kernel enforcement and supported controls
 
@@ -196,28 +404,7 @@ The canonical BPF source contains these LSM hooks:
 | `bpf` | BPF syscall | Treats managed-agent BPF syscall attempts as violations. |
 | `ptrace_access_check` | ptrace access | Treats managed-agent ptrace access attempts as violations. |
 
-### What attacks can be blocked?
-
-KernelGuard does not block an abstract attack name directly. It can block a covered OS action when the action reaches a hook, the process belongs to a registered cgroup, the policy denies the operation, and enforce mode is active.
-
-| Attack or behaviour | Current coverage | Important qualification |
-|---|---|---|
-| Prompt injection that causes an unapproved executable to launch | **Potentially blockable at executable boundary** | The kernel does not detect prompt injection; it can deny the resulting unlisted executable. Live LLM-driven end-to-end evidence is still needed. |
-| Unauthorised `sudo` / shell launch | **Potentially blockable** | Only if the binary identity is not allow-listed and enforce mode is active. |
-| Execution of an unknown binary | **Potentially blockable** | Enforced by executable allow-list for managed cgroup processes. |
-| Execution from `/tmp` | **Potentially blockable** | Not a universal path rule; decision is based on executable identity/allow-list, not a generic “deny all /tmp paths” guarantee. |
-| Access to configured sensitive filename components | **Potentially blockable or tainting** | Filename-component matching is not full-path/file-operation control. |
-| Egress to an unlisted IPv4 address/port | **Potentially blockable** | Depends on egress restriction/taint and the relevant socket hook. |
-| Agent attempts to use BPF or ptrace | **Potentially blockable** | For managed agent processes, subject to enforce mode and hook availability. |
-| Fork bomb / excessive process or memory use | **Constrained** | cgroup resource limits are not a complete DoS defence. |
-| IPv6 exfiltration | **Not reliably covered** | IPv6 allow-listing is not implemented; current hook does not provide a destination allow-list for IPv6. |
-| HTTPS data exfiltration / malicious URL path | **Not inspected** | The system checks socket destination metadata, not encrypted request bodies or URL paths. |
-| Prompt injection that abuses an already allowed executable | **Not reliably covered** | Allowing an interpreter does not sandbox its scripts or semantic intent. |
-| Credential theft through an unlisted file access pattern | **Partially covered** | Only configured final filename components are matched; this is not comprehensive file-system mediation. |
-| Kernel exploit, malicious kernel module, or host-root compromise | **Out of scope** | The design assumes a trusted Linux kernel and privileged controller. |
-| Tool/API misuse that has no covered OS side effect | **Not covered by kernel hooks alone** | Requires application/tool-level controls and additional telemetry. |
-
-**Safe claim:** KernelGuard implements policy checks for selected executable, file-open, network, BPF and ptrace operations. Whether a particular attack is blocked depends on its resulting OS behaviour and policy configuration. It is not a universal defence against every prompt injection, malware family, or Agentic AI attack.
+The policy controls and their limitations are described in detail in Section 5. A hook being present in source code is not by itself evidence that it loaded, attached or successfully denied an operation on the target kernel.
 
 ## 7. Behavioural ML and dataset
 
@@ -333,7 +520,7 @@ Four of six attack-oriented cases were classified DENY; two were REVIEW. The rep
 
 The saved results show that controlled process-execution patterns can be separated to some extent by run-level features, and that the small runtime experiment produced useful policy decisions with no observed false positives in 13 cases. They do **not** establish production accuracy, robustness to adaptive attacks, or full end-to-end autonomous prompt-injection prevention. The 1.0 ML metrics should be reported alongside the lower five-fold results and the dataset limitations, not as a standalone headline.
 
-## 9. Related work and research positioning
+## 9. Research positioning
 
 KernelGuard draws on established OS security and eBPF/BPF-LSM mechanisms, and on recent work that places controls around agent tool execution.
 
@@ -386,13 +573,13 @@ KernelGuard can only enforce what its hooks observe and what its policy expresse
 - BPF verifier acceptance, attach success and enforce-mode outcomes must be validated on the target kernel;
 - this is a research prototype, not a production security guarantee.
 
-## 12. Installation and safe validation
+## 12. Installation and validation plan
 
-### Prerequisites
+### 12.1 Prerequisites
 
 Use a disposable Ubuntu Linux VM for live BPF testing. The controller documents requirements including a compatible Linux kernel (at least 5.15), `CONFIG_BPF_LSM=y`, BPF enabled in the active LSM list, kernel BTF, cgroup v2, bpffs, bpftool, clang/LLVM with BPF target support, GCC, libbpf development headers and Python dependencies.
 
-### Safe checks (no BPF attachment)
+### 12.2 Stage 1 — safe, non-privileged checks
 
 From the repository root:
 
@@ -403,18 +590,119 @@ make test
 bash tests/dry_run.sh
 ```
 
-### Build and inspect prerequisites
+These checks validate the policy/controller and safe test paths. They do not establish BPF verifier acceptance, attachment or kernel enforcement.
+
+### 12.3 Stage 2 — inspect kernel prerequisites and build
 
 ```bash
+uname -r
+grep CONFIG_BPF_LSM /boot/config-$(uname -r)
+cat /sys/kernel/security/lsm
+mount | grep cgroup
+mount | grep bpf
+
 make
 python3 kgctl.py doctor
 ```
 
-A successful build or doctor check does not prove that the kernel verifier accepts the program or that the LSM program is attached and enforcing policy.
+Record the kernel version, BPF-LSM configuration, active LSM list, cgroup v2 and bpffs state, BTF availability, build output and doctor output. Confirm that `bpf` is in the active LSM list. A successful compile or doctor check is not proof that the verifier accepted and attached every hook.
 
-### Live test warning
+### 12.4 Stage 3 — audit-mode baseline
 
-Do not load, detach, or unload BPF programs on a shared host without first inspecting existing programs, links and pins and confirming ownership. Follow the test scripts and documentation in a disposable VM. Start with audit mode. Only test enforce mode with a controlled policy and verify the actual operation fails with the expected permission error. Never use a real production agent or sensitive credentials for attack tests.
+1. Keep `mode: audit` in the test policy.
+2. Load the BPF object and apply the policy only in the disposable VM.
+3. Run a benign agent task through `kgctl.py run`.
+4. Observe the event stream and status counters.
+5. Record legitimate executable, file and network activity.
+6. Adjust the allow-lists only when the operation is understood and required.
+
+Example commands (check `--help` and the current VM state before use):
+
+```bash
+sudo python3 kgctl.py load
+sudo python3 kgctl.py apply -p policy/policy.example.yaml
+sudo python3 kgctl.py events
+```
+
+Run the managed workload from another terminal using the configured agent name and command. Stop the event reader cleanly after collecting the test. Preserve the exact policy file used and its SHA-256 digest with the experiment.
+
+### 12.5 Stage 4 — controlled enforcement probes
+
+Use harmless files, binaries and local test services. Do not test against production credentials, real sensitive files, external third-party systems or a shared host.
+
+| Test ID | Controlled action | Expected audit-mode result | Expected enforce-mode result | Evidence to retain |
+|---|---|---|---|---|
+| ZTA-01 | Launch an allow-listed executable from the managed cgroup | Allowed; no policy violation | Allowed | Process exit status, cgroup ID, event/counter |
+| ZTA-02 | Attempt to launch a deliberately unlisted harmless executable | Audit-deny event; operation continues | Deny event; operation fails with `EPERM` | Exact command, exit status, hook event and counter |
+| ZTA-03 | Open a harmless test file whose final name is configured under `sensitive.deny` | Audit-deny event; open continues | Deny event; open fails with `EPERM` | Test filename, policy, open result, hook event |
+| ZTA-04 | Open a harmless file configured under `sensitive.taint` | Taint event; open succeeds | Taint event; open succeeds | Taint event and agent state |
+| ZTA-05 | After ZTA-04, connect to a non-allow-listed IPv4 test destination | If restricted by egress policy, audit-deny event; connection continues | Deny event; connection fails | Destination/port, taint state, socket hook event |
+| ZTA-06 | Connect to an explicitly allow-listed IPv4 test destination | Allowed | Allowed | Destination/port and connection result |
+| ZTA-07 | Attempt BPF syscall from the managed workload | Audit-deny event; syscall continues if otherwise permitted | Deny event; syscall fails | Probe result and BPF hook event |
+| ZTA-08 | Attempt ptrace access in a controlled test | Audit-deny event; syscall continues if otherwise permitted | Deny event; syscall fails | Probe result and ptrace hook event |
+| ZTA-09 | Run an unmanaged process and repeat a restricted test operation | Agent-specific policy does not apply | Agent-specific policy does not apply | Managed/unmanaged cgroup IDs and results |
+| ZTA-10 | Exceed a deliberately small test PID or memory limit | cgroup limit constrains workload | cgroup limit constrains workload | cgroup configuration and kernel/cgroup result |
+
+For every test, verify all four parts: (1) the process is in the intended cgroup, (2) the expected map/policy is applied, (3) the relevant hook event or counter is observed, and (4) the actual operation result matches the expected verdict. A log message alone is insufficient proof of blocking.
+
+**Audit/enforce comparison:** use the same benign test workload, same OS permissions, same policy entries and same operation in both modes. Change only the mode. Audit should record the violation while allowing the covered operation; enforce should record the denial and cause the covered operation to fail. If the operation fails for an unrelated Linux permission, missing file, network outage or configuration error, it is not evidence of KernelGuard enforcement.
+
+### 12.6 Stage 5 — prompt-injection-to-OS-action experiment
+
+This is the central research experiment, and it must be distinguished from a direct syscall probe.
+
+**Baseline run:** execute the same agent and task without KernelGuard enforcement. Supply a controlled test document containing an instruction that attempts to induce a prohibited but harmless test action. Record whether the model actually chooses the tool/action.
+
+**Protected run:** execute the same agent, task, model configuration, document and host permissions inside the KernelGuard-managed cgroup with the relevant policy in enforce mode. Record the agent/tool trace, attempted OS operation, cgroup ID, BPF event, policy verdict and actual operation result.
+
+Keep the workload and test conditions identical except for the KernelGuard enforcement condition. If the agent does not attempt the operation, the experiment cannot be used to claim that KernelGuard blocked it. In that case, report the direct controlled hook probe separately.
+
+Evidence package:
+- benign task and malicious test document (sanitised);
+- exact agent configuration and tool trace;
+- policy YAML and SHA-256 digest;
+- kernel version and BPF-LSM configuration;
+- agent PID and cgroup ID;
+- event-reader output and relevant counters;
+- operation exit status and error;
+- repeat count, timestamp and test environment.
+
+### 12.7 Stage 6 — quantify enforcement
+
+Report results from repeated trials rather than one screenshot.
+
+```text
+Blocking rate = blocked prohibited attempts / total prohibited attempts * 100
+False denial rate = legitimate attempts incorrectly blocked / total legitimate attempts * 100
+```
+
+Also report:
+- legitimate-operation success rate;
+- policy validation pass/fail counts;
+- workload identity correctness;
+- event delivery/loss, if measurable;
+- decision and enforcement overhead, with the timing boundary clearly stated;
+- per-hook and per-scenario results, not only one aggregate score.
+
+For latency, distinguish BPF hook execution time, user-space event processing time and end-to-end operation time. Do not label a full decision/test duration as pure BPF hook latency.
+
+### 12.8 Validation evidence checklist
+
+| Evidence | Required to claim |
+|---|---|
+| Policy plan output and invalid-policy tests | Policy parser/validator behaviour |
+| cgroup membership and registered cgroup map entry | Workload-scoped identity |
+| BPF verifier/load/attach logs and pinned program/map inspection | BPF program loaded and attached |
+| Ring-buffer event plus matching counter | Hook observed the operation and telemetry was delivered |
+| Audit operation succeeds with audit-deny event | Audit mode records without blocking |
+| Enforce operation fails with `EPERM`, matching deny event and counter | Kernel-level denial for that specific covered operation |
+| Managed/unmanaged comparison | Agent policy is scoped to registered workload |
+| Same live agent task in baseline/protected runs | End-to-end prompt-injection scenario, but only if the agent actually attempts the action |
+| Repeated benign and prohibited trials | Measured blocking and false-denial rates |
+
+### 12.9 Safety notes
+
+Do not load, detach or unload BPF programs on a shared host without first inspecting existing programs, links and pins and confirming ownership. Follow the test scripts and documentation in a disposable VM. Start with audit mode. Only test enforce mode with a controlled policy and verify the actual operation fails with the expected permission error. Never use a real production agent or sensitive credentials for attack tests.
 
 ## 13. Current status and future work
 
@@ -444,19 +732,5 @@ Do not load, detach, or unload BPF programs on a shared host without first inspe
 6. Version and include model artifacts with provenance, or document a reproducible training command and artifact checksum.
 7. Connect ML out-of-band risk assessment to a safe, explicit controller response workflow, with operator approval and audit logging.
 8. Expand attack coverage and compare with related systems using a common benchmark.
-
-## 14. References
-
-The following works provide context for the problem and related approaches. They are not evidence that KernelGuard has been directly compared with those systems.
-
-1. Meta, **MCPGuard-Dynamic: Kernel-level sandboxing for LLM agent tool calls made through the Model Context Protocol (MCP)**, project repository: https://github.com/meta/mcpguard-dynamic
-2. **Runtime Protection Practice for LLM Agent Security: An On-Demand Behavioral Sandbox Approach**, IEEE conference publication, DOI: https://doi.org/10.1109/ISAEECE70502.2026.11635191
-3. **Runtime Policy Enforcement for MCP-Based LLM Agents**, *Electronics*, 2026: https://www.mdpi.com/2079-9292/15/13/2829
-4. **Hybrid Runtime Detection of Malicious Containers Using eBPF**, *Computers, Materials & Continua*, DOI: https://doi.org/10.32604/cmc.2025.074871
-5. **Agentic AI as a Cybersecurity Attack Surface: Threats, Exploits, and Defenses in Runtime Supply Chains**, arXiv: https://arxiv.org/abs/2602.19555
-6. **SafeAgent: A Runtime Protection Architecture for Agentic Systems**, arXiv: https://arxiv.org/abs/2604.17562
-7. **Execute-Only Agents: Architectural Defense Against Prompt Injection for AI Agents**, Agentic OS 2026: https://os-for-agent.github.io/papers/AgenticOS_2026_paper_21.pdf
-
----
 
 **Maintainer note:** New implementation work belongs under `kernelguard/`. Research datasets, model experiments and results belong under `research/`. Historical implementations belong under `archive/`. Preserve provenance and do not overwrite raw experimental outputs.
