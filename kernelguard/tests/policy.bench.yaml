@@ -1,0 +1,22 @@
+# Policy for eval/run_eval.py (latency benchmark).  Mode is overridden per run with --mode.
+# The agent may exec /usr/bin/true, open ordinary files, and talk to loopback only, so every
+# measured operation takes the real (allow) path through its hook, including the map lookups.
+version: 1
+
+sensitive:
+  taint: [".env"]
+  deny: ["shadow"]
+
+agents:
+  bench:
+    id: 21
+    mode: audit
+    run_as: kgagent
+    workdir: /var/lib/kernelguard/work/bench
+    limits: {pids_max: 64, memory_max: 536870912}
+    exec:
+      allow: [/usr/bin/python3, /usr/bin/true]
+    network:
+      egress_default: deny
+      allow:
+        - {ip: 127.0.0.1, port: 0}

@@ -1,14 +1,43 @@
-# KernelGuard ZTA v2 - HARDENED policy.  Validate:  ./kgctl.py plan -p policy/policy.hardened.yaml
-#                                      Lint:      python3 tools/policy_lint.py policy/policy.hardened.yaml
-# Philosophy: deny by default.  Anything not in exec.allow is refused (see dangerous_commands.yaml
-# for the families this deliberately excludes).  Start in `audit`, then flip to `enforce`.
+# KernelGuard ZTA v2 - HARDENED POLICY (v3: least-privilege profiles)
+#
+#   validate : python3 kgctl.py plan -p policy/policy.hardened.yaml
+#   lint     : python3 tools/policy_lint.py policy/policy.hardened.yaml          (add --strict for CI)
+#   pin      : python3 tools/policy_pin.py policy/policy.hardened.yaml > policy/policy.pinned.yaml
+#   rationale: policy/POLICY_GUIDE.md  (every rule, the attack it stops, and what it does NOT stop)
+#
+# Zero Trust rules this file expresses
+#   1. Deny by default      : an agent can exec only what its profile lists, matched by inode.
+#   2. Least privilege      : three profiles; pick the SMALLEST one that does the job.
+#   3. Assume breach        : reading a secret taints the agent and cuts its network to the allow-list.
+#   4. Verify, don't trust  : run `pin` so a swapped or patched binary no longer matches (sha256).
+#   5. Explicit rollout     : every profile starts in `audit`; promote to `enforce` only after a clean
+#                             audit run (see POLICY_GUIDE.md, "Promotion checklist").
 version: 1
 
+# ---------------------------------------------------------------------------------------------
+# Sensitive files (GLOBAL, matched on the final path component of the file actually opened, so a
+# symlink with an innocent name does not help).  Max 31 bytes each.  No wildcards in this engine.
+# ---------------------------------------------------------------------------------------------
 sensitive:
-  taint:          # read allowed but egress is then cut to the allow-list
+  taint:                       # the read is allowed, but afterwards egress = allow-list only
+    # environment / app secrets
     - ".env"
     - ".env.local"
     - ".env.production"
+    - ".env.development"
+    - "secrets.yaml"
+    - "secrets.json"
+    - "service_account.json"
+    - "credentials"            # ~/.aws/credentials, ~/.config/... (generic on purpose)
+    - "credentials.json"
+    - "credentials.db"
+    - "access_tokens.db"
+    - "accessTokens.json"      # Azure CLI
+    - "azureProfile.json"
+    - "token.json"
+    - "tokens.json"
+    - "oauth2.json"
+    # tool credential stores
     - ".netrc"
     - ".npmrc"
     - ".pypirc"
@@ -16,29 +45,31 @@ sensitive:
     - ".pgpass"
     - ".my.cnf"
     - ".boto"
+    - ".s3cfg"
+    - ".dockercfg"
+    - ".htpasswd"
     - ".vault-token"
+    - "kubeconfig"
+    - "terraform.tfstate"
+    # SSH / keys
     - "id_rsa"
     - "id_dsa"
     - "id_ecdsa"
     - "id_ed25519"
     - "authorized_keys"
     - "known_hosts"
-    - "credentials"
-    - "credentials.json"
-    - "credentials.db"
-    - "access_tokens.db"
-    - "service_account.json"
-    - "secrets.yaml"
-    - "secrets.json"
-    - "kubeconfig"
-    - "terraform.tfstate"
-    - "Login Data"         # browser credential stores
+    - "private.key"
+    - "privkey.pem"
+    - "server.key"
+    # browser and wallet stores
+    - "Login Data"
     - "Cookies"
     - "logins.json"
     - "key4.db"
     - "wallet.dat"
     - "keyring"
-  deny:           # never readable by an agent
+  deny:                        # never readable by any agent
+    # host credentials
     - "shadow"
     - "gshadow"
     - "sudoers"
@@ -46,69 +77,114 @@ sensitive:
     - "ssh_host_rsa_key"
     - "ssh_host_ed25519_key"
     - "ssh_host_ecdsa_key"
+    # kernel memory / introspection
     - "kcore"
     - "kallsyms"
     - "kmem"
     - "mem"
+    # container control sockets
     - "docker.sock"
     - "containerd.sock"
+    # persistence / loader hijack
     - "crontab"
     - "rc.local"
     - "ld.so.preload"
     - "ld.so.conf"
-    - "policy.yaml"        # the agent must not read or learn its own policy
+    # the agent must not read or learn its own rules
+    - "policy.yaml"
     - "policy.hardened.yaml"
+    - "policy.pinned.yaml"
+    - "dangerous_commands.yaml"
+    # NOT listed on purpose: "passwd" (NSS lookups need /etc/passwd; python getpwnam would break)
 
 agents:
+  # -------------------------------------------------------------------------------------------
+  # PROFILE 1 - research_agent : reads text, reasons, calls the LLM API.  The default choice.
+  # -------------------------------------------------------------------------------------------
   research_agent:
     id: 1
-    mode: audit               # change to enforce after a clean audit run
+    mode: audit                          # promote to enforce after a clean audit run
     run_as: kgagent
     workdir: /var/lib/kernelguard/work/research_agent
-    env_passthrough: [GOOGLE_API_KEY]
-    limits: {pids_max: 32, memory_max: 536870912}
+    env_passthrough: [GOOGLE_API_KEY]    # ACCEPTED RISK: a key the agent uses is a key it can read.
+                                         # Mitigated by the egress allow-list below (key can only go to Google).
+    limits: {pids_max: 32, memory_max: 536870912}      # 32 tasks, 512 MiB
     exec:
-      allow:                  # read-only, side-effect-free tools only
-        - /usr/bin/python3
+      allow:                             # read-only, side-effect-free tools; nothing that spawns or writes
+        - /usr/bin/python3               # the agent runtime (a venv python is a symlink to this inode)
         - /usr/bin/ls
         - /usr/bin/cat
+        - /usr/bin/head
+        - /usr/bin/tail
+        - /usr/bin/wc
+        - /usr/bin/grep
+        - /usr/bin/sort
+        - /usr/bin/uniq
         - /usr/bin/date
         - /usr/bin/pwd
         - /usr/bin/whoami
         - /usr/bin/uname
-        - /usr/bin/grep
+    network:
+      egress_default: deny
+      allow:
+        - {host: generativelanguage.googleapis.com, port: 443}   # Gemini API only
+        - {ip: 127.0.0.53, port: 53}     # DNS stub.  RISK: DNS tunnelling.  Drop this line and pin the
+                                         # Gemini IPs instead if your threat model includes covert channels.
+
+  # -------------------------------------------------------------------------------------------
+  # PROFILE 2 - coding_agent : same as research, plus tools to compare and shape text.  Still NO shell,
+  # compiler, package manager, git or editor-spawn.  Bigger limits for test runs written in Python.
+  # -------------------------------------------------------------------------------------------
+  coding_agent:
+    id: 2
+    mode: audit
+    run_as: kgagent
+    workdir: /var/lib/kernelguard/work/coding_agent
+    env_passthrough: [GOOGLE_API_KEY]
+    limits: {pids_max: 64, memory_max: 1073741824}     # 64 tasks, 1 GiB
+    exec:
+      allow:
+        - /usr/bin/python3
+        - /usr/bin/ls
+        - /usr/bin/cat
         - /usr/bin/head
         - /usr/bin/tail
         - /usr/bin/wc
+        - /usr/bin/grep
+        - /usr/bin/sort
+        - /usr/bin/uniq
+        - /usr/bin/diff
+        - /usr/bin/cut
+        - /usr/bin/tr
+        - /usr/bin/date
+        - /usr/bin/pwd
+        - /usr/bin/whoami
     network:
       egress_default: deny
       allow:
         - {host: generativelanguage.googleapis.com, port: 443}
         - {ip: 127.0.0.53, port: 53}
 
-  code_agent:
-    id: 2
+  # -------------------------------------------------------------------------------------------
+  # PROFILE 3 - airgapped_agent : handles sensitive local documents with a LOCAL model.  No network
+  # at all, so even a successful injection has nowhere to send data.  Use this whenever the task
+  # does not need an external API.
+  # -------------------------------------------------------------------------------------------
+  airgapped_agent:
+    id: 3
     mode: audit
     run_as: kgagent
-    workdir: /var/lib/kernelguard/work/code_agent
-    env_passthrough: [GOOGLE_API_KEY]
-    limits: {pids_max: 64, memory_max: 1073741824}
+    workdir: /var/lib/kernelguard/work/airgapped_agent
+    limits: {pids_max: 16, memory_max: 2147483648}     # 16 tasks, 2 GiB (local model needs RAM)
     exec:
-      allow:                  # note: NO shell, NO compiler, NO package manager, NO git
+      allow:
         - /usr/bin/python3
         - /usr/bin/ls
         - /usr/bin/cat
-        - /usr/bin/date
-        - /usr/bin/pwd
-        - /usr/bin/whoami
-        - /usr/bin/grep
         - /usr/bin/head
         - /usr/bin/tail
         - /usr/bin/wc
-        - /usr/bin/diff
-        - /usr/bin/sort
+        - /usr/bin/grep
     network:
       egress_default: deny
-      allow:
-        - {host: generativelanguage.googleapis.com, port: 443}
-        - {ip: 127.0.0.53, port: 53}
+      allow: []                                        # nothing, not even DNS or loopback
