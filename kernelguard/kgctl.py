@@ -432,7 +432,7 @@ def cmd_plan(args) -> int:
 def cmd_load(args) -> int:
     need_root()
     if not BPF_OBJ.exists():
-        raise CtlError(f"{BPF_OBJ} missing; run `make` in zta_v2/")
+        raise CtlError(f"{BPF_OBJ} missing; run `make` in kernelguard/ or set KG_BPF_OBJ")
     if PROGS_DIR.exists():
         raise CtlError("already loaded; run `kgctl.py unload` first")
     BPFFS_ROOT.mkdir(parents=True, exist_ok=True)
