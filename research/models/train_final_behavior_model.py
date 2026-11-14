@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+from pathlib import Path
 import joblib
 import numpy as np
 import pandas as pd
@@ -12,7 +13,7 @@ from sklearn.ensemble import RandomForestClassifier
 # CONFIGURATION
 # ============================================================
 
-BASE = os.path.expanduser("~/kernelguard")
+BASE = str(Path(__file__).resolve().parents[2] / "research")
 
 BENIGN_FILE = os.path.join(
     BASE,
@@ -31,12 +32,12 @@ ATTACK_FILE = os.path.join(
 
 MODEL_FILE = os.path.join(
     BASE,
-    "model/random_forest_behavior_model.joblib"
+    "models/artifacts/random_forest_behavior_model.joblib"
 )
 
 FEATURE_FILE = os.path.join(
     BASE,
-    "model/behavior_features.joblib"
+    "models/artifacts/behavior_features.joblib"
 )
 
 
@@ -49,6 +50,7 @@ print("KernelGuard - Final Behavioral ML Model Training")
 print("=" * 70)
 
 print("\n[1] Loading datasets...")
+os.makedirs(os.path.dirname(MODEL_FILE), exist_ok=True)
 
 benign = pd.read_csv(BENIGN_FILE)
 composite = pd.read_csv(COMPOSITE_FILE)
