@@ -7,16 +7,15 @@ CC      ?= gcc
 BPFTOOL ?= $(shell command -v bpftool || echo /usr/sbin/bpftool)
 ARCH    := $(shell uname -m | sed 's/x86_64/x86/; s/aarch64/arm64/')
 
-# The committed CO-RE vmlinux.h is currently sourced from the repository ebpf/
-# directory. A host-specific header generated with "make vmlinux" takes priority.
-BPF_CFLAGS := -O2 -g -Wall -target bpf -D__TARGET_ARCH_$(ARCH) -Ibpf -I../ebpf
+# The CO-RE vmlinux.h is kept beside the canonical BPF source.
+BPF_CFLAGS := -O2 -g -Wall -target bpf -D__TARGET_ARCH_$(ARCH) -Ibpf
 
 all: build/kg_zta.bpf.o build/kg_events
 
 build:
 	mkdir -p build
 
-build/kg_zta.bpf.o: bpf/kg_zta.bpf.c bpf/kg_common.h | build
+build/kg_zta.bpf.o: bpf/kg_zta.bpf.c bpf/kg_common.h bpf/vmlinux.h | build
 	$(CLANG) $(BPF_CFLAGS) -c $< -o $@
 
 build/kg_events: tools/kg_events.c bpf/kg_common.h | build
