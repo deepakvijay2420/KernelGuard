@@ -378,6 +378,169 @@ Suppose an agent reads untrusted content that says, "Run a shell and send the co
 
 This is an operating-system action control, not prompt-injection detection. It does not prove that a prompt was malicious, and it cannot stop an action that does not pass through one of the implemented controls.
 
+
+### Detailed explanation of every policy in the current example
+
+This section walks through the actual values in `policy/policy.example.yaml`. These are the policies currently present in the example configuration, not proposed future features.
+
+#### 1. Sensitive-file policy
+
+Current entries:
+
+```yaml
+sensitive:
+  taint:
+    - ".env"
+    - "id_rsa"
+    - "id_ed25519"
+    - "id_ecdsa"
+    - "authorized_keys"
+    - "credentials"
+    - "known_hosts"
+  deny:
+    - "shadow"
+    - "gshadow"
+    - "sudoers"
+```
+
+- **Taint list:** when the agent opens a file whose final filename component matches one of these entries, the `file_open` hook allows that open and marks the agent's cgroup as tainted.
+- **Deny list:** when the agent opens a file whose final filename component matches one of these entries, the hook records a policy violation. In `enforce` mode it rejects the open; in `audit` mode it records the violation but allows the open.
+- **Why taint?** It lets the policy distinguish an agent that has accessed a sensitive resource. When tainted, the agent's network access is restricted to the configured egress allow-list.
+
+Matching is by the final filename component of the resolved file, not a complete path or a read-versus-write operation. This is not a complete filesystem sandbox.
+
+#### 2. Agent identity, mode and Linux account
+
+Current entries:
+
+```yaml
+agents:
+  research_agent:
+    id: 1
+    mode: audit
+    run_as: kgagent
+```
+
+- `research_agent` is the policy name for this workload.
+- `id: 1` is its numeric policy identity, used in policy-map keys.
+- `mode: audit` means violations are recorded but are not blocked by the policy check. Change to `enforce` only for a controlled test after reviewing legitimate activity.
+- `run_as: kgagent` makes the controller launch the workload as the configured unprivileged Linux account; the controller refuses to run it as root.
+- The controller registers the workload's cgroup v2 ID in the `agent_cgroups` map. Child processes inherit that cgroup membership and are therefore associated with the same agent policy.
+
+Cgroup identity associates a process with the managed workload. It does not prove which model or prompt caused a particular command.
+
+#### 3. Working directory and environment variables
+
+Current entries:
+
+```yaml
+workdir: /var/lib/kernelguard/work/research_agent
+env_passthrough:
+  - GOOGLE_API_KEY
+```
+
+- `workdir` is created and assigned to the configured unprivileged account before the process starts.
+- The controller builds a minimal environment for the agent and passes only the variables explicitly listed in `env_passthrough`, if they exist in the controller environment.
+- In this example, `GOOGLE_API_KEY` is passed so the workload can authenticate to its configured AI service.
+
+Passing a secret to the agent means the agent can use it and potentially expose it. This setting is environment filtering, not a secret vault or secret-isolation mechanism.
+
+#### 4. Resource limits
+
+Current entries:
+
+```yaml
+limits:
+  pids_max: 64
+  memory_max: 1073741824
+```
+
+The controller configures cgroup v2 resource controls for the agent:
+
+- `pids_max: 64` sets the maximum process count for the agent cgroup.
+- `memory_max: 1073741824` sets the memory limit to 1 GiB.
+
+These are Linux cgroup controls, not BPF-LSM policy hooks. The controller warns if it cannot apply a requested limit, so runtime evidence should confirm that the limits were successfully set. CPU and I/O limits are not configured by this example.
+
+#### 5. Executable allow-list
+
+Current entries:
+
+```yaml
+exec:
+  allow:
+    - /usr/bin/python3
+    - /usr/bin/ls
+    - /usr/bin/cat
+    - /usr/bin/date
+    - /usr/bin/pwd
+    - /usr/bin/whoami
+```
+
+The `bprm_check_security` hook checks each executable launch made by a registered agent. The controller resolves configured executable paths and stores their device/inode identity in the `exec_allow` BPF map. The kernel checks that identity rather than trusting only the supplied path string.
+
+- A listed executable is allowed by this rule.
+- An unlisted executable creates a policy violation.
+- In audit mode the violation is logged and the execution is allowed.
+- In enforce mode the hook rejects the execution.
+
+The example intentionally does not allow general shells and common download/network utilities such as `bash`, `sh`, `sudo`, `curl` and `wget`. This is an executable-launch control, not a script-language sandbox: allowing `python3` does not inspect or restrict every operation performed inside a Python process. The optional `sha256` form can pin expected binary content when configured, but hashes are not mandatory for every entry in this example.
+
+#### 6. Network egress policy
+
+Current entries:
+
+```yaml
+network:
+  egress_default: deny
+  allow:
+    - {host: generativelanguage.googleapis.com, port: 443}
+    - {ip: 127.0.0.53, port: 53}
+```
+
+- `egress_default: deny` makes unlisted destinations restricted even before a sensitive-file access.
+- The Gemini API hostname is resolved by the controller when applying the policy; the resulting IPv4 address/port entries are stored in the `egress_allow` map.
+- `127.0.0.53:53` allows traffic to the local systemd-resolved DNS stub.
+- `socket_connect` checks connection attempts. `socket_sendmsg` checks UDP messages that specify an explicit destination.
+- An unlisted destination is a violation: audit mode logs and allows it; enforce mode rejects it.
+
+If the policy instead used `egress_default: allow`, unlisted destinations would be allowed until the agent becomes tainted by a configured sensitive-file open. Once tainted, the network hooks restrict it to the allow-list. The current allow-list enforcement is IPv4-based; IPv6 destinations have no allow-list support yet and are treated as unlisted when egress is restricted. These hooks do not inspect HTTPS payloads or determine whether the data being sent is a secret.
+
+#### 7. Kernel self-protection policies
+
+These controls are implemented in the BPF program rather than represented as separate keys in the example YAML:
+
+- The `bpf` LSM hook rejects calls to the `bpf()` system call made by a registered agent in enforce mode. This helps prevent the agent from loading or managing BPF programs through that syscall.
+- The `ptrace_access_check` hook rejects ptrace access checks initiated by a registered agent in enforce mode. This helps restrict process tracing/debugging access.
+
+In audit mode these violations are recorded but allowed. These checks do not replace normal Linux permissions, capabilities, or other LSM protections.
+
+### Quick policy-to-enforcement reference
+
+| Policy or control | Where it is defined | Enforcement component | What it protects |
+|---|---|---|---|
+| Sensitive-file taint/deny | `sensitive.taint`, `sensitive.deny` | `file_open` | Configured sensitive filename components and subsequent egress restriction |
+| Agent identity and mode | `id`, `mode`, controller-created cgroup | `current_agent()` lookup and BPF maps | Associates kernel operations with the configured agent and selects audit/enforce behaviour |
+| Unprivileged execution context | `run_as` | `kgctl.py` | Avoids launching the agent as root |
+| Working directory/environment | `workdir`, `env_passthrough` | `kgctl.py` | Sets the workload directory and filters inherited environment variables |
+| Process/memory limits | `limits` | cgroup v2 | Limits process count and memory |
+| Executable allow-list | `exec.allow` | `bprm_check_security` | Restricts executable launches |
+| Network egress | `network` | `socket_connect`, `socket_sendmsg` | Restricts selected outbound IPv4 destinations |
+| BPF syscall restriction | Implemented in BPF source | `bpf` | Restricts agent use of the BPF syscall |
+| Ptrace restriction | Implemented in BPF source | `ptrace_access_check` | Restricts agent-initiated ptrace access checks |
+
+### Example end-to-end scenario
+
+Assume untrusted content attempts to persuade the agent to read credentials and send them to an external server:
+
+1. If the agent attempts to launch an unlisted shell, the executable hook checks the binary against `exec.allow`. In enforce mode, it rejects the launch.
+2. If the agent is already running inside an allowed interpreter and opens a file matching `sensitive.taint`, the file open is allowed but the agent is marked tainted. If the filename matches `sensitive.deny`, the open is rejected in enforce mode.
+3. A tainted agent is restricted to the network allow-list. With this example's `egress_default: deny`, unlisted IPv4 destinations are restricted regardless of taint state.
+4. If the agent attempts to use the `bpf()` syscall or initiate a ptrace access check, the corresponding self-protection hook records the violation and rejects it in enforce mode.
+5. The ring-buffer event stream reports the decision for user-space monitoring. The ring buffer reports decisions; it does not make the allow/deny decision.
+
+This scenario illustrates OS-level containment. KernelGuard does not detect the malicious prompt itself, and the current controls do not guarantee that every possible data-leak path is blocked.
+
 ## 17. What should be added to the policy next?
 
 The current policy is a useful first enforcement layer, but it is not yet a complete least-privilege policy for an AI workload. The following are **proposed extensions**, not claims about features already implemented.
