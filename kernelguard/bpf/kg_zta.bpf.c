@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: GPL-2.0
 /*
- * KernelGuard ZTA v2 - kernel enforcement program (BPF-LSM)
+ * KernelGuard kernel enforcement program (BPF-LSM)
  *
- * What changed compared with ebpf/zta/zta_enforcer.bpf.c (v1):
+ * The unified enforcement implementation uses:
  *
  *  1. IDENTITY   : cgroup v2 id instead of "PID + 8-level parent walk".
  *                  Children inherit the cgroup, so double-fork / reparenting
