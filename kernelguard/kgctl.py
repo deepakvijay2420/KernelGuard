@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # SPDX-License-Identifier: GPL-2.0
 """
-KernelGuard ZTA v2 controller  (kgctl.py)
+KernelGuard unified controller (kgctl.py)
 
-One tool that replaces the v1 "zta_controller <PID>" binary:
+One controller for policy, agent isolation, enforcement lifecycle and event reporting:
 
     kgctl.py doctor                      check the machine can run BPF-LSM
     kgctl.py plan   -p policy.yaml       validate policy, show what would be loaded (no root)
