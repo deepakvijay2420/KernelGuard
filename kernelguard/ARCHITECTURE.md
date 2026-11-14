@@ -40,6 +40,7 @@ kernelguard/
 ├── agent/langchain_gemini_agent.py
 ├── bpf/kg_zta.bpf.c
 ├── bpf/kg_common.h
+├── bpf/vmlinux.h
 ├── tools/kg_events.c
 ├── tools/policy_lint.py
 ├── policy/
