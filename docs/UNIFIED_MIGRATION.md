@@ -7,7 +7,7 @@ The canonical implementation is under `kernelguard/`. The previous top-level exp
 - Do not delete historical files until functionality, dependencies, tests and runtime ownership have been compared.
 - Do not assume legacy ML log collectors consume the new BPF ring-buffer schema.
 - Do not claim live enforcement or ML integration from dry-run/unit-test results.
-- Preserve existing Git branches; this work is isolated on `unified-kernelguard`.
+- Preserve existing Git branches; this review is isolated on `cleanup/final-repository-review`, created from `main`.
 
 ## Canonical components copied
 Current ZTA controller, BPF-LSM program, shared header, policy examples, event reader, controller tests, safe dry-run script, LangChain/Gemini agent example, behavioural feature/ML/risk modules, and dataset guide/generators.
