@@ -1,21 +1,17 @@
 [Unit]
-Description=KernelGuard ZTA v2 (BPF-LSM programs + policy)
+Description=KernelGuard unified BPF-LSM runtime policy
 After=local-fs.target sys-fs-bpf.mount
 Requires=sys-fs-bpf.mount
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-WorkingDirectory=/opt/kernelguard/zta_v2
-# Fail closed: if the programs or the policy cannot be loaded, the unit fails and
-# kgctl.py refuses to start agents (they are never run "unconfined" by this tool).
-ExecStart=/usr/bin/python3 /opt/kernelguard/zta_v2/kgctl.py load
-ExecStart=/usr/bin/python3 /opt/kernelguard/zta_v2/kgctl.py apply -p /etc/kernelguard/policy.yaml
-ExecStop=/usr/bin/python3 /opt/kernelguard/zta_v2/kgctl.py unload --force
-
-# The policy must be root-owned and not writable by agents:
-#   install -d -m 0755 /etc/kernelguard
-#   install -m 0600 -o root -g root policy.yaml /etc/kernelguard/policy.yaml
+WorkingDirectory=/opt/kernelguard/kernelguard
+# Load the BPF-LSM object and apply the root-owned administrator policy.
+ExecStart=/usr/bin/python3 /opt/kernelguard/kernelguard/kgctl.py load
+ExecStart=/usr/bin/python3 /opt/kernelguard/kernelguard/kgctl.py apply -p /etc/kernelguard/policy.yaml
+# Do not force-unload while managed agents may still be running.
+ExecStop=/usr/bin/python3 /opt/kernelguard/kernelguard/kgctl.py unload
 
 [Install]
 WantedBy=multi-user.target
