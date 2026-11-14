@@ -2,8 +2,12 @@
 
 KernelGuard uses an out-of-band behavioral anomaly detector.
 
-Algorithm:
-Isolation Forest
+Training/evaluation comparison:
+- Logistic Regression
+- Random Forest
+- Gradient Boosting
+
+The canonical inference wrapper loads a separately trained Random Forest artifact.
 
 Training:
 Benign KernelGuard execution behaviour

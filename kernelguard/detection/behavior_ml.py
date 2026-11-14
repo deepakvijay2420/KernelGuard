@@ -8,7 +8,9 @@ import pandas as pd
 
 
 HERE = Path(__file__).resolve().parent
-ARTIFACT_DIR = Path(os.environ.get("KG_ML_ARTIFACT_DIR", HERE / "artifacts"))
+REPO_ROOT = HERE.parents[1]
+DEFAULT_ARTIFACT_DIR = REPO_ROOT / "research/models/artifacts"
+ARTIFACT_DIR = Path(os.environ.get("KG_ML_ARTIFACT_DIR", DEFAULT_ARTIFACT_DIR))
 MODEL_PATH = Path(os.environ.get("KG_ML_MODEL_PATH", ARTIFACT_DIR / "random_forest_behavior_model.joblib"))
 FEATURE_PATH = Path(os.environ.get("KG_ML_FEATURE_PATH", ARTIFACT_DIR / "behavior_features.joblib"))
 
