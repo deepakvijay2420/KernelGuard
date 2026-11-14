@@ -1,0 +1,17 @@
+[Unit]
+Description=KernelGuard unified BPF-LSM runtime policy
+After=local-fs.target sys-fs-bpf.mount
+Requires=sys-fs-bpf.mount
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/kernelguard/kernelguard
+# Load the BPF-LSM object and apply the root-owned administrator policy.
+ExecStart=/usr/bin/python3 /opt/kernelguard/kernelguard/kgctl.py load
+ExecStart=/usr/bin/python3 /opt/kernelguard/kernelguard/kgctl.py apply -p /etc/kernelguard/policy.yaml
+# Do not force-unload while managed agents may still be running.
+ExecStop=/usr/bin/python3 /opt/kernelguard/kernelguard/kgctl.py unload
+
+[Install]
+WantedBy=multi-user.target

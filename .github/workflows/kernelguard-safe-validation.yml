@@ -1,0 +1,43 @@
+name: KernelGuard safe validation
+
+on:
+  push:
+    branches:
+      - unified-kernelguard
+  pull_request:
+    branches:
+      - unified-kernelguard
+
+jobs:
+  controller-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install controller test dependency
+        run: python -m pip install --upgrade pip PyYAML
+
+      - name: Run safe syntax, policy and unit checks
+        working-directory: kernelguard
+        run: bash tests/dry_run.sh
+
+  bpf-compile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install BPF build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang llvm gcc make libbpf-dev
+
+      - name: Compile BPF object and event reader (no attach/load)
+        working-directory: kernelguard
+        run: make
