@@ -27,7 +27,10 @@ vmlinux:
 test:
 	python3 -m unittest discover -s tests -v
 
+syntax:
+	python3 -m py_compile kgctl.py tests/test_kgctl.py tests/test_event_adapter.py tests/attack_probe.py tools/policy_lint.py agent/langchain_gemini_agent.py detection/event_adapter.py detection/behavior_features.py detection/behavior_ml.py detection/risk_fusion.py
+
 clean:
 	rm -rf build
 
-.PHONY: all test vmlinux clean
+.PHONY: all test syntax vmlinux clean
