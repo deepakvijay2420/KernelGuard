@@ -23,6 +23,12 @@ The central security principle of KernelGuard is:
 
 > Machine Learning and AI-based analysis can identify suspicious behavior, but deterministic kernel-level policy remains the final enforcement authority.
 
+## Current implementation: ZTA v2
+
+The active development version is documented separately under [`zta_v2/`](zta_v2/README.md). That guide describes the current cgroup-based agent identity, YAML policy, six BPF-LSM hooks, build steps, validation status, limitations, and safe testing workflow.
+
+**Version note:** this root README also contains historical v1 architecture and research components. Do not assume that every capability described in the v1 sections is implemented in ZTA v2. For the current ZTA v2 implementation, use the [ZTA v2 documentation](zta_v2/README.md).
+
 ---
 
 # 1. Problem Statement
