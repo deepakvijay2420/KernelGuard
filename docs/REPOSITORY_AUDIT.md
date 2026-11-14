@@ -1,7 +1,7 @@
 # KernelGuard repository audit and cleanup plan
 
 **Audit baseline:** `main` at the start of this cleanup branch.  
-**Cleanup branch:** `cleanup/unified-kernelguard`.  
+**Cleanup branch:** `cleanup/final-repository-review`.  
 **Canonical implementation:** `kernelguard/`.
 
 This is an evidence-based initial audit, not a declaration that every legacy file has already been proven unused. No historical source, dataset, model artifact or result is deleted by this change.
@@ -46,7 +46,7 @@ The following names were visible in the repository root at the time of the audit
 
 The earlier `zta_v2/kgctl.py` and `zta_v2/bpf/kg_zta.bpf.c` implement the same core design as the canonical files: cgroup v2 identity, executable allow-list by device/inode, sensitive-file taint/deny, IPv4 egress rules, BPF/ptrace restrictions and audit/enforce modes. The canonical versions have different file blob hashes, so they must not be assumed byte-for-byte identical. The canonical Makefile is independent of the legacy Makefile.
 
-The canonical BPF source still contains an outdated comment referring to `zta_v2/Makefile`; this should be corrected to `kernelguard/Makefile`.
+The canonical BPF source build comment now correctly points to `kernelguard/Makefile`. The controller's missing-object diagnostic was found to reference the historical `zta_v2/` directory; this cleanup branch corrects it to the canonical `kernelguard/` build location.
 
 ### Dataset and model
 
@@ -105,4 +105,4 @@ After the full file-level dependency check and clean-checkout tests:
 
 ## 9. Safety and rollback
 
-All cleanup work is on `cleanup/unified-kernelguard`, created from `main`. Existing `main` and `unified-kernelguard` are preserved. Historical source is not deleted until the above gates pass. Review the branch diff before merging.
+All cleanup work is on `cleanup/final-repository-review`, created from the current `main` branch. Existing `main` and `unified-kernelguard` are preserved. Historical source is not deleted until the above gates pass. Review the branch diff before merging.
