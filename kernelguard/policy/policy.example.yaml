@@ -1,0 +1,60 @@
+# KernelGuard ZTA v2 policy  (validate with: ./kgctl.py plan -p policy/policy.example.yaml)
+#
+# Zero Trust rules this file expresses:
+#   * DENY BY DEFAULT: an agent can exec only what is listed under exec.allow.
+#   * Executables are matched by inode, so symlinks / copies / "../" tricks do not help.
+#   * Sensitive files either deny the open or TAINT the agent.
+#   * A tainted agent can only talk to the explicit network allow-list.
+#   * `mode` has no default on purpose: choose audit (log only) or enforce (block).
+#
+# Rollout order that avoids breaking your agent:
+#   1. mode: audit   -> run the normal workload -> read `kgctl.py events`
+#   2. add whatever legitimate things showed up as audit_deny to the allow-lists
+#   3. mode: enforce
+version: 1
+
+# Global (not per agent).  Matched against the FINAL path component of the file
+# that is really being opened, so opening it through an innocent symlink name
+# does not help.  Max 31 bytes each.
+sensitive:
+  taint:            # allow the read, but remember it: egress is then restricted
+    - ".env"
+    - "id_rsa"
+    - "id_ed25519"
+    - "id_ecdsa"
+    - "authorized_keys"
+    - "credentials"
+    - "known_hosts"
+  deny:             # never allowed for agents
+    - "shadow"
+    - "gshadow"
+    - "sudoers"
+
+agents:
+  research_agent:
+    id: 1                       # 1..63, unique, stored in every BPF key
+    mode: audit                 # audit | enforce   (REQUIRED)
+    run_as: kgagent             # unprivileged user:  useradd --system --no-create-home kgagent
+    workdir: /var/lib/kernelguard/work/research_agent
+    env_passthrough:            # the agent gets a minimal env; list what it really needs
+      - GOOGLE_API_KEY
+    limits:
+      pids_max: 64              # fork-bomb / resource-exhaustion guard (cgroup pids.max)
+      memory_max: 1073741824    # 1 GiB (cgroup memory.max)
+
+    exec:
+      allow:                    # path string, or {path, sha256} to pin the binary content
+        - /usr/bin/python3      # the agent runtime itself (venv python is a symlink to this)
+        - /usr/bin/ls
+        - /usr/bin/cat
+        - /usr/bin/date
+        - /usr/bin/pwd
+        - /usr/bin/whoami
+        # - {path: /usr/bin/curl, sha256: "<output of: sha256sum /usr/bin/curl>"}
+        # NOT listed on purpose: sudo, bash, sh, dash, passwd, curl, wget, nc, perl
+
+    network:
+      egress_default: deny      # deny | allow.  allow => only restricted after a sensitive read
+      allow:
+        - {host: generativelanguage.googleapis.com, port: 443}   # Gemini API (resolved at apply)
+        - {ip: 127.0.0.53, port: 53}                             # systemd-resolved stub (DNS)
