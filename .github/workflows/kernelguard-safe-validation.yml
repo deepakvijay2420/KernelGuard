@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - unified-kernelguard
+      - review/code-review-ready
   pull_request:
     branches:
       - unified-kernelguard
+      - review/code-review-ready
 
 jobs:
   controller-tests:
