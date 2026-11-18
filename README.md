@@ -388,33 +388,133 @@ KernelGuard can only enforce what its hooks observe and what its policy expresse
 
 ## 12. Installation and safe validation
 
-### Prerequisites
+### 12.1 Tested development environment
 
-Use a disposable Ubuntu Linux VM for live BPF testing. The controller documents requirements including a compatible Linux kernel (at least 5.15), `CONFIG_BPF_LSM=y`, BPF enabled in the active LSM list, kernel BTF, cgroup v2, bpffs, bpftool, clang/LLVM with BPF target support, GCC, libbpf development headers and Python dependencies.
+The project has been developed and exercised on Ubuntu 22.04 with a Linux 6.8 kernel. The exact host configuration must be checked on the machine used for review; kernel configuration and installed packages vary.
 
-### Safe checks (no BPF attachment)
+### 12.2 Prerequisites
 
-From the repository root:
+The active implementation requires:
+
+- Linux kernel 5.15 or newer with BPF support, `CONFIG_BPF_LSM=y`, and `bpf` enabled in the active LSM list;
+- kernel BTF at `/sys/kernel/btf/vmlinux`;
+- cgroup v2 and bpffs;
+- Clang/LLVM with the BPF target, GCC, Make, bpftool, libbpf development headers and kernel headers;
+- Python 3.10+ and PyYAML for controller and policy operations.
+
+Install the common Ubuntu packages:
 
 ```bash
-cd kernelguard
+sudo apt update
+sudo apt install -y clang llvm gcc make pkg-config libbpf-dev bpftool \
+  linux-headers-$(uname -r) python3 python3-venv python3-pip
+```
+
+Confirm the active Linux security modules and cgroup filesystem before attempting a live load:
+
+```bash
+uname -r
+cat /sys/kernel/security/lsm
+mount | grep -E 'bpf|cgroup2'
+test -r /sys/kernel/btf/vmlinux && echo "Kernel BTF available"
+```
+
+### 12.3 Clone and install Python dependency
+
+```bash
+git clone https://github.com/deepakvijay2420/KernelGuard.git
+cd KernelGuard/kernelguard
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install PyYAML
+```
+
+The optional ML modules use additional packages such as NumPy, pandas and joblib; the optional Gemini agent requires LangChain, the Google GenAI integration and a user-provided API key. These optional dependencies are not required for controller unit tests or policy dry-run.
+
+### 12.4 Safe quick-start (no root, no BPF attachment)
+
+Start with checks that do not load or unload kernel programs:
+
+```bash
+cd KernelGuard/kernelguard
 python3 kgctl.py plan -p policy/policy.example.yaml
 make test
 bash tests/dry_run.sh
 ```
 
-### Build and inspect prerequisites
+The dry-run performs Python/shell syntax checks, validates example policies and runs unit tests. It does not create cgroups, change BPF maps, attach programs or prove runtime enforcement.
+
+### 12.5 Build
 
 ```bash
+cd KernelGuard/kernelguard
 make
-python3 kgctl.py doctor
 ```
 
-A successful build or doctor check does not prove that the kernel verifier accepts the program or that the LSM program is attached and enforcing policy.
+The Makefile builds:
 
-### Live test warning
+- `build/kg_zta.bpf.o`: the BPF-LSM object;
+- `build/kg_events`: the userspace ring-buffer reader.
 
-Do not load, detach, or unload BPF programs on a shared host without first inspecting existing programs, links and pins and confirming ownership. Follow the test scripts and documentation in a disposable VM. Start with audit mode. Only test enforce mode with a controlled policy and verify the actual operation fails with the expected permission error. Never use a real production agent or sensitive credentials for attack tests.
+If the BPF build reports a missing or incompatible `bpf/vmlinux.h`, regenerate it only after confirming the target kernel BTF is available:
+
+```bash
+make vmlinux
+make
+```
+
+### 12.6 Live operation (disposable VM only)
+
+Live operation requires root and a supported kernel. Before loading anything, inspect existing BPF links and pins. Do not run load/unload commands on a shared host or a machine with other BPF workloads unless ownership is confirmed.
+
+After reviewing the policy and confirming the machine is a disposable test VM:
+
+```bash
+sudo python3 kgctl.py doctor
+sudo python3 kgctl.py load
+sudo python3 kgctl.py apply -p policy/policy.example.yaml
+sudo python3 kgctl.py status
+```
+
+The example policy uses **audit** mode. Audit mode records would-be denials but permits the operation. For a live workload, use the controller form:
+
+```bash
+sudo python3 kgctl.py run research_agent -- /usr/bin/python3 --version
+```
+
+For the event stream, use a separate terminal:
+
+```bash
+sudo python3 kgctl.py events
+```
+
+The command and output depend on the active policy, user account, kernel configuration and installed binary paths. Do not change the example to enforce mode until legitimate operations have been observed in audit mode and the policy has been reviewed.
+
+### 12.7 Optional LangChain + Gemini agent
+
+The example agent is under `kernelguard/agent/langchain_gemini_agent.py`. It calls an external Gemini API and therefore needs network access, compatible Python packages and a valid API key. Never commit the key. Configure it as an environment variable in the controlled agent environment, consistent with the policy's `env_passthrough`.
+
+An external model API failure (rate limit, service unavailable, invalid key or denied egress) is not evidence of a KernelGuard kernel failure. For a deterministic code review, first demonstrate the local controlled executable and file tests; treat the live LLM call as an optional integration demonstration.
+
+### 12.8 Unload
+
+Only unload KernelGuard programs from the same disposable VM where you loaded them, after confirming that the pinned objects belong to this test instance:
+
+```bash
+sudo python3 kgctl.py unload
+```
+
+### 12.9 What each validation result proves
+
+| Check | What it proves | What it does not prove |
+|---|---|---|
+| `kgctl.py plan` | Policy parses and planned map entries can be generated | BPF is loaded or enforcing |
+| `make test` | Controller validation and data-layout unit tests pass | Kernel verifier/attach succeeds |
+| `make` | BPF object and userspace reader compile on this machine | BPF object loads or emits valid events |
+| `kgctl.py doctor` | Reported kernel/runtime prerequisites | Every hook enforces the intended policy |
+| Audit-mode test | Covered actions produce audit decisions | The kernel blocks those actions |
+| Enforce-mode test plus observed `EPERM` | A specific tested operation was blocked in that environment | All attack classes are blocked |
 
 ## 13. Current status and future work
 
