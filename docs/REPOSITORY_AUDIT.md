@@ -1,3 +1,7 @@
+> **Status update — 19 November 2026:** This document records an earlier repository review and is retained for history. The current integration branch is `integration/latest-core-controller`. The latest hardened controller from the supplied Ubuntu `KernelGuard-Core/` snapshot has now been synchronized into the canonical `kernelguard/kgctl.py` path on this branch. Current implementation status, VM evidence and remaining ML integration work are documented in the root [README](../README.md) and [source-of-truth migration note](UNIFIED_MIGRATION.md). Do not treat branch-specific statements below as the current branch state.
+
+---
+
 # KernelGuard repository audit and cleanup plan
 
 **Audit baseline:** `main` at the start of this cleanup branch.  
