@@ -6,8 +6,8 @@
 
 ## Repository organisation
 
-- `kernelguard/` — active runtime implementation: eBPF-LSM source, ZTA controller, policies, event reader, agent example, tests and behavioural-analysis modules.
-- `research/` — controlled datasets, feature engineering, ML training/evaluation scripts and saved research outputs.
+- `kernelguard/` — active runtime implementation: eBPF-LSM source, ZTA controller, policies, event reader, agent example and tests.
+- `research/` — retained historical or exploratory materials only; behavioural analysis and ML are not implemented features of the current KernelGuard runtime.
 - `evidence/` — preserved test logs, event records, benchmark outputs and evaluation reports.
 - `docs/` — architecture, threat model, policy, review and demonstration documentation.
 - `archive/` — historical agent, daemon, eBPF, policy and script snapshots retained for provenance.
@@ -29,11 +29,11 @@ The separate `KernelGuard-Core/` directory in the supplied development archive i
 - The controller drops the workload to a configured unprivileged user, clears supplementary groups, applies `NO_NEW_PRIVS`, and configures cgroup resource limits.
 - The latest controller fails closed when required cgroup controllers or configured limit files cannot be verified. It also terminates remaining descendants and retains BPF identity/run state if it cannot verify that the cgroup is empty.
 
-### Research and behavioural ML
+### Behavioural analysis and ML status
 
-ML work exists and is retained under `research/` and `kernelguard/detection/`. It includes controlled dataset construction, run-level feature extraction, offline model training/evaluation, a model-loading inference wrapper, and advisory risk-fusion logic.
+Behavioural analysis, ML-based detection, dataset-driven classification, model inference and ML-driven risk fusion are **future scope**. They are not implemented in the current KernelGuard runtime. Any historical datasets, scripts, models or saved results retained in the repository are preserved for provenance only; they must not be described as active, integrated or validated KernelGuard capabilities.
 
-This is not yet a single integrated online ML enforcement pipeline. The legacy collectors parse a legacy text-log format; a validated adapter from the current BPF ring-buffer JSON schema to the dataset/feature pipeline is still required. The model artifacts used by the inference wrapper are external to the canonical source tree. ML risk fusion is not in the synchronous eBPF hook path.
+Potential future work may include collecting behavioural traces from the current event stream, defining and validating features, preparing reproducible datasets, evaluating models, and designing an out-of-band response workflow. These items become implementation claims only after code and repeatable tests exist.
 
 ## Verified evidence from the supplied Ubuntu VM
 
@@ -52,14 +52,15 @@ These are finite tests from the supplied Ubuntu environment, not a claim that ev
 
 A successful unit test or BPF compilation alone does not prove runtime kernel enforcement.
 
-## ML work still outstanding
+## Future scope
 
-1. Implement and test a schema adapter from BPF JSON events to the research dataset/feature schema.
-2. Capture current live agent traces using the canonical event reader.
-3. Reproduce offline model results from versioned data and document model artifact checksums.
-4. If desired, connect advisory ML risk to an out-of-band, auditable operator response workflow.
-5. Do not claim LSTM autoencoder deployment, LLM semantic adjudication, or automatic ML-triggered kernel enforcement unless those components are implemented and tested.
+1. Design and implement a behavioural event collection pipeline based on the current ring-buffer event format.
+2. Define and validate workload behaviour features and reproducible labelled test scenarios.
+3. Evaluate suitable anomaly-detection or classification methods with documented methodology.
+4. If required, design an out-of-band risk assessment and operator-controlled response interface.
+
+None of these ML/behavioural-analysis capabilities is part of the current implementation.
 
 ## Historical source and preservation policy
 
-Do not delete `archive/`, prior agents, datasets, models, results or experiment traces merely because they are not part of the active runtime. Keep provenance and clearly label historical components. New active runtime changes belong under `kernelguard/`; research work belongs under `research/`; test proof belongs under `evidence/`.
+Do not delete `archive/`, prior agents, datasets, models, results or experiment traces merely because they are not part of the active runtime. Keep provenance and clearly label historical components. New active runtime changes belong under `kernelguard/`; future or historical research material belongs under `research/` and must be labelled as not implemented; test proof belongs under `evidence/`.
