@@ -77,7 +77,27 @@ printf 'SYNTHETIC_SHADOW_MARKER\n' | sudo tee /tmp/kg-demo/shadow >/dev/null
 sudo chmod 0644 /tmp/kg-demo/public.txt /tmp/kg-demo/.env /tmp/kg-demo/shadow
 ```
 
-The active policy must contain the matching sensitive filename rules. A `.env` read is configured as a taint event in the hardened policy, while a file whose final name is `shadow` is configured for denial. Confirm these rules against the exact policy and BPF source before demonstrating.
+The active policy must contain the matching sensitive filename rules. In `policy/policy.hardened.yaml`, `.env` is a taint filename and `shadow` is a deny filename. Confirm the exact rules in the policy you apply before demonstrating.
+
+Run the synthetic file tests:
+
+```bash
+# Reading .env is permitted but should mark this workload as tainted.
+sudo python3 kgctl.py run research_agent -- /usr/bin/python3 -c "print(open('/tmp/kg-demo/.env').read())"
+
+# Reading a file whose final component is shadow should be denied.
+sudo python3 kgctl.py run research_agent -- /usr/bin/python3 -c "import pathlib; p=pathlib.Path('/tmp/kg-demo/shadow'); print(p.read_text())"
+```
+
+The second command should produce a permission error if the deny rule is active. Check the corresponding `file_open / deny` event. The `.env` read should produce a `file_open / taint` event.
+
+To demonstrate taint-based network restriction, read the synthetic `.env` and attempt the connection in the **same managed process/cgroup**:
+
+```bash
+sudo python3 kgctl.py run research_agent -- /usr/bin/python3 -c "import socket; open('/tmp/kg-demo/.env').read(); s=socket.socket(); s.settimeout(4); s.connect(('1.1.1.1',443))"
+```
+
+Expected result under the supplied taint policy: the connection attempt is rejected with `PermissionError` / `Operation not permitted`, and the event stream records `connect / deny`. If the network is unavailable for unrelated reasons, use the event verdict to distinguish KernelGuard denial from an ordinary network failure.
 
 Do not use `/etc/shadow`, `/etc/sudoers`, SSH private keys, real API keys, or any production secret for testing.
 
