@@ -52,7 +52,7 @@ Network test exit: 0
 {"ts_ns":6283268537130,"cgroup_id":12682,"agent":1,"hook":"exec","verdict":"allow","pid":11532,"comm":"python3","name":"/usr/bin/python3","ino":656210,"dev":8388611,"dst":"","port":0,"family":0}
 {"ts_ns":6283277184265,"cgroup_id":12682,"agent":1,"hook":"file_open","verdict":"taint","pid":11532,"comm":"python3","name":".env","ino":1604891,"dev":8388611,"dst":"","port":0,"family":0}
 {"ts_ns":6283408559347,"cgroup_id":12724,"agent":1,"hook":"exec","verdict":"allow","pid":11553,"comm":"python3","name":"/usr/bin/python3","ino":656210,"dev":8388611,"dst":"","port":0,"family":0}
-{"ts_ns":6283416430118,"cgroup_id":12724,"agent":1,"comm":"python3","hook":"file_open","verdict":"deny","pid":11553,"comm":"python3","name":"shadow","ino":1625323,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6283416430118,"cgroup_id":12724,"agent":1,"hook":"file_open","verdict":"deny","pid":11553,"comm":"python3","name":"shadow","ino":1625323,"dev":8388611,"dst":"","port":0,"family":0}
 {"ts_ns":6283543045145,"cgroup_id":12766,"agent":1,"hook":"exec","verdict":"allow","pid":11576,"comm":"python3","name":"/usr/bin/python3","ino":656210,"dev":8388611,"dst":"","port":0,"family":0}
 {"ts_ns":6283559407675,"cgroup_id":12766,"agent":1,"hook":"file_open","verdict":"taint","pid":11576,"comm":"python3","name":".env","ino":1604891,"dev":8388611,"dst":"","port":0,"family":0}
-{"ts_ns":6283559625717,"cgroup_id":12766,"hook":"connect","verdict":"deny","pid":11576,"comm":"python3","name":"","ino":0,"dev":0,"dst":"1.1.1.1","port":443,"family":2}
+{"ts_ns":6283559625717,"cgroup_id":12766,"agent":1,"hook":"connect","verdict":"deny","pid":11576,"comm":"python3","name":"","ino":0,"dev":0,"dst":"1.1.1.1","port":443,"family":2}
