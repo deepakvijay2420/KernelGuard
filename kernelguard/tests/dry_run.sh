@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Safe unified KernelGuard dry run: no root, BPF load/unload, map writes or cgroups.
+# Safe KernelGuard Core dry run: no root, BPF load/unload, map writes or cgroups.
 set -Eeuo pipefail
 cd "$(dirname "$0")/.."
 
@@ -12,7 +12,7 @@ printf 'bpftool: '; command -v bpftool || true
 
 echo
 echo "== Python and shell syntax =="
-python3 -m py_compile kgctl.py tests/test_kgctl.py tests/attack_probe.py tools/policy_lint.py agent/langchain_gemini_agent.py detection/behavior_features.py detection/behavior_ml.py detection/risk_fusion.py dataset/generators/collect_attack_dataset.py dataset/generators/collect_benign_dataset.py dataset/generators/collect_composite_benign.py dataset/generators/generate_benign.py
+python3 -m py_compile kgctl.py tests/test_kgctl.py tests/attack_probe.py tools/policy_lint.py agent/langchain_gemini_agent.py
 bash -n tests/dry_run.sh
 echo "Syntax checks: PASS"
 
