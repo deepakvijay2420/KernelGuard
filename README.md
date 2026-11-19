@@ -46,7 +46,7 @@ The canonical implementation combines:
 5. **Telemetry:** BPF events are sent through a ring buffer and read in user space as JSON Lines.
 6. **Operator response:** the controller exposes observe, restrict, freeze, thaw, and kill actions for a managed workload.
 
-The kernel policy is the runtime enforcement authority. Behavioural analysis and ML-based detection are not implemented in the current system.
+The kernel policy is the runtime enforcement authority. Behavioural analysis and ML-based detection are future scope, not implemented functionality.
 
 ## 3. Architecture and execution flow
 
@@ -262,25 +262,24 @@ The comparison is conceptual, not a controlled head-to-head benchmark. KernelGua
 
 ## 10. Research contributions and novelty
 
-The defensible contribution is the **specific integration and evaluation of a Linux workload-scoped Zero Trust enforcement design for an Agentic AI process**, rather than a claim to invent eBPF, BPF-LSM, Zero Trust or cgroups.
+The defensible contribution is the **implementation and evaluation of a Linux workload-scoped Zero Trust enforcement design for an Agentic AI process**, rather than a claim to invent eBPF, BPF-LSM, Zero Trust or cgroups.
 
-Potential contributions supported by the current repository:
+Potential contributions supported by the current implementation and supplied test evidence:
 
-1. **Cgroup-scoped agent identity at the kernel boundary:** associate a controller-managed AI-agent process tree with a registered cgroup ID and use it to select policy in BPF-LSM hooks.
+1. **Cgroup-scoped workload identity:** associate a controller-managed AI-agent process tree with a registered cgroup ID and use it to select policy in BPF-LSM hooks.
 2. **Administrator-owned executable and resource policy:** translate YAML policy into BPF maps and combine executable identity checks with sensitive-file taint/deny, IPv4 egress restrictions, BPF/ptrace restrictions and cgroup resource limits.
-3. **Deterministic enforcement separated from behavioural risk:** keep kernel policy as the final synchronous authority and treat ML as a separate advisory signal, avoiding a model call in the syscall path.
-4. **Controlled behavioural dataset and evaluation:** document benign/composite and attack-like command workloads, run-level feature extraction, multiple classifiers, scenario-aware evaluation and runtime policy observations.
-5. **Explicit claim boundaries and reproducibility:** distinguish scripted attack-like sequences from live LLM-driven prompt injection and distinguish saved ML scores from verified kernel blocking.
+3. **Deterministic kernel enforcement:** keep policy evaluation in the kernel hook path and apply allow, audit or deny outcomes without relying on an ML model.
+4. **Hardened workload lifecycle:** validate cgroup resource controls, terminate remaining descendants, and preserve BPF identity/run state if the controller cannot verify that a workload cgroup is empty.
+5. **Reproducible enforcement evidence:** preserve test reports that distinguish policy planning, audit decisions and observed enforce-mode denials.
 
-### What is not yet a demonstrated novelty claim
+Behavioural analysis and ML-based detection are future scope and are not claimed as a current contribution.
+
+### Claim boundaries
 
 - The repository does not prove that KernelGuard is the first system to use eBPF for AI-agent security.
-- The current saved experiments do not prove an autonomous prompt-injection attack was blocked end-to-end.
-- Behavioural analysis and ML-based detection are future scope, not implemented features.
-- The runtime experiment does not establish kernel-level `-EPERM` blocking.
+- The current tests demonstrate selected OS-level policy outcomes; they do not prove that the kernel semantically detects prompt injection.
 - The project has not completed a controlled head-to-head evaluation against MCPGuard-Dynamic or other related systems.
-
-A stronger novelty claim requires a literature review, a reproducible live agent experiment, an end-to-end event adapter, enforcement-mode validation, and comparative evaluation on shared scenarios.
+- A stronger novelty claim requires further literature review, repeatable live agent experiments and comparative evaluation on shared scenarios.
 
 ## 11. Attack coverage and limitations
 
