@@ -20,6 +20,7 @@ KernelGuard investigates how to place a deterministic operating-system security 
 - [Research contributions and novelty](#10-research-contributions-and-novelty)
 - [Attack coverage and limitations](#11-attack-coverage-and-limitations)
 - [Installation and safe validation](#12-installation-and-safe-validation)
+- [Live demonstration guide](docs/LIVE_DEMO_GUIDE.md)
 - [Latest implementation and verified progress](#13-latest-implementation-and-verified-progress)
 - [Current status and future work](#14-current-status-and-future-work)
 - [References](#15-references)
