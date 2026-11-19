@@ -502,40 +502,229 @@ def _write(path: Path, text: str) -> None:
 
 
 def _prepare_cgroup(agent: str, limits: dict) -> Path:
-    KG_CGROUP.mkdir(exist_ok=True)
+    """Create an agent cgroup and apply every configured limit or fail closed."""
+    KG_CGROUP.mkdir(parents=True, exist_ok=True)
+
+    limit_files = {
+        "pids_max": ("pids", "pids.max"),
+        "memory_max": ("memory", "memory.max"),
+    }
+    required = {
+        controller
+        for key, (controller, _) in limit_files.items()
+        if key in limits
+    }
+
+    # Ensure each required controller is available and enabled down the
+    # hierarchy. Do not silently launch an agent without configured limits.
     for parent in (CGROUP_ROOT, KG_CGROUP):
         try:
-            _write(parent / "cgroup.subtree_control", "+pids +memory")
-        except OSError:
-            pass  # already enabled, or not permitted: limits below become best effort
+            available = set((parent / "cgroup.controllers").read_text().split())
+            missing_available = required - available
+            if missing_available:
+                raise CtlError(
+                    f"required cgroup controllers unavailable at {parent}: "
+                    f"{', '.join(sorted(missing_available))}"
+                )
+
+            control_file = parent / "cgroup.subtree_control"
+            enabled = set(control_file.read_text().split())
+            missing_enabled = required - enabled
+            if missing_enabled:
+                _write(
+                    control_file,
+                    " ".join(f"+{name}" for name in sorted(missing_enabled)),
+                )
+                enabled = set(control_file.read_text().split())
+
+            if required - enabled:
+                raise CtlError(
+                    f"could not enable cgroup controllers at {parent}: "
+                    f"{', '.join(sorted(required - enabled))}"
+                )
+        except OSError as exc:
+            raise CtlError(
+                f"cannot configure cgroup controllers at {parent}: {exc}"
+            ) from exc
+
     cg = KG_CGROUP / f"{agent}-{os.getpid()}-{int(time.time())}"
-    cg.mkdir()
-    for key, fname in (("pids_max", "pids.max"), ("memory_max", "memory.max")):
-        if key in limits:
+    created = False
+
+    try:
+        cg.mkdir()
+        created = True
+
+        for key, (_, filename) in limit_files.items():
+            if key not in limits:
+                continue
+
+            limit_file = cg / filename
+            if not limit_file.exists():
+                raise CtlError(
+                    f"required limit file {limit_file} is unavailable"
+                )
+
+            expected = str(limits[key])
+            _write(limit_file, expected)
+            actual = limit_file.read_text().strip()
+
+            if actual != expected:
+                raise CtlError(
+                    f"failed to apply {filename}: expected {expected}, got {actual}"
+                )
+
+        return cg
+
+    except Exception as exc:
+        if created:
             try:
-                _write(cg / fname, str(limits[key]))
-            except OSError as exc:
-                print(f"warning: could not set {fname}: {exc}", file=sys.stderr)
-    return cg
+                cg.rmdir()
+            except OSError:
+                pass
+
+        if isinstance(exc, CtlError):
+            raise
+        if isinstance(exc, OSError):
+            raise CtlError(
+                f"failed to configure agent cgroup {cg}: {exc}"
+            ) from exc
+        raise
 
 
 def _cgroup_empty(cg: Path) -> bool:
     try:
         return not (cg / "cgroup.procs").read_text().strip()
-    except OSError:
-        return True
+    except OSError as exc:
+        raise CtlError(
+            f"cannot verify whether cgroup {cg} is empty: {exc}"
+        ) from exc
 
 
 def _kill_cgroup(cg: Path) -> None:
     try:
         _write(cg / "cgroup.kill", "1")
+        return
     except OSError:
-        for line in (cg / "cgroup.procs").read_text().split():
-            try:
-                os.kill(int(line), signal.SIGKILL)
-            except OSError:
-                pass
+        pass
 
+    try:
+        pids = (cg / "cgroup.procs").read_text().split()
+    except OSError as exc:
+        raise CtlError(
+            f"cannot read processes from cgroup {cg}: {exc}"
+        ) from exc
+
+    for line in pids:
+        try:
+            os.kill(int(line), signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        except OSError as exc:
+            raise CtlError(
+                f"cannot terminate PID {line} in {cg}: {exc}"
+            ) from exc
+
+def cmd_run(args) -> int:
+    state = load_state()
+    a = _agent(state, args.agent)
+    mode = a["mode"] == "enforce"
+    exe, cmd = _resolve_command(args.command)
+    pw = pwd.getpwnam(a["run_as"])
+    workdir = Path(a.get("workdir", "/")).resolve()
+    env = _minimal_env(a.get("env", {}))
+    limits = a.get("limits", {})
+
+    cg = _prepare_cgroup(args.agent, limits)
+    cgid = _cgroup_id(cg)
+    map_update("agent_cgroups", pack_cgroup_key(cgid), pack_agent_value(a["id"], mode))
+    map_update("agent_state", pack_cgroup_key(cgid), pack_state_value(0))
+
+    state.setdefault("runs", {})[str(cgid)] = {
+        "agent": args.agent,
+        "agent_id": a["id"],
+        "cgroup": str(cg),
+        "pid": None,
+        "started": time.time(),
+    }
+    save_state(state)
+
+    print(f"[kgctl] agent={args.agent} id={a['id']} mode={'enforce' if mode else 'audit'} "
+          f"cgroup={cg.name} cgid={cgid} exe={exe}", file=sys.stderr)
+
+    old_int = signal.getsignal(signal.SIGINT)
+    old_term = signal.getsignal(signal.SIGTERM)
+    pid = None
+    code = 125
+
+    def _terminate(signum, _frame):
+        _kill_cgroup(cg)
+
+    try:
+        pid = os.fork()
+
+        if pid == 0:  # child
+            try:
+                _write(cg / "cgroup.procs", str(os.getpid()))
+                os.setgroups([])
+                os.setgid(pw.pw_gid)
+                os.setuid(pw.pw_uid)
+
+                if libc.prctl(38, 1, 0, 0, 0) != 0:
+                    raise OSError(
+                        ctypes.get_errno(), "prctl(NO_NEW_PRIVS) failed"
+                    )
+
+                os.chdir(workdir)
+                os.execve(exe, cmd, env)
+
+            except PermissionError:
+                print(
+                    f"[kgctl] exec of {exe} was refused (EPERM). "
+                    f"Is it in agents.{args.agent}.exec.allow?",
+                    file=sys.stderr,
+                )
+                os._exit(126)
+
+            except BaseException as exc:
+                print(f"[kgctl] child setup failed: {exc}", file=sys.stderr)
+                os._exit(125)
+
+        signal.signal(signal.SIGINT, _terminate)
+        signal.signal(signal.SIGTERM, _terminate)
+
+        _, status = os.waitpid(pid, 0)
+        code = os.waitstatus_to_exitcode(status)
+
+    finally:
+        try:
+            # Terminate any background descendants, even after normal exit.
+            _kill_cgroup(cg)
+
+            deadline = time.monotonic() + 5
+            while not _cgroup_empty(cg) and time.monotonic() < deadline:
+                time.sleep(0.05)
+
+            if not _cgroup_empty(cg):
+                raise CtlError(
+                    f"cgroup {cg} is still populated after termination; "
+                    "preserving BPF registrations and run state"
+                )
+
+            # Remove kernel identity only after confirming no process remains.
+            map_delete("agent_cgroups", pack_cgroup_key(cgid))
+            map_delete("agent_state", pack_cgroup_key(cgid))
+
+            cg.rmdir()
+
+            state = load_state()
+            state.get("runs", {}).pop(str(cgid), None)
+            save_state(state)
+
+        finally:
+            signal.signal(signal.SIGINT, old_int)
+            signal.signal(signal.SIGTERM, old_term)
+
+    return code
 
 def cmd_run(args) -> int:
     need_root()
