@@ -45,9 +45,8 @@ The canonical implementation combines:
 4. **Administrator-owned Zero Trust policy:** YAML policy is validated and compiled into BPF map entries by the controller.
 5. **Telemetry:** BPF events are sent through a ring buffer and read in user space as JSON Lines.
 6. **Operator response:** the controller exposes observe, restrict, freeze, thaw, and kill actions for a managed workload.
-7. **Operator response:** the controller exposes observe, restrict, freeze, thaw, and kill actions for a managed workload.
 
-The kernel policy is the synchronous enforcement authority. The ML component is advisory/offline in the current repository and must not be described as blocking a syscall.
+The kernel policy is the runtime enforcement authority. Behavioural analysis and ML-based detection are not implemented in the current system.
 
 ## 3. Architecture and execution flow
 
@@ -91,11 +90,6 @@ The kernel policy is the synchronous enforcement authority. The ML component is 
                          |
                    JSONL events
                          |
-              (separate ML research path)
-                         |
-              features -> model -> risk
-                         |
-                operator review/action
 ```
 
 ### Runtime sequence
@@ -258,7 +252,7 @@ KernelGuard draws on established OS security and eBPF/BPF-LSM mechanisms, and on
 | Related direction | What it contributes | KernelGuard's relationship |
 |---|---|---|
 | eBPF/BPF-LSM runtime monitoring and policy enforcement | Kernel-visible process, file and network activity with low-level policy hooks. | KernelGuard uses BPF-LSM hooks and maps as its OS enforcement boundary. |
-| Container/runtime eBPF + ML detection | Uses kernel telemetry to derive features and classify suspicious workloads. | KernelGuard explores run-level behavioural features for AI-agent workload traces, while retaining deterministic policy as the enforcement authority. |
+| Container/runtime eBPF + ML detection | Uses kernel telemetry to derive features and classify suspicious workloads. | This is a possible future research direction; KernelGuard does not currently implement this capability. |
 | Application/tool-call policy enforcement | Intercepts tool calls and validates arguments or capabilities before execution. | KernelGuard complements this layer by checking selected resulting OS operations below the agent framework. |
 | MCPGuard-Dynamic | Describes a layered MCP proxy with application validation and eBPF sandboxing for MCP server subprocesses. | Demonstrates that kernel-level eBPF controls for AI tool execution are an active research direction; KernelGuard should not claim to be the first eBPF-based AI-agent sandbox. |
 | Runtime protection/sandbox approaches for LLM agents | Inspect or sandbox risky agent actions before release to the real environment. | KernelGuard takes a Linux cgroup/BPF-LSM policy approach and documents its current integration boundary. |
@@ -268,7 +262,7 @@ The comparison is conceptual, not a controlled head-to-head benchmark. KernelGua
 
 ## 10. Research contributions and novelty
 
-The defensible contribution is the **specific integration and evaluation of a Linux workload-scoped Zero Trust enforcement design for an Agentic AI process**, rather than a claim to invent eBPF, BPF-LSM, Zero Trust, cgroups, or ML-based anomaly detection.
+The defensible contribution is the **specific integration and evaluation of a Linux workload-scoped Zero Trust enforcement design for an Agentic AI process**, rather than a claim to invent eBPF, BPF-LSM, Zero Trust or cgroups.
 
 Potential contributions supported by the current repository:
 
@@ -282,7 +276,7 @@ Potential contributions supported by the current repository:
 
 - The repository does not prove that KernelGuard is the first system to use eBPF for AI-agent security.
 - The current saved experiments do not prove an autonomous prompt-injection attack was blocked end-to-end.
-- The ML modules are not yet a tested live telemetry-to-ML-to-kernel enforcement pipeline.
+- Behavioural analysis and ML-based detection are future scope, not implemented features.
 - The runtime experiment does not establish kernel-level `-EPERM` blocking.
 - The project has not completed a controlled head-to-head evaluation against MCPGuard-Dynamic or other related systems.
 
@@ -347,7 +341,7 @@ python -m pip install --upgrade pip
 python -m pip install PyYAML
 ```
 
-The optional Gemini agent requires LangChain, the Google GenAI integration and a user-provided API key. Behavioural analysis and ML dependencies are not required because ML-based detection is not part of the current implementation.
+The optional Gemini agent requires LangChain, the Google GenAI integration and a user-provided API key. These optional packages are not required for controller unit tests or policy dry-run.
 
 ### 12.4 Safe quick-start (no root, no BPF attachment)
 
