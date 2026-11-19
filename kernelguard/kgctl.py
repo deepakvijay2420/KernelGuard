@@ -625,29 +625,56 @@ def _kill_cgroup(cg: Path) -> None:
             ) from exc
 
 def cmd_run(args) -> int:
+    need_root()
+    cmd = list(args.cmd)
+    if cmd and cmd[0] == "--":
+        cmd = cmd[1:]
+    if not cmd:
+        raise CtlError("usage: kgctl.py run AGENT -- COMMAND [ARGS...]")
+
     state = load_state()
-    a = _agent(state, args.agent)
-    mode = a["mode"] == "enforce"
-    exe, cmd = _resolve_command(args.command)
-    pw = pwd.getpwnam(a["run_as"])
-    workdir = Path(a.get("workdir", "/")).resolve()
-    env = _minimal_env(a.get("env", {}))
-    limits = a.get("limits", {})
+    policy_path = args.policy or state.get("policy_path")
+    if not policy_path or "applied" not in state:
+        raise CtlError("no policy applied; run `kgctl.py apply -p policy.yaml` first")
+    if file_sha256(policy_path) != state.get("policy_sha256"):
+        raise CtlError("policy file changed since `apply` - refusing to start (re-run apply to accept the change)")
 
-    cg = _prepare_cgroup(args.agent, limits)
-    cgid = _cgroup_id(cg)
-    map_update("agent_cgroups", pack_cgroup_key(cgid), pack_agent_value(a["id"], mode))
-    map_update("agent_state", pack_cgroup_key(cgid), pack_state_value(0))
+    pol = load_policy(policy_path)
+    # Re-validates the policy and re-checks binary hashes right now. DNS is not
+    # needed here because the egress map was filled by apply.
+    plan = build_plan(pol, resolver=lambda host: ["0.0.0.0"])
+    if args.agent not in plan["agents"]:
+        raise CtlError(f"unknown agent {args.agent!r}; known: {', '.join(plan['agents'])}")
+    a = plan["agents"][args.agent]
+    mode = {"audit": MODE_AUDIT, "enforce": MODE_ENFORCE}[args.mode or a["mode"]]
 
-    state.setdefault("runs", {})[str(cgid)] = {
-        "agent": args.agent,
-        "agent_id": a["id"],
-        "cgroup": str(cg),
-        "pid": None,
-        "started": time.time(),
-    }
+    # Complete all checks that can fail before the child joins the cgroup.
+    try:
+        pw = pwd.getpwnam(a["run_as"])
+    except KeyError:
+        raise CtlError(f"run_as user {a['run_as']!r} does not exist (useradd --system {a['run_as']})") from None
+    if pw.pw_uid == 0:
+        raise CtlError("refusing to run an agent as root (set run_as to an unprivileged user)")
+    workdir = Path(a["workdir"])
+    workdir.mkdir(parents=True, exist_ok=True)
+    os.chown(workdir, pw.pw_uid, pw.pw_gid)
+    exe = shutil.which(cmd[0], path="/usr/bin:/bin:/usr/local/bin") if "/" not in cmd[0] else cmd[0]
+    if not exe:
+        raise CtlError(f"command {cmd[0]!r} not found")
+    env = {"PATH": "/usr/bin:/bin", "HOME": str(workdir), "LANG": "C.UTF-8", "KG_AGENT": args.agent,
+           "KG_WORKDIR": str(workdir)}
+    for var in a["env_passthrough"]:
+        if var in os.environ:
+            env[var] = os.environ[var]
+    libc = ctypes.CDLL(None, use_errno=True)
+
+    cg = _prepare_cgroup(args.agent, a["limits"])
+    cgid = os.stat(cg).st_ino  # on cgroup2 the directory inode number is the cgroup ID
+    map_update("agent_cgroups", pack_cgroup_key(cgid),
+               pack_agent_cfg(a["id"], mode, a["egress_default_deny"]))
+    state.setdefault("runs", {})[str(cgid)] = {"agent": args.agent, "cgroup": str(cg),
+                                              "started": int(time.time()), "controller_pid": os.getpid()}
     save_state(state)
-
     print(f"[kgctl] agent={args.agent} id={a['id']} mode={'enforce' if mode else 'audit'} "
           f"cgroup={cg.name} cgid={cgid} exe={exe}", file=sys.stderr)
 
@@ -662,7 +689,7 @@ def cmd_run(args) -> int:
     try:
         pid = os.fork()
 
-        if pid == 0:  # child
+        if pid == 0:
             try:
                 _write(cg / "cgroup.procs", str(os.getpid()))
                 os.setgroups([])
@@ -670,9 +697,7 @@ def cmd_run(args) -> int:
                 os.setuid(pw.pw_uid)
 
                 if libc.prctl(38, 1, 0, 0, 0) != 0:
-                    raise OSError(
-                        ctypes.get_errno(), "prctl(NO_NEW_PRIVS) failed"
-                    )
+                    raise OSError(ctypes.get_errno(), "prctl(NO_NEW_PRIVS) failed")
 
                 os.chdir(workdir)
                 os.execve(exe, cmd, env)
@@ -724,104 +749,6 @@ def cmd_run(args) -> int:
             signal.signal(signal.SIGINT, old_int)
             signal.signal(signal.SIGTERM, old_term)
 
-    return code
-
-def cmd_run(args) -> int:
-    need_root()
-    cmd = list(args.cmd)
-    if cmd and cmd[0] == "--":
-        cmd = cmd[1:]
-    if not cmd:
-        raise CtlError("usage: kgctl.py run AGENT -- COMMAND [ARGS...]")
-
-    state = load_state()
-    policy_path = args.policy or state.get("policy_path")
-    if not policy_path or "applied" not in state:
-        raise CtlError("no policy applied; run `kgctl.py apply -p policy.yaml` first")
-    if file_sha256(policy_path) != state.get("policy_sha256"):
-        raise CtlError("policy file changed since `apply` - refusing to start (re-run apply to accept the change)")
-
-    pol = load_policy(policy_path)
-    # Re-validates the policy and re-checks binary hashes right now.  DNS is NOT needed here
-    # (the egress map was filled by `apply`), so a resolver outage cannot stop an agent starting.
-    plan = build_plan(pol, resolver=lambda host: ["0.0.0.0"])
-    if args.agent not in plan["agents"]:
-        raise CtlError(f"unknown agent {args.agent!r}; known: {', '.join(plan['agents'])}")
-    a = plan["agents"][args.agent]
-    mode = {"audit": MODE_AUDIT, "enforce": MODE_ENFORCE}[args.mode or a["mode"]]
-
-    # ---- everything that may fail happens BEFORE the child joins the cgroup ----
-    try:
-        pw = pwd.getpwnam(a["run_as"])
-    except KeyError:
-        raise CtlError(f"run_as user {a['run_as']!r} does not exist (useradd --system {a['run_as']})") from None
-    if pw.pw_uid == 0:
-        raise CtlError("refusing to run an agent as root (set run_as to an unprivileged user)")
-    workdir = Path(a["workdir"])
-    workdir.mkdir(parents=True, exist_ok=True)
-    os.chown(workdir, pw.pw_uid, pw.pw_gid)
-    exe = shutil.which(cmd[0], path="/usr/bin:/bin:/usr/local/bin") if "/" not in cmd[0] else cmd[0]
-    if not exe:
-        raise CtlError(f"command {cmd[0]!r} not found")
-    env = {"PATH": "/usr/bin:/bin", "HOME": str(workdir), "LANG": "C.UTF-8", "KG_AGENT": args.agent,
-           "KG_WORKDIR": str(workdir)}
-    for var in a["env_passthrough"]:
-        if var in os.environ:
-            env[var] = os.environ[var]
-    libc = ctypes.CDLL(None, use_errno=True)
-
-    cg = _prepare_cgroup(args.agent, a["limits"])
-    cgid = os.stat(cg).st_ino    # on cgroup2 the directory inode number IS the cgroup id
-    map_update("agent_cgroups", pack_cgroup_key(cgid),
-               pack_agent_cfg(a["id"], mode, a["egress_default_deny"]))
-    state.setdefault("runs", {})[str(cgid)] = {"agent": args.agent, "cgroup": str(cg),
-                                              "started": int(time.time()), "controller_pid": os.getpid()}
-    save_state(state)
-    print(f"[kgctl] agent={args.agent} id={a['id']} mode={'enforce' if mode else 'audit'} "
-          f"cgroup={cg.name} cgid={cgid} exe={exe}", file=sys.stderr)
-
-    pid = os.fork()
-    if pid == 0:                                   # ------------------ child
-        try:
-            _write(cg / "cgroup.procs", str(os.getpid()))   # join cgroup while still root
-            os.setgroups([])
-            os.setgid(pw.pw_gid)
-            os.setuid(pw.pw_uid)
-            if libc.prctl(38, 1, 0, 0, 0) != 0:        # PR_SET_NO_NEW_PRIVS
-                raise OSError(ctypes.get_errno(), "prctl(NO_NEW_PRIVS) failed")
-            os.chdir(workdir)
-            os.execve(exe, cmd, env)
-        except PermissionError:
-            print(f"[kgctl] exec of {exe} was refused (EPERM). Is it in agents.{args.agent}.exec.allow?",
-                  file=sys.stderr)
-            os._exit(126)
-        except BaseException as exc:  # noqa: BLE001 - child must never return into the parent's code
-            print(f"[kgctl] child setup failed: {exc}", file=sys.stderr)
-            os._exit(125)
-
-    # ---------------------------------------------------------- parent
-    def _terminate(signum, _frame):
-        _kill_cgroup(cg)
-
-    signal.signal(signal.SIGINT, _terminate)
-    signal.signal(signal.SIGTERM, _terminate)
-    _, status = os.waitpid(pid, 0)
-    code = os.waitstatus_to_exitcode(status)
-
-    # the agent may have left background children behind: kill and wait for an empty cgroup
-    deadline = time.time() + 5
-    while not _cgroup_empty(cg) and time.time() < deadline:
-        _kill_cgroup(cg)
-        time.sleep(0.05)
-    map_delete("agent_cgroups", pack_cgroup_key(cgid))
-    map_delete("agent_state", pack_cgroup_key(cgid))
-    try:
-        cg.rmdir()
-    except OSError as exc:
-        print(f"warning: could not remove {cg}: {exc}", file=sys.stderr)
-    state = load_state()
-    state.get("runs", {}).pop(str(cgid), None)
-    save_state(state)
     return code
 
 
