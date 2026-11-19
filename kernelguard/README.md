@@ -40,6 +40,12 @@ The LangChain Google integration normally reads `GOOGLE_API_KEY` from the agent 
 - [Dataset methodology](dataset/README.md)
 - [Root project overview](../README.md)
 
-## Integration status
+## Current implementation status
 
-BPF-LSM policy is the enforcement authority. Behavioural ML and dataset work are currently separate analysis/evaluation components; existing collectors parse legacy monitor logs, not the current BPF ring-buffer JSON schema.
+The active controller includes fail-closed cgroup resource-limit setup and safer workload lifecycle cleanup: configured cgroup controllers and limit files are checked, values are read back, descendants are terminated, and BPF identity/run state is retained if the controller cannot verify an empty cgroup.
+
+The supplied Ubuntu Stage 3/Stage 5 reports record 30 unit tests passing and selected enforce-mode tests: an unapproved executable was refused with EPERM, a synthetic `.env` read tainted the workload, a synthetic file named `shadow` was denied, and a tainted workload's test connection to `1.1.1.1:443` was denied. These results are environment-specific and do not prove universal coverage. See [stage validation evidence](../evidence/stage-validation/) and the [live demo guide](../docs/LIVE_DEMO_GUIDE.md).
+
+Behavioural ML is present as offline dataset/feature/training/evaluation work plus an inference wrapper and advisory risk-fusion helper. It is not yet wired as a live BPF JSON-to-ML-to-controller enforcement pipeline. Model artifacts are external; the current ring-buffer JSON-to-dataset adapter remains to be implemented and validated.
+
+Run the unit tests, BPF build, verifier/load/attach checks and live enforcement matrix on the target Ubuntu VM before describing a new checkout as validated.
