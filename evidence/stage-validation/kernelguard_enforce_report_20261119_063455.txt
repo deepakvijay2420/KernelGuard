@@ -1,0 +1,33 @@
+======================================
+ KERNELGUARD ENFORCEMENT TEST
+======================================
+programs loaded : True
+policy          : /home/deepak/Amrita/KernelGuard/kernelguard/policy/policy.taint-test.yaml (sha256 621d069642e8...)
+  egress_allow     9 entries
+  exec_allow       6 entries
+  sensitive_names  10 entries
+running agents  : 0
+decisions (hook/verdict: count)
+  exec/allow: 4
+  exec/audit_deny: 25
+
+========== APPLY ENFORCE POLICY ==========
+agent research_agent: id=1 mode=enforce egress_default_deny=0 run_as=kgagent limits={'pids_max': 64, 'memory_max': 1073741824}
+  map sensitive_names  10 entries
+  map exec_allow       6 entries
+  map egress_allow     9 entries
+  note: research_agent: generativelanguage.googleapis.com -> 172.217.112.4, 172.217.113.4, 172.217.114.4, 172.217.115.4, 172.217.116.4, 172.217.117.4, 172.217.118.4, 172.217.119.4 (re-run apply to refresh DNS)
+  note: research_agent: egress_default=allow - network is only restricted after a sensitive read (taint)
+applied policy /tmp/kernelguard-enforce-test.yaml (sha256 a37bfed8bf5b...)
+
+========== AUTHORIZED EXECUTION ==========
+[kgctl] agent=research_agent id=1 mode=enforce cgroup=research_agent-10620-1795050299 cgid=12556 exe=/usr/bin/whoami
+kgagent
+Authorized exit code: 0
+
+========== UNAUTHORIZED EXECUTION ==========
+[kgctl] agent=research_agent id=1 mode=enforce cgroup=research_agent-10641-1795050299 cgid=12598 exe=/usr/bin/id
+[kgctl] exec of /usr/bin/id was refused (EPERM). Is it in agents.research_agent.exec.allow?
+Unauthorized exit code: 126
+
+========== SECURITY EVENTS ==========
