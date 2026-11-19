@@ -5,6 +5,8 @@
 KernelGuard investigates how to place a deterministic operating-system security boundary around AI agents that can invoke tools, launch processes, read files, or communicate over a network. Its primary research scenario is an agent influenced by untrusted content (including indirect prompt injection) attempting an OS action outside the administrator's intended permissions.
 
 > **Research prototype — not production-ready.** The repository contains a canonical BPF-LSM/ZTA implementation, historical experiments, a controlled behavioural dataset, ML evaluation outputs, and a small runtime experiment. The evidence does not yet establish a fully integrated live LLM → BPF telemetry → ML → automated enforcement pipeline.
+>
+> **Preparing for a code review?** Start with the [Code Review Walkthrough](docs/CODE_REVIEW_WALKTHROUGH.md), the detailed [Zero Trust Policy Guide](docs/ZTA_POLICY_GUIDE.md), and the [Architecture diagram](docs/architecture.md). These explain the safe quick-start, module inputs/outputs, policy lifecycle, and current implementation boundaries.
 
 ## Contents
 
