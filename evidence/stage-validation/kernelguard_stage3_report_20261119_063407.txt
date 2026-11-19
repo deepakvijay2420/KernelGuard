@@ -91,4 +91,4 @@ Unauthorized test exit code: 0
 {"ts_ns":6160336306197,"cgroup_id":12430,"agent":1,"hook":"exec","verdict":"allow","pid":10242,"comm":"python3","name":"/usr/bin/whoami","ino":664544,"dev":8388611,"dst":"","port":0,"family":0}
 {"ts_ns":6160504790508,"cgroup_id":12472,"agent":1,"hook":"exec","verdict":"audit_deny","pid":10278,"comm":"python3","name":"/usr/bin/id","ino":664494,"dev":8388611,"dst":"","port":0,"family":0}
 {"ts_ns":6211557715507,"cgroup_id":12556,"agent":1,"hook":"exec","verdict":"allow","pid":10628,"comm":"python3","name":"/usr/bin/whoami","ino":664544,"dev":8388611,"dst":"","port":0,"family":0}
-{"ts_ns":6211649383837,"cgroup_id":12598,"agent":1,"comm":"python3","hook":"exec","verdict":"deny","pid":10649,"comm":"python3","name":"/usr/bin/id","ino":664494,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6211649383837,"cgroup_id":12598,"agent":1,"hook":"exec","verdict":"deny","pid":10649,"comm":"python3","name":"/usr/bin/id","ino":664494,"dev":8388611,"dst":"","port":0,"family":0}
