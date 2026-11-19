@@ -88,3 +88,10 @@ daemon/zta/zta_controller
 
 # Old development source
 ebpf/exec_monitor_before_pinning.c
+
+
+# Canonical KernelGuard build outputs
+/kernelguard/build/
+/kernelguard/kg_events
+/kernelguard/kg_zta.bpf.o
+/kernelguard/*.o
