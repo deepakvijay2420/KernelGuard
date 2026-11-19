@@ -571,7 +571,7 @@ However, the current evidence does **not** establish a fully integrated live pip
 
 ## 14. Current status and future work
 
-KernelGuard is an active research prototype with demonstrated selected kernel-level enforcement on the supplied Ubuntu VM. It is not production-ready and does not claim universal prompt-injection detection or a fully integrated ML-driven enforcement pipeline. The canonical GitHub source still requires the controller synchronization and clean-checkout validation listed above before the repository can be called fully up to date.
+KernelGuard is an active research prototype with demonstrated selected kernel-level enforcement on the supplied Ubuntu VM. It is not production-ready and does not claim universal prompt-injection detection or a fully integrated ML-driven enforcement pipeline. The latest hardened controller has been synchronized into the canonical `kernelguard/kgctl.py` path on the integration branch. The branch still requires a clean-checkout test run, BPF build/verifier/load/attach validation and review before it is ready to merge into `main`.
 
 ## 15. References
 
