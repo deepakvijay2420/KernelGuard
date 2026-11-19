@@ -20,7 +20,9 @@ KernelGuard investigates how to place a deterministic operating-system security 
 - [Research contributions and novelty](#10-research-contributions-and-novelty)
 - [Attack coverage and limitations](#11-attack-coverage-and-limitations)
 - [Installation and safe validation](#12-installation-and-safe-validation)
-- [Current status and future work](#13-current-status-and-future-work)
+- [Latest implementation and verified progress](#13-latest-implementation-and-verified-progress)
+- [Current status and future work](#14-current-status-and-future-work)
+- [References](#15-references)
 - [References](#14-references)
 
 ## 1. Problem and motivation
@@ -516,36 +518,61 @@ sudo python3 kgctl.py unload
 | Audit-mode test | Covered actions produce audit decisions | The kernel blocks those actions |
 | Enforce-mode test plus observed `EPERM` | A specific tested operation was blocked in that environment | All attack classes are blocked |
 
-## 13. Current status and future work
+## 13. Latest implementation and verified progress
 
-| Component | Repository status |
-|---|---|
-| Canonical BPF-LSM source and hooks | Implemented in source; target-VM verifier/attach validation still required |
-| Controller and policy lifecycle | Implemented in source; clean-checkout integration testing required |
-| cgroup v2 identity and resource limits | Implemented in controller source; runtime validation required |
-| Ring-buffer event reader | Implemented in source; end-to-end event validation required |
-| LangChain/Gemini agent example | Implemented as a controlled example |
-| Controlled legacy dataset | Present with documented provenance limitations |
-| ML training/evaluation scripts and saved metrics | Present in research folders |
-| Canonical 23-feature extractor and inference wrapper | Present; model artifacts external |
-| Risk-fusion logic | Present as an advisory decision helper |
-| Live BPF JSON → dataset/ML adapter | Not yet verified |
-| Live ML-triggered controller response | Not yet integrated/verified |
-| Live LLM prompt-injection → kernel deny experiment | Not yet demonstrated in saved results |
-| Kernel `-EPERM` enforcement in the saved runtime experiment | Not demonstrated by that experiment |
+The following status is based on the Ubuntu source snapshot supplied for review on 19 November 2026, including the `KernelGuard-Core/` working copy and its saved stage reports. It is important to distinguish that local snapshot from the older controller currently present under the canonical GitHub path until the source synchronization is reviewed and merged.
 
-### Priority next steps
+### Implemented and evidenced in the latest Ubuntu snapshot
 
-1. Run clean-checkout tests and BPF compilation on the target VM.
-2. Record BPF verifier, load/attach and ring-buffer delivery results.
-3. Run controlled audit and enforce-mode tests and retain the exact logs.
-4. Build and test a schema adapter from BPF JSON events to the dataset feature pipeline.
-5. Run a live LangChain/Gemini experiment with a benign task and a controlled malicious document; retain the document, prompt, model/tool trace, cgroup ID and kernel events.
-6. Version and include model artifacts with provenance, or document a reproducible training command and artifact checksum.
-7. Connect ML out-of-band risk assessment to a safe, explicit controller response workflow, with operator approval and audit logging.
-8. Expand attack coverage and compare with related systems using a common benchmark.
+| Area | Current implementation / evidence | Status boundary |
+|---|---|---|
+| eBPF-LSM runtime controls | BPF-LSM hooks for executable checks, sensitive file opens, selected network operations, and BPF/ptrace-related restrictions | Implemented in source; selected hook behaviours have runtime evidence, not universal syscall coverage |
+| Workload identity | Dedicated cgroup v2 per managed agent; cgroup ID is used as the workload identity key in BPF maps | Demonstrated in the saved stage reports |
+| Executable policy | Per-agent executable allow-list based on the executable file identity (device/inode) | Enforce-mode denial of an unapproved `/usr/bin/id` is recorded with `EPERM` |
+| Sensitive file policy | Configurable filename rules; a synthetic `.env` read can taint a workload and a synthetic `shadow` filename can be denied | Taint and denial events are recorded in Stage 5; these tests use synthetic files, not real system secrets |
+| Taint-based egress | A tainted workload's selected IPv4 network connection is checked against the egress allow-list | Stage 5 records denial of a connection to `1.1.1.1:443` after a synthetic `.env` read |
+| Audit/enforce modes | Audit mode records a would-deny decision while allowing the operation; enforce mode rejects the tested operation | Stage 3 and Stage 5 reports distinguish audit from enforce outcomes |
+| cgroup resource limits | Controller checks configured cgroup controllers, writes configured limits and reads values back | Latest Core controller adds fail-closed validation; the controller source must be synchronized into the canonical path |
+| Process lifecycle | Controller terminates remaining descendants and removes BPF identity/run state only after confirming the cgroup is empty | Latest Core controller adds lifecycle hardening; unit tests pass, but failure-path runtime testing should continue |
+| Event telemetry | Ring-buffer reader emits structured JSON Lines with cgroup ID, agent ID, hook, verdict, process and target fields | Runtime event records are present in supplied evidence |
+| LangChain/Gemini agent | A controlled agent example and prompt-injection experiment scripts/evidence are present | External API availability and repeatability are environment-dependent; not a prerequisite for the deterministic kernel demo |
 
-## 14. References
+### Latest saved runtime evidence
+
+The supplied Stage 3 report records 30 controller unit tests passing. It also records an audit-mode test where an unapproved executable was logged as `audit_deny` and allowed to run, followed by an enforce-mode test where the same unapproved `/usr/bin/id` operation was denied and returned exit code 126 with an `EPERM` message.
+
+The supplied Stage 5 report records these outcomes under an enforce policy:
+
+- A normal synthetic public-file read completed.
+- Reading a synthetic `.env` file generated a `file_open / taint` event.
+- Reading a synthetic file named `shadow` generated a `file_open / deny` event and `Operation not permitted`.
+- After the synthetic `.env` read, a connection attempt to `1.1.1.1:443` generated a `connect / deny` event and `PermissionError`.
+- The report records the agent workload cgroup IDs and event details. These are test results from the supplied VM reports, not a guarantee for every kernel or policy configuration.
+
+The separate enforcement report records an authorized `/usr/bin/whoami` run succeeding and an unapproved `/usr/bin/id` run being refused in enforce mode. Keep the raw reports in the repository as evidence; do not turn these finite tests into a claim of complete attack prevention.
+
+### Behavioural ML: what is implemented and what is not
+
+The project has ML research code; it is not accurate to say that no ML work has been done. The current work includes controlled dataset generation, run-level feature extraction, training/evaluation scripts for Logistic Regression, Random Forest and Gradient Boosting, saved experiment results, a model-loading/inference wrapper, and an advisory risk-fusion helper.
+
+However, the current evidence does **not** establish a fully integrated live pipeline in which current BPF ring-buffer JSON is continuously converted to ML features, scored by a deployed model, and used to trigger an automated controller response. The saved controlled-dataset results and saved runtime decision experiment must remain separate from live kernel enforcement evidence. LSTM autoencoder inference and LLM semantic adjudication are not demonstrated as completed components in the supplied implementation snapshot.
+
+### Remaining work (not to be presented as completed)
+
+1. Synchronize the latest hardened `KernelGuard-Core/kgctl.py` into the canonical `kernelguard/kgctl.py` path and retain the existing repository history.
+2. Run the complete test suite and BPF build from a clean checkout of the canonical layout.
+3. Validate BPF verifier acceptance, load/attach, event delivery and enforce-mode behaviour on the target Ubuntu VM after synchronization.
+4. Expand tests for cgroup controller failures, descendants, interrupted workloads and cleanup failure paths.
+5. Build and validate the BPF JSON-to-dataset adapter before claiming current telemetry feeds the ML pipeline.
+6. Reproduce ML experiments from the documented dataset and record artifact provenance/checksums; keep offline evaluation separate from runtime detection claims.
+7. If live ML response is pursued, integrate it out-of-band with explicit operator policy, bounded response actions and audit logging.
+8. Re-run the guide demonstration from a clean checkout and archive command output, policy hash and event logs.
+
+## 14. Current status and future work
+
+KernelGuard is an active research prototype with demonstrated selected kernel-level enforcement on the supplied Ubuntu VM. It is not production-ready and does not claim universal prompt-injection detection or a fully integrated ML-driven enforcement pipeline. The canonical GitHub source still requires the controller synchronization and clean-checkout validation listed above before the repository can be called fully up to date.
+
+## 15. References
 
 The following works provide context for the problem and related approaches. They are not evidence that KernelGuard has been directly compared with those systems.
 
