@@ -1,18 +1,10 @@
-# ==========================================
-# KernelGuard Git Ignore
-# ==========================================
-
 # Python
 __pycache__/
 *.py[cod]
-*.pyo
-
-# Python virtual environments
 .venv/
 venv/
-env/
 
-# Environment / secrets
+# Secrets and local environment
 .env
 .env.*
 *.key
@@ -21,77 +13,28 @@ env/
 secrets/
 credentials/
 
-# API keys / local configuration
-google_api_key.txt
-openai_api_key.txt
-
-# Compiled binaries / objects
+# Compiled outputs
 *.o
 *.so
 *.a
 *.out
-
-# KernelGuard generated binaries
-ebpf/kernelguard_reader
-ebpf/exec_monitor
-ebpf/zta/zta_controller
-ebpf/zta/zta_enforcer.bpf.o
-ebpf/zta/zta_controller
-
-# Backup / temporary source files
-*backup*
-*_backup.*
-*.backup
-*.old
-*.bak
-*~
-*.tmp
-*.swp
-
-# Runtime logs
-logs/
-*.log
-
-# Runtime traces
-traces/
-
-# Temporary experiment files
-tmp/
-
-# Generated ML models
-*.joblib
-*.pkl
-*.pickle
-
-# Generated experiment outputs
-# Keep curated research results in Git, but ignore temporary files.
-results/**/tmp/
-results/**/logs/
-
-# IDE
-.vscode/
-.idea/
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Python test/cache
-.pytest_cache/
-.mypy_cache/
-
-# Jupyter
-.ipynb_checkpoints/
-
-# Local ZTA compiled binary
-daemon/zta/zta_controller
-
-# Old development source
-ebpf/exec_monitor_before_pinning.c
-
-
-# Canonical KernelGuard build outputs
 /kernelguard/build/
 /kernelguard/kg_events
 /kernelguard/kg_zta.bpf.o
-/kernelguard/*.o
+
+# Runtime output
+*.log
+logs/
+traces/
+
+# Temporary and editor files
+*.tmp
+*.swp
+*~
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
