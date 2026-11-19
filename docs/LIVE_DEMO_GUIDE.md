@@ -33,17 +33,19 @@ Expected unit-test result for the supplied source snapshot: 30 tests pass. This 
 ## 3. Validate the policy
 
 ```bash
-python3 tools/policy_lint.py policy/policy.hardened.yaml
-sudo python3 kgctl.py plan -p policy/policy.hardened.yaml
+cp policy/policy.taint-test.yaml /tmp/kg-demo-policy.yaml
+sed -i 's/mode: audit/mode: enforce/g' /tmp/kg-demo-policy.yaml
+python3 tools/policy_lint.py /tmp/kg-demo-policy.yaml
+sudo python3 kgctl.py plan -p /tmp/kg-demo-policy.yaml
 ```
 
-Review the policy before applying it. Confirm the `run_as` account exists, configured executable paths exist, work directories are suitable, and resource limits are supported by the host cgroup hierarchy.
+This test policy is intentionally configured with permissive default egress so the demonstration can show the change after a sensitive read. The demo copy switches the agent to enforce mode. Review the policy before applying it. Confirm the `run_as` account exists, configured executable paths exist, work directories are suitable, and resource limits are supported by the host cgroup hierarchy.
 
 ## 4. Load and apply
 
 ```bash
 sudo python3 kgctl.py load
-sudo python3 kgctl.py apply -p policy/policy.hardened.yaml
+sudo python3 kgctl.py apply -p /tmp/kg-demo-policy.yaml
 sudo python3 kgctl.py status
 ```
 
@@ -77,7 +79,7 @@ printf 'SYNTHETIC_SHADOW_MARKER\n' | sudo tee /tmp/kg-demo/shadow >/dev/null
 sudo chmod 0644 /tmp/kg-demo/public.txt /tmp/kg-demo/.env /tmp/kg-demo/shadow
 ```
 
-The active policy must contain the matching sensitive filename rules. In `policy/policy.hardened.yaml`, `.env` is a taint filename and `shadow` is a deny filename. Confirm the exact rules in the policy you apply before demonstrating.
+The active policy must contain the matching sensitive filename rules. In `policy/policy.taint-test.yaml`, `.env` is a taint filename and `shadow` is a deny filename. The test policy's default egress is allow, so the network denial after taint is attributable to the taint restriction when the test destination is not on the allow-list. Confirm the exact rules in the policy you apply before demonstrating.
 
 Run the synthetic file tests:
 
@@ -118,6 +120,7 @@ The controller should report no active demo run after the workload exits. Confir
 ```bash
 sudo python3 kgctl.py unload
 sudo rm -rf /tmp/kg-demo
+sudo rm -f /tmp/kg-demo-policy.yaml
 ```
 
 Do not use `unload --force` while a managed agent is still running; it can leave that workload without the intended BPF protection.
