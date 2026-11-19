@@ -1,49 +1,68 @@
-# KernelGuard — Unified Runtime Security
+# KernelGuard Core
 
-This directory is the canonical runtime implementation. It contains the agent example, BPF-LSM enforcement core, ZTA controller, policies, event reader and tests.
-
-## Safe quick start
-
-```bash
-python3 kgctl.py plan -p policy/policy.example.yaml
-make test
-bash tests/dry_run.sh
-```
-
-Build and inspect prerequisites only after installing compiler/libbpf/bpftool dependencies:
-
-```bash
-make
-python3 kgctl.py doctor
-```
-
-Do not load or detach BPF programs on a shared host without inspecting existing programs, links and pins and confirming ownership. Use a disposable VM for live tests.
+This directory contains the active KernelGuard implementation. It combines eBPF-LSM enforcement, cgroup-v2 workload identity, the Zero Trust controller, administrator policies, event telemetry and controlled tests.
 
 ## Components
 
-- `agent/`: LangChain + Gemini agent and controlled Python tools.
-- `kgctl.py`: YAML validation, BPF loading/map updates, cgroup lifecycle, privilege drop and response tiers.
-- `bpf/`: BPF-LSM hooks and shared map/event structures.
-- `policy/`: administrator-authored policies.
-- `tools/`: JSON ring-buffer reader and policy lint.
-- `tests/`: unit tests, safe dry run and controlled probes.
+- `kgctl.py` — validates policy, loads BPF programs, updates maps, manages cgroups and controls workload lifecycle.
+- `bpf/` — BPF-LSM hooks and shared kernel/userspace structures.
+- `policy/` — administrator-owned YAML policies.
+- `agent/` — example Agentic AI integration.
+- `tools/kg_events.c` — reads events from the BPF ring buffer.
+- `tools/policy_lint.py` — validates policy files.
+- `tests/` — controller unit tests, dry-run checks and controlled probes.
+- `systemd/` — optional service unit.
+- `Makefile` — builds the BPF object and event reader.
 
-## API key
+## Requirements
 
-The LangChain Google integration normally reads `GOOGLE_API_KEY` from the agent process environment. Set it in the controller's environment and list only the variable name in `env_passthrough`. Never commit or print the key. The agent can access a key passed to its environment; this is not a secret vault.
+- Linux kernel with BPF-LSM and BTF support.
+- cgroup v2 and bpffs.
+- clang/LLVM with BPF target, GCC, libbpf development headers and bpftool.
+- Python 3 and PyYAML.
 
-## Documentation
+The optional LangChain/Gemini agent requires its corresponding Python packages and a user-provided API key. The key must never be committed to the repository.
 
-- [Complete code architecture](ARCHITECTURE.md)
-- [Dataset methodology](dataset/README.md)
-- [Root project overview](../README.md)
+## Safe setup
 
-## Current implementation status
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install --upgrade pip
+python3 -m pip install PyYAML
 
-The active controller includes fail-closed cgroup resource-limit setup and safer workload lifecycle cleanup: configured cgroup controllers and limit files are checked, values are read back, descendants are terminated, and BPF identity/run state is retained if the controller cannot verify an empty cgroup.
+python3 kgctl.py plan -p policy/policy.example.yaml
+python3 -m unittest discover -s tests -v
+make
+sudo python3 kgctl.py doctor
+```
 
-The supplied Ubuntu Stage 3/Stage 5 reports record 30 unit tests passing and selected enforce-mode tests: an unapproved executable was refused with EPERM, a synthetic `.env` read tainted the workload, a synthetic file named `shadow` was denied, and a tainted workload's test connection to `1.1.1.1:443` was denied. These results are environment-specific and do not prove universal coverage. See [stage validation evidence](../evidence/stage-validation/) and the [live demo guide](../docs/LIVE_DEMO_GUIDE.md).
+Run commands from this directory. A successful policy plan, unit test or compilation does not by itself prove that BPF programs load and enforce policy on the target kernel.
 
-Behavioural analysis, ML-based detection, dataset-driven classification, model inference and ML-driven response are **future scope**. They are not implemented in the current KernelGuard runtime. Historical or experimental files retained elsewhere in the repository are not active features and must not be presented as completed implementation.
+## Runtime flow
 
-Run the unit tests, BPF build, verifier/load/attach checks and live enforcement matrix on the target Ubuntu VM before describing a new checkout as validated.
+1. The administrator prepares a YAML policy.
+2. The controller validates the policy and prepares the BPF map entries.
+3. The controller loads and attaches the BPF-LSM programs.
+4. The controller creates a cgroup-v2 workload and registers its cgroup identity.
+5. The managed agent runs with reduced privileges and configured resource limits.
+6. BPF-LSM hooks check selected executable, file and network operations against policy.
+7. Events are sent through the BPF ring buffer and read by the user-space event reader.
+
+## Implemented security controls
+
+- Executable allow-list checks using executable file identity.
+- Configured sensitive filename rules that can deny access or taint a workload.
+- IPv4 destination and port checks for tainted workloads.
+- Selected BPF and ptrace operation restrictions.
+- Audit and enforce policy modes.
+- cgroup-v2 workload identity and lifecycle management.
+- Structured event telemetry.
+
+## Not implemented
+
+Behavioural analysis, ML detection, dataset-driven classification, model inference and ML-driven response are future scope only. They are not part of this Core implementation.
+
+## Safety
+
+Use a disposable Ubuntu VM for live BPF loading and enforcement. Inspect existing BPF programs, links and pins before loading or unloading KernelGuard. Never test against production workloads or real credentials.
