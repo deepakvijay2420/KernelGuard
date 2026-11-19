@@ -4,7 +4,7 @@
 
 KernelGuard investigates how to place a deterministic operating-system security boundary around AI agents that can invoke tools, launch processes, read files, or communicate over a network. Its primary research scenario is an agent influenced by untrusted content (including indirect prompt injection) attempting an OS action outside the administrator's intended permissions.
 
-> **Research prototype — not production-ready.** The repository contains a canonical BPF-LSM/ZTA implementation, historical experiments, a controlled behavioural dataset, ML evaluation outputs, and a small runtime experiment. The evidence does not yet establish a fully integrated live LLM → BPF telemetry → ML → automated enforcement pipeline.
+> **Research prototype — not production-ready.** The implemented scope is the Linux eBPF-LSM and Zero Trust runtime enforcement framework described below. Behavioural analysis, ML-based detection, dataset-driven classification and model-based risk assessment are future-scope items, not implemented features of the current system. Historical or experimental files retained in the repository must not be treated as proof that these capabilities are integrated.
 
 ## Contents
 
@@ -14,8 +14,8 @@ KernelGuard investigates how to place a deterministic operating-system security 
 - [Repository structure](#4-repository-structure)
 - [Zero Trust policy](#5-zero-trust-policy)
 - [Kernel enforcement and supported controls](#6-kernel-enforcement-and-supported-controls)
-- [Behavioural ML and dataset](#7-behavioural-ml-and-dataset)
-- [Experimental results](#8-experimental-results)
+- [Future scope: behavioural analysis and ML](#7-future-scope-behavioural-analysis-and-ml)
+- [Current implementation results](#8-current-implementation-results)
 - [Related work and research positioning](#9-related-work-and-research-positioning)
 - [Research contributions and novelty](#10-research-contributions-and-novelty)
 - [Attack coverage and limitations](#11-attack-coverage-and-limitations)
@@ -24,7 +24,6 @@ KernelGuard investigates how to place a deterministic operating-system security 
 - [Latest implementation and verified progress](#13-latest-implementation-and-verified-progress)
 - [Current status and future work](#14-current-status-and-future-work)
 - [References](#15-references)
-- [References](#14-references)
 
 ## 1. Problem and motivation
 
@@ -45,7 +44,7 @@ The canonical implementation combines:
 3. **Kernel security boundary:** eBPF programs attached through BPF-LSM inspect selected Linux security operations.
 4. **Administrator-owned Zero Trust policy:** YAML policy is validated and compiled into BPF map entries by the controller.
 5. **Telemetry:** BPF events are sent through a ring buffer and read in user space as JSON Lines.
-6. **Behavioural research:** separate scripts extract run-level features and compare ML classifiers on a controlled dataset.
+6. **Operator response:** the controller exposes observe, restrict, freeze, thaw, and kill actions for a managed workload.
 7. **Operator response:** the controller exposes observe, restrict, freeze, thaw, and kill actions for a managed workload.
 
 The kernel policy is the synchronous enforcement authority. The ML component is advisory/offline in the current repository and must not be described as blocking a syscall.
@@ -108,7 +107,6 @@ The kernel policy is the synchronous enforcement authority. The ML component is 
 5. `kgctl.py run` verifies the policy digest, creates a cgroup v2 workload, registers its ID, drops the child to an unprivileged account, sets `no_new_privs`, applies configured resource limits where supported, and launches the command.
 6. BPF-LSM hooks identify managed processes by the current cgroup ID and check covered operations.
 7. The hook emits an event to the ring buffer. The user-space reader formats the event as JSON Lines.
-8. The separate behavioural-analysis scripts can process compatible event records. A tested adapter from the current ring-buffer JSON schema to the legacy dataset schema is still required.
 
 ### Why cgroup v2 is used
 
@@ -123,18 +121,13 @@ KernelGuard/
 ├── kernelguard/              # Canonical active implementation
 │   ├── agent/                # LangChain + Gemini example
 │   ├── bpf/                  # BPF-LSM source, shared headers, vmlinux.h
-│   ├── detection/            # 23-feature extractor, ML wrapper, risk fusion
-│   ├── dataset/              # Canonical dataset methodology and generators
 │   ├── policy/               # Active administrator policy examples
 │   ├── systemd/              # Service unit
 │   ├── tests/                # Controller tests, dry-run and probes
 │   ├── tools/                # Ring-buffer reader and policy linter
 │   ├── kgctl.py               # Controller
 │   └── Makefile
-├── research/
-│   ├── dataset/              # Historical controlled CSV datasets and generators
-│   ├── models/               # ML training and evaluation code
-│   └── results/              # Saved ML and runtime experiment outputs
+├── research/                 # Historical / exploratory material; not active ML implementation
 ├── archive/
 │   ├── agents/               # Earlier agent versions and prompt-injection demo
 │   ├── daemon/               # Earlier policy engines and controller
@@ -148,7 +141,7 @@ KernelGuard/
 └── .gitignore
 ```
 
-The archive is retained intentionally. Historical code and scripts are not the active implementation and may require path/dependency adjustments before they can be run from the reorganised repository. The `libbpf-bootstrap` gitlink is retained separately pending confirmation of its upstream URL and submodule configuration; it must not be removed blindly.
+The archive and research material are retained for provenance only. They are not part of the currently implemented runtime feature set, and their presence does not mean behavioural analysis or ML detection is implemented. Historical code and scripts may require path/dependency adjustments before they can be run from the reorganised repository. The `libbpf-bootstrap` gitlink is retained separately pending confirmation of its upstream URL and submodule configuration; it must not be removed blindly.
 
 ## 5. Zero Trust policy
 
@@ -222,119 +215,41 @@ KernelGuard does not block an abstract attack name directly. It can block a cove
 
 **Safe claim:** KernelGuard implements policy checks for selected executable, file-open, network, BPF and ptrace operations. Whether a particular attack is blocked depends on its resulting OS behaviour and policy configuration. It is not a universal defence against every prompt injection, malware family, or Agentic AI attack.
 
-## 7. Behavioural ML and dataset
+## 7. Future scope: behavioural analysis and ML
 
-### Dataset source and composition
+Behavioural analysis and ML-based detection are **future work** for KernelGuard. They are not part of the currently implemented or validated runtime security pipeline.
 
-The repository contains a controlled research-generated dataset, not a public benchmark and not real-world malware telemetry.
+Potential future extensions include:
 
-The documented dataset composition is:
+- Collecting and curating workload behaviour traces from the current eBPF ring-buffer event stream.
+- Defining and validating behavioural features for agent process, file and network activity.
+- Building a reproducible labelled dataset with clearly documented benign and attack scenarios.
+- Evaluating suitable anomaly-detection or classification approaches using independent train/test splits.
+- Adding an out-of-band behavioural risk assessment service.
+- Designing a controlled and auditable interface between any future risk assessment and the ZTA controller.
 
-| Class | Workload runs | Recorded events |
-|---|---:|---:|
-| Benign | 800 | 1,971 |
-| Attack-like | 300 | 810 |
-| **Total** | **1,100** | **2,781** |
+These items must be implemented, tested and evaluated before they can be described as project capabilities. Any historical datasets, model scripts, saved metrics or experimental files retained elsewhere in this repository are preserved as research material only; they do not establish that an ML detector is integrated, operational or validated in the current KernelGuard implementation.
 
-Benign data consists of 40 simple task types repeated 10 times and 20 composite workflow types repeated 20 times. Attack-like data consists of 10 scripted command-sequence scenarios repeated 30 times each.
+## 8. Current implementation results
 
-Attack-like scenario labels include `prompt_injection_sudo`, `prompt_injection_bash`, `shell_execution_chain`, `password_utility`, `tmp_executable`, `unknown_executable`, `benign_to_sudo`, `benign_to_shell`, `repeated_sudo`, and `repeated_shell`.
+The current project results are based on the implemented eBPF-LSM/ZTA runtime controls and the supplied Ubuntu VM test reports. They are not ML classification results.
 
-These labels describe controlled command sequences. The generator executes the commands directly; the labels do not prove that a live LLM received a malicious document and autonomously chose those commands.
+### Controller and policy validation
 
-### Data collection flow
+The supplied Stage 3 report records 30 controller unit tests passing. It also records an allowed `whoami` execution and an audit-mode record for an unapproved `id` execution. In enforce mode, the unapproved `/usr/bin/id` execution was refused with `EPERM`.
 
-1. Define a controlled benign or attack-like workload.
-2. Prepare harmless test files and commands in a lab directory.
-3. Record the current log offset and workload start time.
-4. Execute the workload with timeouts.
-5. Read only newly appended legacy KernelGuard log records.
-6. Parse process, UID, PID, executable path, risk, reason and action.
-7. Attach run ID, scenario, repetition, label and timestamps.
-8. Save event-level and run-level CSV files.
-9. Aggregate each run into behavioural features for model training/evaluation.
+### Kernel enforcement tests
 
-**Telemetry provenance limitation:** existing dataset generators parse the legacy text log schema (`PID | UID | PROCESS | PATH | RISK | REASON | ACTION`). The canonical `kg_events` reader emits JSON Lines from the BPF ring buffer. A tested adapter and end-to-end capture run are required before claiming the historical CSV dataset was generated from the current canonical BPF-LSM telemetry path.
+The supplied Stage 5 report records the following controlled tests:
 
-### Feature extraction and ML workflow
+- A synthetic public-file read completed successfully.
+- Reading a synthetic `.env` file generated a `file_open / taint` event.
+- Reading a synthetic file named `shadow` generated a `file_open / deny` event and `Operation not permitted`.
+- After the synthetic `.env` read, a connection attempt to `1.1.1.1:443` generated a `connect / deny` event and `PermissionError`.
 
-The canonical detection feature extractor defines 23 run-level behavioural features, including:
+A separate enforcement report records an authorized `/usr/bin/whoami` execution succeeding and an unapproved `/usr/bin/id` execution being refused in enforce mode.
 
-- event count, unique processes, process changes and unique paths;
-- mean and maximum path depth, dominant path ratio and path diversity;
-- repetition ratio and sequence entropy;
-- unique PIDs/UIDs and UID changes;
-- duration, event rate and inter-event timing;
-- burst count and coarse `/bin`, `/usr/bin`, `/tmp`, and `/sbin` path ratios.
-
-The repository also contains earlier ML experiment scripts that use a larger command/category feature set (72 features in one saved report). Those earlier scripts and the canonical 23-feature inference wrapper are related but are not one fully unified, production inference pipeline.
-
-The ML experiment compares Logistic Regression, Random Forest and Gradient Boosting. The saved outputs contain several evaluation variants; they must not be merged into one headline score.
-
-### How ML is integrated today
-
-- Training/evaluation scripts consume the controlled CSV dataset.
-- The canonical `behavior_ml.py` loads external joblib model and feature-list artifacts and calculates a risk label.
-- `risk_fusion.py` combines a ZTA decision with ML risk. A ZTA DENY remains DENY; ML risk can raise an otherwise allowed action to REVIEW.
-- The model files are not included in the canonical source tree.
-- The canonical controller/BPF hook does not currently call the ML wrapper synchronously.
-- The data collector has not yet been validated against the canonical BPF JSON event stream.
-
-Therefore the ML work is best described as **offline behavioural evaluation plus a reusable inference/risk-fusion module**, not a completed live ML-driven kernel enforcement integration.
-
-## 8. Experimental results
-
-Results are reported separately according to the saved experiment files.
-
-### A. ML group-aware holdout evaluation
-
-The saved report `research/results/ml_v2/ml_experiment_report.txt` describes 2,781 raw events, 1,100 run-level samples and 72 features, split into 810 training and 290 testing samples. The script uses `GroupShuffleSplit` with scenario groups and reports no group overlap for its split.
-
-| Model | Accuracy | Precision | Recall | F1 | FPR | Avg inference |
-|---|---:|---:|---:|---:|---:|---:|
-| Logistic Regression | 1.000 | 1.000 | 1.000 | 1.000 | 0.000 | 0.001187 ms |
-| Random Forest | 1.000 | 1.000 | 1.000 | 1.000 | 0.000 | 0.276802 ms |
-| Gradient Boosting | 1.000 | 1.000 | 1.000 | 1.000 | 0.000 | 0.010534 ms |
-
-These perfect scores are results of this particular controlled split, not evidence of generalisation to real agents or unseen attack families. The dataset is small and synthetic, and features include command/path distribution signals closely related to the scripted scenario definitions. Independent datasets, live agent traces, and stronger external validation are needed.
-
-### B. Five-fold scenario evaluation
-
-The saved `research/results/ml/5fold/model_summary.csv` reports:
-
-| Model | Mean accuracy | Mean precision | Mean recall | Mean F1 | Mean FPR |
-|---|---:|---:|---:|---:|---:|
-| Logistic Regression | 0.8336 | 0.8793 | 0.6500 | 0.6634 | 0.0482 |
-| Random Forest | 0.8293 | 0.6734 | 0.8000 | 0.6820 | 0.1203 |
-| Gradient Boosting | 0.7993 | 0.5876 | 0.6000 | 0.5620 | 0.1203 |
-
-The folds show variation (for example, Random Forest accuracy standard deviation is approximately 0.0681 and Logistic Regression approximately 0.1293). This evaluation is more informative than relying only on the single perfect holdout result, but the sample remains controlled and small.
-
-### C. Attack-wise evaluation
-
-The saved attack-wise summary reports overall holdout accuracy of approximately 0.8264 for Logistic Regression and Random Forest, and 0.7991 for Gradient Boosting. Detection is uneven across the 10 attack-like categories: for example, the Random Forest results detect all 30 `prompt_injection_sudo` samples in that particular evaluation but miss all 30 `benign_to_shell` and `benign_to_sudo` samples. Category-specific results demonstrate that a single aggregate metric hides important failure modes.
-
-### D. Small runtime experiment
-
-The saved runtime experiment `research/results/final_experiment/run_20261023_233145/SUMMARY.md` records:
-
-- Linux kernel: `6.8.0-138-generic`
-- 13 test cases: 7 benign and 6 attack-oriented
-- 40 KernelGuard events collected
-- confusion matrix: TN=7, FP=0, FN=2, TP=4
-- accuracy: 0.8462
-- precision: 1.0000
-- recall: 0.6667
-- F1: 0.8000
-- false-positive rate: 0.0000
-- decisions: 5 ALLOW, 4 REVIEW, 4 DENY
-- average decision/test timing: 3,724.46 µs (not pure BPF hook latency)
-
-Four of six attack-oriented cases were classified DENY; two were REVIEW. The report explicitly states that DENY in this experiment represents the policy decision layer and should not be presented as measured kernel-level `-EPERM` enforcement. LSTM and LLM semantic adjudication were not included.
-
-### Interpretation
-
-The saved results show that controlled process-execution patterns can be separated to some extent by run-level features, and that the small runtime experiment produced useful policy decisions with no observed false positives in 13 cases. They do **not** establish production accuracy, robustness to adaptive attacks, or full end-to-end autonomous prompt-injection prevention. The 1.0 ML metrics should be reported alongside the lower five-fold results and the dataset limitations, not as a standalone headline.
+These are selected tests from the supplied Ubuntu environment. They do not prove universal attack coverage, production readiness, or compatibility with every Linux kernel and policy configuration. The reports are retained under `evidence/stage-validation/`.
 
 ## 9. Related work and research positioning
 
@@ -384,8 +299,7 @@ KernelGuard can only enforce what its hooks observe and what its policy expresse
 - an allowed interpreter can execute arbitrary scripts unless additional sandboxing is used;
 - local UNIX-domain sockets and local service interactions are not fully mediated as network egress;
 - API keys passed through environment variables are available to the agent process;
-- legacy dataset collectors do not yet consume the canonical BPF ring-buffer JSON schema;
-- model artifacts are external and not committed in the canonical source copy;
+- behavioural analysis, ML-based detection and model-driven response are future scope and are not implemented in the current runtime;
 - BPF verifier acceptance, attach success and enforce-mode outcomes must be validated on the target kernel;
 - this is a research prototype, not a production security guarantee.
 
@@ -433,7 +347,7 @@ python -m pip install --upgrade pip
 python -m pip install PyYAML
 ```
 
-The optional ML modules use additional packages such as NumPy, pandas and joblib; the optional Gemini agent requires LangChain, the Google GenAI integration and a user-provided API key. These optional dependencies are not required for controller unit tests or policy dry-run.
+The optional Gemini agent requires LangChain, the Google GenAI integration and a user-provided API key. Behavioural analysis and ML dependencies are not required because ML-based detection is not part of the current implementation.
 
 ### 12.4 Safe quick-start (no root, no BPF attachment)
 
@@ -521,7 +435,7 @@ sudo python3 kgctl.py unload
 
 ## 13. Latest implementation and verified progress
 
-The following status is based on the Ubuntu source snapshot supplied for review on 19 November 2026, including the `KernelGuard-Core/` working copy and its saved stage reports. It is important to distinguish that local snapshot from the older controller currently present under the canonical GitHub path until the source synchronization is reviewed and merged.
+The following status is based on the Ubuntu source snapshot supplied for review on 19 November 2026, including the `KernelGuard-Core/` working copy and its saved stage reports. The latest hardened controller has been synchronized into the canonical `kernelguard/kgctl.py` path on this integration branch.
 
 ### Implemented and evidenced in the latest Ubuntu snapshot
 
@@ -552,26 +466,13 @@ The supplied Stage 5 report records these outcomes under an enforce policy:
 
 The separate enforcement report records an authorized `/usr/bin/whoami` run succeeding and an unapproved `/usr/bin/id` run being refused in enforce mode. Keep the raw reports in the repository as evidence; do not turn these finite tests into a claim of complete attack prevention.
 
-### Behavioural ML: what is implemented and what is not
+### Behavioural analysis and ML status
 
-The project has ML research code; it is not accurate to say that no ML work has been done. The current work includes controlled dataset generation, run-level feature extraction, training/evaluation scripts for Logistic Regression, Random Forest and Gradient Boosting, saved experiment results, a model-loading/inference wrapper, and an advisory risk-fusion helper.
-
-However, the current evidence does **not** establish a fully integrated live pipeline in which current BPF ring-buffer JSON is continuously converted to ML features, scored by a deployed model, and used to trigger an automated controller response. The saved controlled-dataset results and saved runtime decision experiment must remain separate from live kernel enforcement evidence. LSTM autoencoder inference and LLM semantic adjudication are not demonstrated as completed components in the supplied implementation snapshot.
-
-### Remaining work (not to be presented as completed)
-
-1. Synchronize the latest hardened `KernelGuard-Core/kgctl.py` into the canonical `kernelguard/kgctl.py` path and retain the existing repository history.
-2. Run the complete test suite and BPF build from a clean checkout of the canonical layout.
-3. Validate BPF verifier acceptance, load/attach, event delivery and enforce-mode behaviour on the target Ubuntu VM after synchronization.
-4. Expand tests for cgroup controller failures, descendants, interrupted workloads and cleanup failure paths.
-5. Build and validate the BPF JSON-to-dataset adapter before claiming current telemetry feeds the ML pipeline.
-6. Reproduce ML experiments from the documented dataset and record artifact provenance/checksums; keep offline evaluation separate from runtime detection claims.
-7. If live ML response is pursued, integrate it out-of-band with explicit operator policy, bounded response actions and audit logging.
-8. Re-run the guide demonstration from a clean checkout and archive command output, policy hash and event logs.
+Behavioural analysis, ML-based detection, model inference and ML-driven risk fusion are **not implemented in the current KernelGuard runtime**. They are future-scope research directions only. Any historical scripts, datasets, models or result files retained in the repository are not part of the active implementation and must not be used to claim that these capabilities are operational.
 
 ## 14. Current status and future work
 
-KernelGuard is an active research prototype with demonstrated selected kernel-level enforcement on the supplied Ubuntu VM. It is not production-ready and does not claim universal prompt-injection detection or a fully integrated ML-driven enforcement pipeline. The latest hardened controller has been synchronized into the canonical `kernelguard/kgctl.py` path on the integration branch. The branch still requires a clean-checkout test run, BPF build/verifier/load/attach validation and review before it is ready to merge into `main`.
+KernelGuard is an active research prototype with demonstrated selected kernel-level enforcement on the supplied Ubuntu VM. It is not production-ready and does not claim universal prompt-injection detection. Behavioural analysis and ML-based detection remain future scope and are not implemented in the current system. The latest hardened controller has been synchronized into the canonical `kernelguard/kgctl.py` path on the integration branch. The branch still requires a clean-checkout test run, BPF build/verifier/load/attach validation and review before it is ready to merge into `main`.
 
 ## 15. References
 
@@ -587,4 +488,4 @@ The following works provide context for the problem and related approaches. They
 
 ---
 
-**Maintainer note:** New implementation work belongs under `kernelguard/`. Research datasets, model experiments and results belong under `research/`. Historical implementations belong under `archive/`. Preserve provenance and do not overwrite raw experimental outputs.
+**Maintainer note:** Active runtime implementation belongs under `kernelguard/`. Future research material and historical experiments, if retained, must be clearly labelled as not implemented in the current system. Historical implementations belong under `archive/`. Preserve provenance and do not present saved datasets, model scripts or experiment outputs as completed KernelGuard capabilities.
