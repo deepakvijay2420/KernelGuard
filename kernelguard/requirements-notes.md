@@ -1,15 +1,17 @@
-# Python dependencies for optional KernelGuard components
+# Dependencies
 
-PyYAML is required by the policy controller and tests.
-NumPy and pandas are required by behavioural feature extraction.
-joblib and pandas are required by the ML inference wrapper.
-LangChain and langchain-google-genai are required by the Gemini agent example.
-
-Install only the components needed for your experiment:
+## Required for the controller and tests
 
 ```bash
-python3 -m pip install PyYAML numpy pandas joblib
-python3 -m pip install langchain langchain-google-genai
+python3 -m pip install PyYAML
 ```
 
-The eBPF build additionally requires system packages such as clang/LLVM, gcc, libbpf development headers and bpftool. Those are not Python packages.
+## Required for the eBPF build
+
+Install system packages for clang/LLVM with the BPF target, GCC, libbpf development headers and bpftool using the package manager for your Linux distribution.
+
+## Optional agent integration
+
+The example LangChain/Gemini agent requires its LangChain and Google GenAI integration packages and a user-provided `GOOGLE_API_KEY`. Never commit the API key.
+
+Behavioural-analysis and ML dependencies are not required because those components are not part of the current implementation.

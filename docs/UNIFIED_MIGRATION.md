@@ -1,23 +1,27 @@
-# Unified KernelGuard migration
+# KernelGuard Repository Structure
 
-The canonical implementation is under `kernelguard/`. The previous top-level experiments and `zta_v2/` tree are retained as historical source snapshots while the unified layout is validated.
+The repository has one active implementation: `kernelguard/`. This directory is the KernelGuard Core and contains the controller, eBPF-LSM source, policies, agent example, event reader, tests and build instructions.
 
-## Migration policy
-- New active development goes into `kernelguard/`.
-- Do not delete historical files until functionality, dependencies, tests and runtime ownership have been compared.
-- Do not assume legacy ML log collectors consume the new BPF ring-buffer schema.
-- Do not claim live enforcement or ML integration from dry-run/unit-test results.
-- Preserve existing Git branches; this review is isolated on `cleanup/final-repository-review`, created from `main`.
+## Active source of truth
 
-## Canonical components copied
-Current ZTA controller, BPF-LSM program, shared header, policy examples, event reader, controller tests, safe dry-run script, LangChain/Gemini agent example, behavioural feature/ML/risk modules, and dataset guide/generators.
+- `kernelguard/kgctl.py` — Zero Trust controller and workload lifecycle.
+- `kernelguard/bpf/` — eBPF-LSM program and shared definitions.
+- `kernelguard/policy/` — administrator-owned YAML policies.
+- `kernelguard/agent/` — agent integration example.
+- `kernelguard/tools/` — event reader and policy linter.
+- `kernelguard/tests/` — controller tests and controlled probes.
+- `kernelguard/Makefile` — BPF and userspace build.
 
-## Next integration tasks
-1. Verify canonical paths and Makefile in a clean checkout.
-2. Run Python/shell syntax checks and controller unit tests.
-3. Compile the BPF object and event reader in the target VM.
-4. Inspect existing BPF links/pins before any load or unload.
-5. Test audit and enforce behaviour in a disposable VM.
-6. Add a schema adapter and tested event-to-feature pipeline before claiming ML integration.
-7. Configure model artifact paths and verify artifact provenance.
-8. Retire duplicated historical source directories only after parity is demonstrated.
+## Project scope
+
+The current implementation is eBPF-LSM + cgroup-v2 workload identity + administrator-defined Zero Trust policy + ring-buffer telemetry.
+
+Behavioural analysis, ML detection, datasets, model inference and ML-driven response are not implemented and are not included in the active source tree. They are future research possibilities only.
+
+## Validation boundary
+
+The reports under `evidence/stage-validation/` preserve selected results from the supplied Ubuntu VM. They do not establish universal attack coverage or guarantee that a clean checkout works on every kernel. Run the unit tests, build, BPF verifier/load/attach checks and controlled enforcement tests on the target VM before merging changes into the default branch.
+
+## Safety
+
+Use a disposable test VM for live BPF operations. Do not load or detach programs on a shared host without checking ownership of existing BPF programs, links and pins.

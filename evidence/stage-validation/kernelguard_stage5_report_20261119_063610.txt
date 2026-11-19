@@ -1,0 +1,58 @@
+==========================================
+ KERNELGUARD STAGE 5 SECURITY EXPERIMENT
+==========================================
+Thursday 19 November 2026 06:36:10 AM IST
+
+========== 1. BASELINE STATUS ==========
+programs loaded : True
+policy          : /home/deepak/Amrita/KernelGuard/kernelguard/policy/policy.taint-test.yaml (sha256 621d069642e8...)
+  egress_allow     9 entries
+  exec_allow       6 entries
+  sensitive_names  10 entries
+running agents  : 0
+decisions (hook/verdict: count)
+  exec/allow: 5
+  exec/deny: 1
+  exec/audit_deny: 25
+
+========== 2. PREPARE ENFORCEMENT POLICY ==========
+agent research_agent: id=1 mode=enforce egress_default_deny=0 run_as=kgagent limits={'pids_max': 64, 'memory_max': 1073741824}
+  map sensitive_names  10 entries
+  map exec_allow       6 entries
+  map egress_allow     9 entries
+  note: research_agent: generativelanguage.googleapis.com -> 172.217.112.4, 172.217.113.4, 172.217.114.4, 172.217.115.4, 172.217.116.4, 172.217.117.4, 172.217.118.4, 172.217.119.4 (re-run apply to refresh DNS)
+  note: research_agent: egress_default=allow - network is only restricted after a sensitive read (taint)
+applied policy /tmp/kg-stage5-enforce.yaml (sha256 a37bfed8bf5b...)
+Enforcement policy applied.
+
+========== 3. NORMAL FILE ACCESS ==========
+[kgctl] agent=research_agent id=1 mode=enforce cgroup=research_agent-11503-1795050370 cgid=12640 exe=/usr/bin/python3
+PUBLIC_TEST_DATA
+Normal file test exit: 0
+
+========== 4. SENSITIVE FILE TAINT TEST ==========
+[kgctl] agent=research_agent id=1 mode=enforce cgroup=research_agent-11524-1795050370 cgid=12682 exe=/usr/bin/python3
+SECRET_READ: SYNTHETIC_SECRET=KG_TEST_ONLY
+Taint test exit: 0
+
+========== 5. SENSITIVE FILE DENIAL TEST ==========
+[kgctl] agent=research_agent id=1 mode=enforce cgroup=research_agent-11545-1795050371 cgid=12724 exe=/usr/bin/python3
+ACCESS_DENIED: [Errno 1] Operation not permitted: '/tmp/kg-sensitive-test-11383/shadow'
+Sensitive denial test exit: 0
+
+========== 6. TAINT + NETWORK RESTRICTION ==========
+[kgctl] agent=research_agent id=1 mode=enforce cgroup=research_agent-11568-1795050371 cgid=12766 exe=/usr/bin/python3
+Reading synthetic secret
+Attempting unauthorized connection
+CONNECTION_FAILED: PermissionError [Errno 1] Operation not permitted
+Network test exit: 0
+
+========== 7. SECURITY EVENTS ==========
+{"ts_ns":6283154662712,"cgroup_id":12640,"agent":1,"hook":"exec","verdict":"allow","pid":11511,"comm":"python3","name":"/usr/bin/python3","ino":656210,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6283268537130,"cgroup_id":12682,"agent":1,"hook":"exec","verdict":"allow","pid":11532,"comm":"python3","name":"/usr/bin/python3","ino":656210,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6283277184265,"cgroup_id":12682,"agent":1,"hook":"file_open","verdict":"taint","pid":11532,"comm":"python3","name":".env","ino":1604891,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6283408559347,"cgroup_id":12724,"agent":1,"hook":"exec","verdict":"allow","pid":11553,"comm":"python3","name":"/usr/bin/python3","ino":656210,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6283416430118,"cgroup_id":12724,"agent":1,"hook":"file_open","verdict":"deny","pid":11553,"comm":"python3","name":"shadow","ino":1625323,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6283543045145,"cgroup_id":12766,"agent":1,"hook":"exec","verdict":"allow","pid":11576,"comm":"python3","name":"/usr/bin/python3","ino":656210,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6283559407675,"cgroup_id":12766,"agent":1,"hook":"file_open","verdict":"taint","pid":11576,"comm":"python3","name":".env","ino":1604891,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6283559625717,"cgroup_id":12766,"agent":1,"hook":"connect","verdict":"deny","pid":11576,"comm":"python3","name":"","ino":0,"dev":0,"dst":"1.1.1.1","port":443,"family":2}
