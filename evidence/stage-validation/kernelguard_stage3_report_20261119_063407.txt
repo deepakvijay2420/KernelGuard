@@ -1,0 +1,94 @@
+==========================================
+       KERNELGUARD STAGE 3 TEST
+==========================================
+Thursday 19 November 2026 06:34:07 AM IST
+
+========== 1. ENVIRONMENT ==========
+uid=1000(deepak) gid=1000(deepak) groups=1000(deepak),4(adm),24(cdrom),27(sudo),30(dip),46(plugdev),122(lpadmin),135(lxd),136(sambashare),998(docker)
+6.8.0-149-generic
+
+========== 2. AGENT USER ==========
+kgagent:x:999:999::/home/kgagent:/usr/sbin/nologin
+PASS: kgagent exists
+
+========== 3. PYTHON VALIDATION ==========
+Python syntax: 0
+
+========== 4. UNIT TESTS ==========
+test_python_layouts_match_c_header (test_kgctl.TestLayout) ... ok
+test_egress_key_address_is_network_order_and_port_host_order (test_kgctl.TestPacking) ... ok
+test_hex_helper (test_kgctl.TestPacking) ... ok
+test_inode_key_fields (test_kgctl.TestPacking) ... ok
+test_kdev_encoding (test_kgctl.TestPacking) ... ok
+test_name_key_padding_and_truncation (test_kgctl.TestPacking) ... ok
+test_egress_expansion_hosts_and_ports (test_kgctl.TestPlan) ... ok
+test_example_policy_in_repo_validates (test_kgctl.TestPlan) ... ok
+test_exec_is_identified_by_inode_of_the_real_file (test_kgctl.TestPlan) ... ok
+test_exec_keys_are_scoped_per_agent (test_kgctl.TestPlan) ... ok
+test_ipv6_literal_is_rejected_not_silently_ignored (test_kgctl.TestPlan) ... ok
+test_missing_or_non_executable_binary_is_an_error (test_kgctl.TestPlan) ... ok
+test_notes_warn_about_audit_mode_and_permissive_egress (test_kgctl.TestPlan) ... ok
+test_sensitive_names_values (test_kgctl.TestPlan) ... ok
+test_sha256_pin (test_kgctl.TestPlan) ... ok
+test_inode_key_fields (test_kgctl.TestPlan) ... ok
+test_symlink_resolves_to_same_inode_but_copy_does_not (test_kgctl.TestPlan) ... ok
+test_unresolvable_host_is_an_error (test_kgctl.TestPlan) ... ok
+test_find_run_by_name_picks_newest_and_by_cgid (test_kgctl.TestRuns) ... ok
+test_bad_egress_default (test_kgctl.TestValidation) ... ok
+test_bad_mode (test_kgctl.TestValidation) ... ok
+test_exec_allow_must_be_nonempty (test_kgctl.TestValidation) ... ok
+test_id_range_and_uniqueness (test_kgctl.TestValidation) ... ok
+test_limits_must_be_positive_ints (test_kgctl.TestValidation) ... ok
+test_mode_is_mandatory (test_kgctl.TestValidation) ... ok
+test_network_entry_needs_ip_xor_host (test_kgctl.TestValidation) ... ok
+test_network_entry_needs_port (test_kgctl.TestValidation) ... ok
+test_not_a_mapping (test_kgctl.TestValidation) ... ok
+test_sensitive_name_rules (test_kgctl.TestValidation) ... ok
+test_valid_policy_passes (test_kgctl.TestValidation) ... ok
+test_wrong_version (test_kgctl.TestValidation) ... ok
+
+----------------------------------------------------------------------
+Ran 30 tests in 0.056s
+
+OK
+Unit tests exit code: 0
+
+========== 5. KERNELGUARD STATUS ==========
+programs loaded : True
+policy          : /home/deepak/Amrita/KernelGuard/kernelguard/policy/policy.taint-test.yaml (sha256 621d069642e8...)
+  egress_allow     9 entries
+  exec_allow       6 entries
+  sensitive_names  10 entries
+running agents  : 0
+decisions (hook/verdict: count)
+  exec/allow: 3
+  exec/audit_deny: 24
+
+========== 6. AUTHORIZED AGENT TEST ==========
+[kgctl] agent=research_agent id=1 mode=audit cgroup=research_agent-10234-1795050247 cgid=12430 exe=/usr/bin/whoami
+kgagent
+Authorized test exit code: 0
+
+========== 7. STATUS AFTER AUTHORIZED TEST ==========
+programs loaded : True
+policy          : /home/deepak/Amrita/KernelGuard/kernelguard/policy/policy.taint-test.yaml (sha256 621d069642e8...)
+  egress_allow     9 entries
+  exec_allow       6 entries
+  sensitive_names  10 entries
+running agents  : 0
+decisions (hook/verdict: count)
+  exec/allow: 4
+  exec/audit_deny: 24
+
+========== 8. CGROUP CLEANUP CHECK ==========
+
+========== 9. UNAUTHORIZED EXECUTABLE TEST ==========
+[kgctl] agent=research_agent id=1 mode=audit cgroup=research_agent-10270-1795050248 cgid=12472 exe=/usr/bin/id
+uid=999(kgagent) gid=999(kgagent) groups=999(kgagent)
+Unauthorized test exit code: 0
+
+========== 10. SECURITY EVENTS ==========
+{"ts_ns":6160336306197,"cgroup_id":12430,"agent":1,"hook":"exec","verdict":"allow","pid":10242,"comm":"python3","name":"/usr/bin/whoami","ino":664544,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6160504790508,"cgroup_id":12472,"agent":1,"hook":"exec","verdict":"audit_deny","pid":10278,"comm":"python3","name":"/usr/bin/id","ino":664494,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6211557715507,"cgroup_id":12556,"agent":1,"hook":"exec","verdict":"allow","pid":10628,"comm":"python3","name":"/usr/bin/whoami","ino":664544,"dev":8388611,"dst":"","port":0,"family":0}
+{"ts_ns":6211649383837,"cgroup_id":12598,"agent":1,"comm":"python3","hook":"exec","verdict":"deny","pid":10649,"comm":"python3","name":"/usr/bin/id","ino":664494,"dev":8388611,"dst":"","port":0,"family":0}
