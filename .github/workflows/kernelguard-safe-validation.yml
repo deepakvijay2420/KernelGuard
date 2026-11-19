@@ -3,10 +3,11 @@ name: KernelGuard safe validation
 on:
   push:
     branches:
-      - unified-kernelguard
+      - main
+      - integration/latest-core-controller
   pull_request:
     branches:
-      - unified-kernelguard
+      - main
 
 jobs:
   controller-tests:
