@@ -98,11 +98,15 @@ static int append_sequence(yaml_document_t *doc,
             return -1;
 
         size_t len = node->data.scalar.length;
-        const char *path = (const char *)node->data.scalar.value;
-        if (len == 0 || len >= MAX_POLICY_PATH || path[0] != '/') {
+        char path[MAX_POLICY_PATH];
+        if (len == 0 || len >= sizeof(path) ||
+            node->data.scalar.value[0] != '/') {
             fprintf(stderr, "[POLICY] Invalid executable path in YAML\n");
             return -1;
         }
+        memcpy(path, node->data.scalar.value, len);
+        path[len] = '\0';
+
         if (*count >= MAX_POLICY_RULES) {
             fprintf(stderr, "[POLICY] More than %d rules are not supported\n",
                     MAX_POLICY_RULES);
